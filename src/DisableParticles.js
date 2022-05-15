@@ -30,7 +30,7 @@ export default function DisableParticles({ setParticles }) {
 
   function handleFile() {
     const file = document.getElementById("file").files[0];
-    if(!file) return;
+    if (!file) return;
     const fileReader = new FileReader();
     fileReader.onload = (f) => {
       document.getElementById("particlesToDisable").value = f.target.result;
