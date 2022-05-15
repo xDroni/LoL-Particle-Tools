@@ -1,23 +1,27 @@
 import { useEffect, useState } from "react";
 import Particles from "./Particles";
+import DisableParticles from "./DisableParticles";
+import config from "./config.json";
 
 function App() {
   const [particles, setParticles] = useState([]);
-
-  useEffect(() => {
-    fetch("https://127.0.0.1:2999/replay/particles")
+  function getParticles() {
+    fetch(`${config.address}:${config.port}/replay/${config.particlesEndpoint}`)
       .then((res) => res.json())
       .then((res) => {
         setParticles(() => res);
       });
+  }
+
+  useEffect(() => {
+    getParticles();
   }, []);
 
   return (
     <>
       <Particles particles={particles} />
-      <input type="text" />
-      <button>Disable Particles</button>
-      <button>Refresh</button>
+      <DisableParticles setParticles={setParticles} />
+      <button onClick={() => getParticles()}>Refresh</button>
     </>
   );
 }
