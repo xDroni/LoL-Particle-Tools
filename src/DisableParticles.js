@@ -5,15 +5,15 @@ export default function DisableParticles({ setParticles }) {
   const [particlesToDisable, setParticlesToDisable] = useState("");
 
   async function postParticles() {
-    const particlesToDisableJSON = Object.assign(
-      {},
-      ...particlesToDisable
-        .split("\n")
-        .filter((e) => e.trim().length)
-        .map((e) => ({ [e.trim()]: false }))
+    const particlesToDisableJSON = particlesToDisable.split("\n").reduce(
+      (prev, curr) => ({
+        ...prev,
+        ...(curr.trim().length ? { [curr.trim()]: false } : {}),
+      }),
+      {}
     );
 
-    const response = await fetch(
+    fetch(
       `${config.address}:${config.port}/replay/${config.particlesEndpoint}`,
       {
         method: "POST",
@@ -22,9 +22,10 @@ export default function DisableParticles({ setParticles }) {
           "Content-Type": "application/json",
         },
       }
-    );
-    const json = await response.json();
-    setParticles(() => json);
+    )
+      .then((res) => res.json())
+      .then((res) => setParticles(res))
+      .catch((e) => console.error(e));
   }
 
   return (

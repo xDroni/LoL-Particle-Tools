@@ -8,9 +8,8 @@ function App() {
   function getParticles() {
     fetch(`${config.address}:${config.port}/replay/${config.particlesEndpoint}`)
       .then((res) => res.json())
-      .then((res) => {
-        setParticles(() => res);
-      });
+      .then((res) => setParticles(res))
+      .catch((e) => console.error(e));
   }
 
   useEffect(() => {
