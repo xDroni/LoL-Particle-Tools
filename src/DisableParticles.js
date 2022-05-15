@@ -28,12 +28,29 @@ export default function DisableParticles({ setParticles }) {
       .catch((e) => console.error(e));
   }
 
+  function handleFile() {
+    const file = document.getElementById("file").files[0];
+    if(!file) return;
+    const fileReader = new FileReader();
+    fileReader.onload = (f) => {
+      document.getElementById("particlesToDisable").value = f.target.result;
+      setParticlesToDisable(f.target.result.toString());
+    };
+    fileReader.readAsText(file, "UTF-8");
+  }
+
   return (
     <>
       <textarea
+        id="particlesToDisable"
         onChange={(e) => setParticlesToDisable(e.target.value)}
+        value={particlesToDisable}
       ></textarea>
       <button onClick={() => postParticles()}>Disable Particles</button>
+
+      <label>Load from file</label>
+      <input type="file" id="file" />
+      <button onClick={handleFile}>Load</button>
     </>
   );
 }
