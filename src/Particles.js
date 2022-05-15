@@ -10,16 +10,27 @@ export default function Particles({ particles }) {
   );
   return (
     <>
-      <p>Enabled particles</p>
-      <textarea
-        readOnly={true}
-        value={particlesByState.enabled.join("\n")}
-      ></textarea>
-      <p>Disabled particles</p>
-      <textarea
-        readOnly={true}
-        value={particlesByState.disabled.join("\n")}
-      ></textarea>
+      <label>Enabled particles</label>
+      <select multiple>
+        {particlesByState.enabled.map((particleName) => {
+          return (
+            <option key={particleName} value={particleName}>
+              {particleName}
+            </option>
+          );
+        })}
+      </select>
+
+      <label>Disabled particles</label>
+      <select multiple>
+        {particlesByState.disabled.map((particleName) => {
+          return (
+            <option key={particleName} value={particleName}>
+              {particleName}
+            </option>
+          );
+        })}
+      </select>
     </>
   );
 }
