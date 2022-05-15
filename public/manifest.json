@@ -1,6 +1,6 @@
 {
-  "short_name": "lol-particles-auto-disable",
-  "name": "lol-particles-auto-disable",
+  "short_name": "lol-particles-enable-disable",
+  "name": "lol-particles-enable-disable",
   "icons": [],
   "start_url": ".",
   "display": "standalone",
