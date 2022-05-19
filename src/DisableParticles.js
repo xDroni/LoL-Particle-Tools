@@ -43,6 +43,7 @@ export default function DisableParticles({ setParticles }) {
     <>
       <textarea
         id="particlesToDisable"
+        className="bg-slate-800 h-1/4 rounded-xl overflow-auto no-scrollbar"
         onChange={(e) => setParticlesToDisable(e.target.value)}
         value={particlesToDisable}
       ></textarea>
