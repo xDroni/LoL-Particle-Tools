@@ -1,6 +1,6 @@
 {
-  "short_name": "lol-particles-enable-disable",
-  "name": "lol-particles-enable-disable",
+  "short_name": "lol-particle-tools",
+  "name": "lol-particle-tools",
   "icons": [],
   "start_url": ".",
   "display": "standalone",
