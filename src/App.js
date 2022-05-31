@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Particles from "./Particles";
 import DisableParticles from "./DisableParticles";
+import ParticleLocator from "./ParticleLocator";
 import config from "./config.json";
 
 function App() {
@@ -19,8 +20,9 @@ function App() {
   return (
     <div className="text-slate-200 mt-4">
       <Particles particles={particles} />
-      {/*<DisableParticles setParticles={setParticles} />*/}
-      {/*<button onClick={() => getParticles()}>Refresh</button>*/}
+      <DisableParticles setParticles={setParticles} />
+      <button onClick={() => getParticles()}>Refresh</button>
+      <ParticleLocator particles={particles} setParticles={setParticles} />
     </div>
   );
 }
