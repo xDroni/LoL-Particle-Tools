@@ -17,11 +17,11 @@ function App() {
   }, []);
 
   return (
-    <>
+    <div className="text-slate-200 mt-4">
       <Particles particles={particles} />
-      <DisableParticles setParticles={setParticles} />
-      <button onClick={() => getParticles()}>Refresh</button>
-    </>
+      {/*<DisableParticles setParticles={setParticles} />*/}
+      {/*<button onClick={() => getParticles()}>Refresh</button>*/}
+    </div>
   );
 }
 
