@@ -19,3 +19,13 @@
     @apply bg-slate-900
   }
 }
+
+.btn {
+  @apply font-bold py-1 px-2 rounded;
+}
+.btn-slate {
+  @apply bg-slate-500 text-white;
+}
+.btn-slate:hover {
+  @apply bg-slate-700;
+}

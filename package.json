@@ -14,7 +14,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "eslint": "eslint --ext .js,.jsx src"
   },
   "browserslist": {
     "production": [
@@ -31,9 +32,16 @@
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.2",
     "autoprefixer": "^10.4.7",
+    "eslint": "^8.16.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-react": "^7.30.0",
     "postcss": "^8.4.14",
-    "prettier": "2.6.2",
     "react-scripts": "5.0.1",
     "tailwindcss": "^3.0.24"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
   }
 }

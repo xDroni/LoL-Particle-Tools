@@ -35,13 +35,14 @@ export default function ParticleLocator({ particles, setParticles }) {
     });
 
     const data = await result.json();
-    setParticles(data)
+    setParticles(data);
 
     const [promise, resolver] = createPromise();
     promiseResolver = resolver;
 
     let answer = await promise;
 
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       switch (answer) {
         case "y":
@@ -57,13 +58,22 @@ export default function ParticleLocator({ particles, setParticles }) {
 
   return (
     <>
-      <p onClick={() => findParticle(Object.entries(particles))}>
+      <button
+        className="btn btn-slate"
+        onClick={() => findParticle(Object.entries(particles))}
+      >
         Particle Locator
-      </p>
-      <button className="block ml-10" onClick={() => promiseResolver("y")}>
+      </button>
+      <button
+        className="block ml-10 btn btn-slate w-8"
+        onClick={() => promiseResolver("y")}
+      >
         Y
       </button>
-      <button className="block ml-10" onClick={() => promiseResolver("n")}>
+      <button
+        className="block ml-10 btn btn-slate w-8"
+        onClick={() => promiseResolver("n")}
+      >
         N
       </button>
     </>
