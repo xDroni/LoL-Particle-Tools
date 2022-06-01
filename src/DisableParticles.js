@@ -41,17 +41,21 @@ export default function DisableParticles({ setParticles }) {
 
   return (
     <>
+      <span className="block mb-2 uppercase">List to disable</span>
       <textarea
         id="particlesToDisable"
-        className="bg-slate-800 h-1/4 rounded-xl overflow-auto no-scrollbar"
+        className="bg-slate-800 h-1/4 rounded-xl overflow-auto no-scrollbar block ml-auto mr-auto mb-4"
         onChange={(e) => setParticlesToDisable(e.target.value)}
         value={particlesToDisable}
       ></textarea>
-      <button onClick={() => postParticles()}>Disable Particles</button>
+      <button
+        className="block ml-auto mr-auto btn btn-slate mb-4"
+        onClick={() => postParticles()}
+      >
+        Disable Particles
+      </button>
 
-      <label>Load from file</label>
-      <input type="file" id="file" />
-      <button onClick={handleFile}>Load</button>
+      <input type="file" id="file" onChange={handleFile} />
     </>
   );
 }
