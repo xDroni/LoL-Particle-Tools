@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import Particles from "./Particles";
-import config from "./config.json";
+import { useEffect, useState } from 'react';
+import Particles from './Particles';
+import config from './config.json';
 
 function App() {
   const [particles, setParticles] = useState([]);

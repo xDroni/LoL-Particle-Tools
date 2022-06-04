@@ -1,6 +1,6 @@
-import React, { useDeferredValue, useState } from "react";
-import DisableParticles from "./DisableParticles";
-import ParticleLocator from "./ParticleLocator";
+import React, { useDeferredValue, useState } from 'react';
+import DisableParticles from './DisableParticles';
+import ParticleLocator from './ParticleLocator';
 
 export default function Particles({ particles, setParticles }) {
   const [locationInProgress, setLocationInProgress] = useState(false);
@@ -8,19 +8,17 @@ export default function Particles({ particles, setParticles }) {
   const particlesByState = Object.entries(particles).reduce(
     (prev, curr) => ({
       enabled: curr[1] ? [...prev.enabled, curr[0]] : [...prev.enabled],
-      disabled: !curr[1] ? [...prev.disabled, curr[0]] : [...prev.disabled],
+      disabled: !curr[1] ? [...prev.disabled, curr[0]] : [...prev.disabled]
     }),
     { enabled: [], disabled: [] }
   );
 
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState('');
   const deferredFilter = useDeferredValue(filter);
 
   const filtered = particlesByState.enabled.filter((p) => {
-    const regex = new RegExp(deferredFilter, "i");
-    return deferredFilter === ""
-      ? true
-      : regex.test(p) || regex.test(p.replaceAll("_", ""));
+    const regex = new RegExp(deferredFilter, 'i');
+    return deferredFilter === '' ? true : regex.test(p) || regex.test(p.replaceAll('_', ''));
   });
 
   function handleChange(event) {

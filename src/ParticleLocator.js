@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 export default function ParticleLocator({
   particles,
   setParticles,
   locationInProgress,
-  setLocationInProgress,
+  setLocationInProgress
 }) {
   const [split, setSplit] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,10 +17,10 @@ export default function ParticleLocator({
       const stateChanged = split.entries1.map(([key, value]) => [key, !value]);
       const json = Object.fromEntries(stateChanged);
       split.entries1 = stateChanged;
-      const result = await fetch("https://127.0.0.1:2999/replay/particles", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(json),
+      const result = await fetch('https://127.0.0.1:2999/replay/particles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(json)
       });
 
       const data = await result.json();
@@ -39,7 +39,7 @@ export default function ParticleLocator({
 
     setSplit({
       entries1: entries.slice(0, entries.length / 2),
-      entries2: entries.slice(entries.length / 2),
+      entries2: entries.slice(entries.length / 2)
     });
   }
 
