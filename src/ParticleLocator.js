@@ -28,11 +28,7 @@ export default function ParticleLocator({
 
   async function findParticle(entries) {
     if (entries.length === 1) {
-      await postParticles(particlesStateToRestore.current);
-      setParticles(particlesStateToRestore.current);
-      setParticleName(entries[0][0]);
-      setLocationInProgress(false);
-      return;
+      return stopLocating(entries);
     }
 
     setSplit({
@@ -41,17 +37,30 @@ export default function ParticleLocator({
     });
   }
 
-  function handleParticleLocator() {
+  async function handleParticleLocator() {
+    if (locationInProgress === true) {
+      return stopLocating();
+    }
+
     particlesStateToRestore.current = particles;
     setParticleName(null);
     setLocationInProgress(true);
-    void findParticle(Object.entries(particles));
+    return findParticle(Object.entries(particles));
+  }
+
+  async function stopLocating(entries) {
+    await postParticles(particlesStateToRestore.current, setParticles);
+    setParticles(particlesStateToRestore.current);
+    if (entries !== undefined) {
+      setParticleName(entries[0][0]);
+    }
+    setLocationInProgress(false);
   }
 
   return (
     <>
       <button type="button" className="btn btn-slate mb-4" onClick={handleParticleLocator}>
-        Particle Locator
+        {locationInProgress === false ? 'Particle Locator' : 'Cancel locating'}
       </button>
       {locationInProgress === true ? (
         <>
@@ -76,8 +85,16 @@ export default function ParticleLocator({
       ) : null}
       {particleName !== null ? (
         <>
-          <p>Particle name: </p>
-          <span className="font-bold">{particleName}</span>
+          <div className="mb-9">
+            <p>Particle name: </p>
+            <span className="font-bold">{particleName}</span>
+          </div>
+          <button
+            type="button"
+            className="block ml-auto mr-auto btn btn-slate"
+            onClick={() => postParticles({ [particleName]: false }, setParticles)}>
+            Disable particle
+          </button>
         </>
       ) : null}
     </>
