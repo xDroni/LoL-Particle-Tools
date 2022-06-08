@@ -52,28 +52,30 @@ export default function ParticleLocator({
           setParticleName(null);
           setLocationInProgress(true);
           return findParticle(Object.entries(particles));
-        }}
-      >
+        }}>
         Particle Locator
       </button>
-      <div className="flex gap-4 justify-center mb-4">
-        <button
-          type="button"
-          className="block btn btn-slate w-12 h-12 disabled:bg-slate-800"
-          onClick={() => findParticle(split.entries1)}
-          disabled={isLoading || !locationInProgress}
-        >
-          Y
-        </button>
-        <button
-          type="button"
-          className="block btn btn-slate w-12 h-12 disabled:bg-slate-800"
-          onClick={() => findParticle(split.entries2)}
-          disabled={isLoading || !locationInProgress}
-        >
-          N
-        </button>
-      </div>
+      {locationInProgress === true ? (
+        <>
+          <div className="mb-2">Did change?</div>
+          <div className="flex gap-4 justify-center mb-4">
+            <button
+              type="button"
+              className="block btn btn-slate w-12 h-12 disabled:bg-slate-800"
+              onClick={() => findParticle(split.entries1)}
+              disabled={isLoading || !locationInProgress}>
+              Yes
+            </button>
+            <button
+              type="button"
+              className="block btn btn-slate w-12 h-12 disabled:bg-slate-800"
+              onClick={() => findParticle(split.entries2)}
+              disabled={isLoading || !locationInProgress}>
+              No
+            </button>
+          </div>
+        </>
+      ) : null}
       {particleName !== null ? (
         <>
           <p>Particle name: </p>
