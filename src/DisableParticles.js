@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import config from './config.json';
+import postParticles from './common/postParticles';
 
 export default function DisableParticles({ setParticles }) {
   const [particlesToDisable, setParticlesToDisable] = useState('');
 
-  async function postParticles() {
+  async function post() {
     const particlesToDisableJSON = particlesToDisable.split('\n').reduce(
       (prev, curr) => ({
         ...prev,
@@ -13,16 +13,7 @@ export default function DisableParticles({ setParticles }) {
       {}
     );
 
-    fetch(`${config.address}:${config.port}/replay/${config.particlesEndpoint}`, {
-      method: 'POST',
-      body: JSON.stringify(particlesToDisableJSON),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then((res) => res.json())
-      .then((res) => setParticles(res))
-      .catch((e) => console.error(e));
+    await postParticles(particlesToDisableJSON, setParticles);
   }
 
   function handleFile() {
@@ -43,9 +34,8 @@ export default function DisableParticles({ setParticles }) {
         id="particlesToDisable"
         className="bg-slate-800 h-1/4 w-2/3 rounded-xl overflow-auto no-scrollbar block ml-auto mr-auto mb-4"
         onChange={(e) => setParticlesToDisable(e.target.value)}
-        value={particlesToDisable}
-      ></textarea>
-      <button className="block ml-auto mr-auto btn btn-slate mb-4" onClick={() => postParticles()}>
+        value={particlesToDisable}></textarea>
+      <button className="block ml-auto mr-auto btn btn-slate mb-4" onClick={() => post()}>
         Disable Particles
       </button>
 
