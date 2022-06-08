@@ -17,7 +17,7 @@ export default function DisableParticles({ setParticles }) {
   }
 
   function handleFile() {
-    const file = document.getElementById('file').files[0];
+    const file = document.getElementById('openFile').files[0];
     if (file === undefined || file.name.split('.').pop() !== 'txt') return;
     const fileReader = new FileReader();
     fileReader.onload = (f) => {
@@ -39,7 +39,7 @@ export default function DisableParticles({ setParticles }) {
         Disable Particles
       </button>
 
-      <input type="file" id="file" accept=".txt" onChange={handleFile} />
+      <input type="file" id="openFile" accept=".txt" onChange={handleFile} />
     </>
   );
 }
