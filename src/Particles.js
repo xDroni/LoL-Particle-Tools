@@ -2,6 +2,7 @@ import React, { useDeferredValue, useState } from 'react';
 import DisableParticles from './DisableParticles';
 import ParticleLocator from './ParticleLocator';
 import { saveAs } from 'file-saver';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function Particles({ particles, setParticles }) {
   const [locationInProgress, setLocationInProgress] = useState(false);
@@ -41,19 +42,21 @@ export default function Particles({ particles, setParticles }) {
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center items-center">
       <div className="w-1/3 text-center">
         <span className="block mb-2 uppercase">Enabled particles</span>
         <select
           multiple
-          className="bg-slate-800 w-2/3 rounded-xl overflow-auto no-scrollbar h-[32rem] mb-4 disabled:bg-slate-800"
-          disabled={locationInProgress}>
+          className="bg-slate-800 w-2/3 rounded-xl overflow-auto no-scrollbar h-[38rem] mb-4 disabled:bg-slate-800"
+          disabled={locationInProgress}
+        >
           {filtered.map((particleName) => {
             return (
               <option
                 key={particleName}
                 value={particleName}
-                className="hover:bg-slate-700 rounded-xl">
+                className="hover:bg-slate-700 rounded-xl"
+              >
                 {particleName}
               </option>
             );
@@ -77,14 +80,16 @@ export default function Particles({ particles, setParticles }) {
         <span className="block mb-2 uppercase">Disabled particles</span>
         <select
           multiple
-          className="bg-slate-800 w-2/3 rounded-xl overflow-auto no-scrollbar h-[32rem] mb-4 disabled:bg-slate-800"
-          disabled={locationInProgress}>
+          className="bg-slate-800 w-2/3 rounded-xl overflow-auto no-scrollbar h-[38rem] mb-4 disabled:bg-slate-800"
+          disabled={locationInProgress}
+        >
           {particlesByState.disabled.map((particleName) => {
             return (
               <option
                 key={particleName}
                 value={particleName}
-                className="hover:bg-slate-700 rounded-xl">
+                className="hover:bg-slate-700 rounded-xl"
+              >
                 {particleName}
               </option>
             );
@@ -101,11 +106,13 @@ export default function Particles({ particles, setParticles }) {
         <button
           type="button"
           className="block ml-auto mr-auto btn btn-slate mb-4"
-          onClick={handleSaveFile}>
-          Save to file
+          onClick={handleSaveFile}
+        >
+          <FontAwesomeIcon className="mr-1" icon="fa-solid fa-file-arrow-down" size="lg" /> Save to
+          file
         </button>
-        <DisableParticles setParticles={setParticles} />
       </div>
+      <DisableParticles setParticles={setParticles} />
     </div>
   );
 }
