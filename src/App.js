@@ -17,12 +17,18 @@ function App() {
   }, []);
 
   return (
-    <div className="text-slate-200 mt-4">
-      <Particles particles={particles} setParticles={setParticles} />
-      {/*<button className="btn btn-slate" onClick={() => getParticles()}>*/}
-      {/*  Refresh*/}
-      {/*</button>*/}
-    </div>
+    <>
+      <div className="text-slate-200 mt-4">
+        <Particles particles={particles} setParticles={setParticles} />
+        {/*<button className="btn btn-slate" onClick={() => getParticles()}>*/}
+        {/*  Refresh*/}
+        {/*</button>*/}
+      </div>
+      <footer className="text-white text-xs fixed right-0 bottom-0 mr-8 mb-2">
+        <span>Created by</span> <span className="font-bold">dx droni#9467</span>,
+        mrdroonix@gmail.com
+      </footer>
+    </>
   );
 }
 
