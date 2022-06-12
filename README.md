@@ -10,4 +10,4 @@
 
 It's simply making requests to League of Legends Replay API locally.
 
-![demo](demo/demo-image.png)
+<a href="https://github.com/xDroni/lol-particle-tools/blob/main/demo/demo-image.png?raw=true">![demo](demo/demo-image.png)
