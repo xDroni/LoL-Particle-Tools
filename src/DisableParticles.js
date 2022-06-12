@@ -35,7 +35,7 @@ export default function DisableParticles({ setParticles }) {
   }
 
   return (
-    <div className="w-1/3 text-center">
+    <div className="w-1/4 text-center">
       <span className="block mb-2 uppercase">List to disable</span>
       <textarea
         id="particlesToDisable"

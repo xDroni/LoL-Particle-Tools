@@ -3,9 +3,12 @@ import DisableParticles from './DisableParticles';
 import ParticleLocator from './ParticleLocator';
 import { saveAs } from 'file-saver';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import postParticles from './common/postParticles';
 
 export default function Particles({ particles, setParticles }) {
   const [locationInProgress, setLocationInProgress] = useState(false);
+  const [selectedEnabledParticles, setSelectedEnabledParticles] = useState([]);
+  const [selectedDisabledParticles, setSelectedDisabledParticles] = useState([]);
 
   const particlesByState = Object.entries(particles).reduce(
     (prev, curr) => ({
@@ -32,6 +35,44 @@ export default function Particles({ particles, setParticles }) {
     setFileName(event.target.value);
   }
 
+  function handleEnabledParticlesChange(event) {
+    const selectedOptions = event.target.selectedOptions;
+    const values = Array.from(selectedOptions).map(({ value }) => value);
+    setSelectedEnabledParticles(values);
+  }
+
+  function handleDisabledParticlesChange(event) {
+    const selectedOptions = event.target.selectedOptions;
+    const values = Array.from(selectedOptions).map(({ value }) => value);
+    setSelectedDisabledParticles(values);
+  }
+
+  function makeJSON(particles, state) {
+    return particles.reduce(
+      (prev, curr) => ({
+        ...prev,
+        [curr]: state
+      }),
+      {}
+    );
+  }
+
+  function disableSelectedParticles() {
+    if (selectedEnabledParticles.length === 0) {
+      return;
+    }
+    const json = makeJSON(selectedEnabledParticles, false);
+    postParticles(json, setParticles);
+  }
+
+  function enableSelectedParticles() {
+    if (selectedDisabledParticles.length === 0) {
+      return;
+    }
+    const json = makeJSON(selectedDisabledParticles, true);
+    postParticles(json, setParticles);
+  }
+
   function handleSaveFile() {
     const data = particlesByState.disabled.reduce((prev, curr) => {
       return prev + curr + '\n';
@@ -42,31 +83,38 @@ export default function Particles({ particles, setParticles }) {
   }
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="w-1/3 text-center">
+    <div className="flex gap-12 justify-center">
+      <div className="w-96 text-center mr-8">
         <span className="block mb-2 uppercase">Enabled particles</span>
-        <select
-          multiple
-          className="bg-slate-800 w-2/3 rounded-xl overflow-auto no-scrollbar h-[38rem] mb-4 disabled:bg-slate-800"
-          disabled={locationInProgress}
-        >
-          {filtered.map((particleName) => {
-            return (
-              <option
-                key={particleName}
-                value={particleName}
-                className="hover:bg-slate-700 rounded-xl"
-              >
-                {particleName}
-              </option>
-            );
-          })}
-        </select>
+        <div className="flex">
+          <select
+            multiple
+            className="bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar h-[38rem] mb-4 disabled:bg-slate-800"
+            disabled={locationInProgress}
+            onChange={handleEnabledParticlesChange}
+          >
+            {filtered.map((particleName) => {
+              return (
+                <option
+                  key={particleName}
+                  value={particleName}
+                  className="hover:bg-slate-700 rounded-xl"
+                >
+                  {particleName}
+                </option>
+              );
+            })}
+          </select>
+          <button className="btn btn-slate h-16 mt-auto mb-auto" onClick={disableSelectedParticles}>
+            <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
+          </button>
+        </div>
+
         <input
           value={filter}
           onChange={handleFilterChange}
           type="text"
-          className="w-1/2 ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 mb-4"
+          className="w-3/4 ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 mb-4"
           placeholder="Filter"
         />
         <ParticleLocator
@@ -76,31 +124,38 @@ export default function Particles({ particles, setParticles }) {
           setLocationInProgress={setLocationInProgress}
         />
       </div>
-      <div className="w-1/3 text-center">
+      <div className="w-96 text-center">
         <span className="block mb-2 uppercase">Disabled particles</span>
-        <select
-          multiple
-          className="bg-slate-800 w-2/3 rounded-xl overflow-auto no-scrollbar h-[38rem] mb-4 disabled:bg-slate-800"
-          disabled={locationInProgress}
-        >
-          {particlesByState.disabled.map((particleName) => {
-            return (
-              <option
-                key={particleName}
-                value={particleName}
-                className="hover:bg-slate-700 rounded-xl"
-              >
-                {particleName}
-              </option>
-            );
-          })}
-        </select>
+        <div className="flex">
+          <button className="btn btn-slate h-16 mt-auto mb-auto" onClick={enableSelectedParticles}>
+            <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
+          </button>
+          <select
+            multiple
+            className="bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar h-[38rem] mb-4 disabled:bg-slate-800"
+            disabled={locationInProgress}
+            onChange={handleDisabledParticlesChange}
+          >
+            {particlesByState.disabled.map((particleName) => {
+              return (
+                <option
+                  key={particleName}
+                  value={particleName}
+                  className="hover:bg-slate-700 rounded-xl"
+                >
+                  {particleName}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+
         <input
           id="saveFile"
           value={fileName}
           onChange={handleFileNameChange}
           type="text"
-          className="w-1/2 ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 mb-4"
+          className="w-3/4 ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 mb-4"
           placeholder="File name"
         />
         <button
