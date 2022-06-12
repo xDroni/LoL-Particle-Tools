@@ -12,7 +12,7 @@ function createWindow() {
     width: 1920,
     height: 1080,
     fullscreen: true,
-    webPreferences: { webSecurity: false }
+    webPreferences: { webSecurity: false, spellcheck: false }
   });
   mainWindow.loadURL(
     isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
