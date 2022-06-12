@@ -15,6 +15,7 @@ export default function DisableParticles({ setParticles }) {
     );
 
     await postParticles(particlesToDisableJSON, setParticles);
+    setParticlesToDisable('');
   }
 
   function handleFile() {
@@ -35,14 +36,13 @@ export default function DisableParticles({ setParticles }) {
   }
 
   return (
-    <div className="w-1/3 text-center">
+    <div className="w-1/4 text-center">
       <span className="block mb-2 uppercase">List to disable</span>
       <textarea
         id="particlesToDisable"
         className="bg-slate-800 h-1/4 w-2/3 rounded-xl overflow-auto no-scrollbar block ml-auto mr-auto mb-4 h-[28rem]"
         onChange={(e) => setParticlesToDisable(e.target.value)}
-        value={particlesToDisable}
-      ></textarea>
+        value={particlesToDisable}></textarea>
       <button className="block ml-auto mr-auto btn btn-slate mb-4" onClick={() => post()}>
         <FontAwesomeIcon className="mr-1" icon="fa-solid fa-eye-slash" size="lg" />
         Disable particles
