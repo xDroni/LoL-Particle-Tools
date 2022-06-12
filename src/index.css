@@ -16,7 +16,7 @@
 
 @layer base {
   body {
-    @apply bg-slate-900;
+    @apply text-slate-200 bg-slate-900 text-xs lg:text-base;
   }
 }
 
@@ -28,4 +28,12 @@
 }
 .btn-slate:hover {
   @apply bg-slate-700;
+}
+
+.btn-responsive {
+  @apply lg:text-base md:text-xs sm:text-xs text-[0px];
+}
+
+.initial {
+  font-size: initial;
 }

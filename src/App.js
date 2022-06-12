@@ -18,7 +18,7 @@ function App() {
 
   return (
     <>
-      <div className="text-slate-200 mt-4">
+      <div className="mt-4">
         <Particles particles={particles} setParticles={setParticles} />
         {/*<button className="btn btn-slate" onClick={() => getParticles()}>*/}
         {/*  Refresh*/}

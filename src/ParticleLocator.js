@@ -60,8 +60,12 @@ export default function ParticleLocator({
 
   return (
     <>
-      <button type="button" className="btn btn-slate mb-4" onClick={handleParticleLocator}>
-        <FontAwesomeIcon className="mr-1" icon="fa-solid fa-crosshairs" size="lg" />
+      <button
+        type="button"
+        className="btn btn-slate btn-responsive mb-4"
+        onClick={handleParticleLocator}
+      >
+        <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-crosshairs" size="lg" />
         {locationInProgress === false ? 'Particle Locator' : 'Cancel locating'}
       </button>
       {locationInProgress === true ? (
@@ -70,7 +74,7 @@ export default function ParticleLocator({
           <div className="flex gap-4 justify-center mb-4">
             <button
               type="button"
-              className="block btn btn-slate w-12 h-12 disabled:bg-slate-800"
+              className="block btn btn-slate w-8 h-8 lg:w-12 lg:h-12 disabled:bg-slate-800"
               onClick={() => findParticle(split.entries1)}
               disabled={isLoading || !locationInProgress}
             >
@@ -78,7 +82,7 @@ export default function ParticleLocator({
             </button>
             <button
               type="button"
-              className="block btn btn-slate w-12 h-12 disabled:bg-slate-800"
+              className="block btn btn-slate w-8 h-8 lg:w-12 lg:h-12 disabled:bg-slate-800"
               onClick={() => findParticle(split.entries2)}
               disabled={isLoading || !locationInProgress}
             >
