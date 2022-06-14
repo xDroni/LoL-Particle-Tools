@@ -6,13 +6,22 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faArrowLeft,
   faArrowRight,
+  faArrowsRotate,
   faCrosshairs,
   faEyeSlash,
   faFileArrowDown,
   faFileArrowUp
 } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faFileArrowUp, faFileArrowDown, faCrosshairs, faEyeSlash, faArrowRight, faArrowLeft);
+library.add(
+  faFileArrowUp,
+  faFileArrowDown,
+  faCrosshairs,
+  faEyeSlash,
+  faArrowRight,
+  faArrowLeft,
+  faArrowsRotate
+);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

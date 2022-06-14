@@ -5,7 +5,7 @@ import { saveAs } from 'file-saver';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import postParticles from './common/postParticles';
 
-export default function Particles({ particles, setParticles }) {
+export default function Particles({ particles, setParticles, interval, setInterval }) {
   const [locationInProgress, setLocationInProgress] = useState(false);
   const [selectedEnabledParticles, setSelectedEnabledParticles] = useState([]);
   const [selectedDisabledParticles, setSelectedDisabledParticles] = useState([]);
@@ -85,21 +85,19 @@ export default function Particles({ particles, setParticles }) {
   return (
     <div className="flex gap-2 lg:gap-8 justify-center">
       <div className="w-96 text-center">
-        <span className="block mb-2 uppercase">Enabled particles</span>
+        <span className="block sm:mb-2 mb-0 uppercase">Enabled particles</span>
         <div className="flex">
           <select
             multiple
             className="h-[20vh] sm:h-[40vh] md:h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar mb-4 disabled:bg-slate-800"
             disabled={locationInProgress}
-            onChange={handleEnabledParticlesChange}
-          >
+            onChange={handleEnabledParticlesChange}>
             {filtered.map((particleName) => {
               return (
                 <option
                   key={particleName}
                   value={particleName}
-                  className="hover:bg-slate-700 rounded-xl"
-                >
+                  className="hover:bg-slate-700 rounded-xl">
                   {particleName}
                 </option>
               );
@@ -107,8 +105,7 @@ export default function Particles({ particles, setParticles }) {
           </select>
           <button
             className="btn btn-slate h-8 lg:h-16 mt-auto mb-auto"
-            onClick={disableSelectedParticles}
-          >
+            onClick={disableSelectedParticles}>
             <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
           </button>
         </div>
@@ -121,34 +118,32 @@ export default function Particles({ particles, setParticles }) {
           placeholder="Filter"
         />
         <ParticleLocator
-          particles={particles}
           setParticles={setParticles}
           locationInProgress={locationInProgress}
           setLocationInProgress={setLocationInProgress}
+          interval={interval}
+          setInterval={setInterval}
         />
       </div>
       <div className="w-96 text-center">
-        <span className="block mb-2 uppercase">Disabled particles</span>
+        <span className="block sm:mb-2 mb-0 uppercase">Disabled particles</span>
         <div className="flex">
           <button
             className="btn btn-slate h-8 lg:h-16 mt-auto mb-auto"
-            onClick={enableSelectedParticles}
-          >
+            onClick={enableSelectedParticles}>
             <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
           </button>
           <select
             multiple
             className="h-[20vh] sm:h-[40vh] md:h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar mb-4 disabled:bg-slate-800"
             disabled={locationInProgress}
-            onChange={handleDisabledParticlesChange}
-          >
+            onChange={handleDisabledParticlesChange}>
             {particlesByState.disabled.map((particleName) => {
               return (
                 <option
                   key={particleName}
                   value={particleName}
-                  className="hover:bg-slate-700 rounded-xl"
-                >
+                  className="hover:bg-slate-700 rounded-xl">
                   {particleName}
                 </option>
               );
@@ -167,8 +162,7 @@ export default function Particles({ particles, setParticles }) {
         <button
           type="button"
           className="block ml-auto mr-auto btn btn-slate btn-responsive mb-4"
-          onClick={handleSaveFile}
-        >
+          onClick={handleSaveFile}>
           <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-file-arrow-down" size="lg" />{' '}
           Save to file
         </button>

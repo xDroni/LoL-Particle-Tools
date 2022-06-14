@@ -1,28 +1,32 @@
 import { useEffect, useState } from 'react';
 import Particles from './Particles';
-import config from './config.json';
+import { autoFetch } from './common/fetchParticles';
 
 function App() {
   const [particles, setParticles] = useState([]);
-
-  function getParticles() {
-    fetch(`${config.address}:${config.port}/replay/${config.particlesEndpoint}`)
-      .then((res) => res.json())
-      .then((res) => setParticles(res))
-      .catch((e) => console.error(e));
-  }
+  const [interval, setInterval] = useState(null);
 
   useEffect(() => {
-    getParticles();
+    if (Number(interval)) {
+      clearInterval(interval);
+    }
+
+    const i = autoFetch(setParticles);
+    setInterval(i);
+    return () => {
+      clearInterval(i);
+    };
   }, []);
 
   return (
     <>
       <div className="mt-4">
-        <Particles particles={particles} setParticles={setParticles} />
-        {/*<button className="btn btn-slate" onClick={() => getParticles()}>*/}
-        {/*  Refresh*/}
-        {/*</button>*/}
+        <Particles
+          particles={particles}
+          setParticles={setParticles}
+          interval={interval}
+          setInterval={setInterval}
+        />
       </div>
       <footer className="text-white text-xs fixed right-0 bottom-0 mr-8 mb-2">
         <span>Created by</span> <span className="font-bold">dx droni#9467</span>,
