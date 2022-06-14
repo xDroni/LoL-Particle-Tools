@@ -1,16 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import postParticles from './common/postParticles';
+import NewWindowComponent from './NewWindowComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import fetchParticles, { autoFetch } from './common/fetchParticles';
 
 export default function ParticleLocator({
-  particles,
   setParticles,
   locationInProgress,
-  setLocationInProgress
+  setLocationInProgress,
+  interval,
+  setInterval
 }) {
   const [split, setSplit] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [particleName, setParticleName] = useState(null);
+  const [isNewWindow, setIsNewWindow] = useState(false);
   const particlesStateToRestore = useRef([]);
 
   useEffect(() => {
@@ -29,6 +33,8 @@ export default function ParticleLocator({
 
   async function findParticle(entries) {
     if (entries.length === 1) {
+      clearInterval(interval);
+      setInterval(autoFetch(setParticles));
       return stopLocating(entries);
     }
 
@@ -40,13 +46,17 @@ export default function ParticleLocator({
 
   async function handleParticleLocator() {
     if (locationInProgress === true) {
+      clearInterval(interval);
+      setInterval(autoFetch(setParticles));
       return stopLocating();
     }
 
-    particlesStateToRestore.current = particles;
+    clearInterval(interval);
+    const fetchedParticles = await fetchParticles(setParticles);
+    particlesStateToRestore.current = fetchedParticles;
     setParticleName(null);
     setLocationInProgress(true);
-    return findParticle(Object.entries(particles));
+    return findParticle(Object.entries(fetchedParticles));
   }
 
   async function stopLocating(entries) {
@@ -62,50 +72,62 @@ export default function ParticleLocator({
     <>
       <button
         type="button"
-        className="btn btn-slate btn-responsive mb-4"
-        onClick={handleParticleLocator}
-      >
+        className="btn btn-slate btn-responsive sm:mb-4 mb-1"
+        onClick={() => setIsNewWindow(true)}>
         <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-crosshairs" size="lg" />
-        {locationInProgress === false ? 'Particle Locator' : 'Cancel locating'}
+        Particle Locator
       </button>
-      {locationInProgress === true ? (
-        <>
-          <div className="mb-2">Did change?</div>
-          <div className="flex gap-4 justify-center mb-4">
+      {isNewWindow === true && (
+        <NewWindowComponent
+          onClose={() => {
+            setIsNewWindow(false);
+            if (locationInProgress) void stopLocating();
+          }}>
+          <div className="">
             <button
               type="button"
-              className="block btn btn-slate w-8 h-8 lg:w-12 lg:h-12 disabled:bg-slate-800"
-              onClick={() => findParticle(split.entries1)}
-              disabled={isLoading || !locationInProgress}
-            >
-              Yes
+              className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
+              onClick={handleParticleLocator}>
+              {locationInProgress === false ? 'Start' : 'Stop'}
             </button>
-            <button
-              type="button"
-              className="block btn btn-slate w-8 h-8 lg:w-12 lg:h-12 disabled:bg-slate-800"
-              onClick={() => findParticle(split.entries2)}
-              disabled={isLoading || !locationInProgress}
-            >
-              No
-            </button>
+            {locationInProgress === true ? (
+              <>
+                <div className="mb-2 text-xl">Did change?</div>
+                <div className="flex gap-6 justify-center">
+                  <button
+                    type="button"
+                    className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
+                    onClick={() => findParticle(split.entries1)}
+                    disabled={isLoading || !locationInProgress}>
+                    Yes
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
+                    onClick={() => findParticle(split.entries2)}
+                    disabled={isLoading || !locationInProgress}>
+                    No
+                  </button>
+                </div>
+              </>
+            ) : null}
+            {particleName !== null ? (
+              <>
+                <div className="mb-9">
+                  <p>Particle name: </p>
+                  <span className="font-bold">{particleName}</span>
+                </div>
+                <button
+                  type="button"
+                  className="block ml-auto mr-auto btn btn-slate"
+                  onClick={() => postParticles({ [particleName]: false }, setParticles)}>
+                  Disable particle
+                </button>
+              </>
+            ) : null}
           </div>
-        </>
-      ) : null}
-      {particleName !== null ? (
-        <>
-          <div className="mb-9">
-            <p>Particle name: </p>
-            <span className="font-bold">{particleName}</span>
-          </div>
-          <button
-            type="button"
-            className="block ml-auto mr-auto btn btn-slate"
-            onClick={() => postParticles({ [particleName]: false }, setParticles)}
-          >
-            Disable particle
-          </button>
-        </>
-      ) : null}
+        </NewWindowComponent>
+      )}
     </>
   );
 }

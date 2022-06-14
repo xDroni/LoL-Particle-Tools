@@ -9,14 +9,33 @@ let mainWindow;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1920,
-    height: 1080,
-    fullscreen: true,
-    webPreferences: { webSecurity: false, spellcheck: false }
+    width: 1500,
+    height: 770,
+    fullscreen: false,
+    webPreferences: { webSecurity: false, spellcheck: false },
+    title: 'lol-particle-tools by dxdroni'
   });
+
   mainWindow.loadURL(
     isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
   );
+
+  mainWindow.webContents.setWindowOpenHandler(({ frameName }) => {
+    if (frameName === 'NewWindowComponent') {
+      mainWindow.minimize();
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: {
+          width: 330,
+          height: 300,
+          alwaysOnTop: true,
+          autoHideMenuBar: true,
+          title: 'Particle Locator by dxdroni'
+        }
+      };
+    }
+    return { action: 'deny' };
+  });
   mainWindow.on('closed', () => (mainWindow = null));
 }
 
