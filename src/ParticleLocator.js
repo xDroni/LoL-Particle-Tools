@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import postParticles from './common/postParticles';
+import NewWindowComponent from "./NewWindowComponent";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 export default function ParticleLocator({
   particles,
@@ -11,6 +13,7 @@ export default function ParticleLocator({
   const [split, setSplit] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [particleName, setParticleName] = useState(null);
+  const [isNewWindow, setIsNewWindow] = useState(false);
   const particlesStateToRestore = useRef([]);
 
   useEffect(() => {
@@ -38,6 +41,7 @@ export default function ParticleLocator({
     });
   }
 
+  // eslint-disable-next-line no-unused-vars
   async function handleParticleLocator() {
     if (locationInProgress === true) {
       return stopLocating();
@@ -63,49 +67,56 @@ export default function ParticleLocator({
       <button
         type="button"
         className="btn btn-slate btn-responsive mb-4"
-        onClick={handleParticleLocator}
-      >
+        onClick={() => setIsNewWindow(true)}>
         <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-crosshairs" size="lg" />
-        {locationInProgress === false ? 'Particle Locator' : 'Cancel locating'}
+        Particle Locator
       </button>
-      {locationInProgress === true ? (
-        <>
-          <div className="mb-2">Did change?</div>
-          <div className="flex gap-4 justify-center mb-4">
-            <button
-              type="button"
-              className="block btn btn-slate w-8 h-8 lg:w-12 lg:h-12 disabled:bg-slate-800"
-              onClick={() => findParticle(split.entries1)}
-              disabled={isLoading || !locationInProgress}
-            >
-              Yes
-            </button>
-            <button
-              type="button"
-              className="block btn btn-slate w-8 h-8 lg:w-12 lg:h-12 disabled:bg-slate-800"
-              onClick={() => findParticle(split.entries2)}
-              disabled={isLoading || !locationInProgress}
-            >
-              No
-            </button>
-          </div>
-        </>
-      ) : null}
-      {particleName !== null ? (
-        <>
-          <div className="mb-9">
-            <p>Particle name: </p>
-            <span className="font-bold">{particleName}</span>
-          </div>
+      {isNewWindow === true && (
+        <NewWindowComponent onClose={() => setIsNewWindow(false)}>
           <button
             type="button"
-            className="block ml-auto mr-auto btn btn-slate"
-            onClick={() => postParticles({ [particleName]: false }, setParticles)}
-          >
-            Disable particle
+            className="btn btn-slate mb-4 h-8 text-xl"
+            onClick={handleParticleLocator}>
+            <FontAwesomeIcon className="mr-1" icon="fa-solid fa-crosshairs" size="lg" />
+            {locationInProgress === false ? 'Start' : 'Stop'}
           </button>
-        </>
-      ) : null}
+          {locationInProgress === true ? (
+            <>
+              <div className="mb-2 text-xl">Did change?</div>
+              <div className="flex gap-4 justify-center">
+                <button
+                  type="button"
+                  className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
+                  onClick={() => findParticle(split.entries1)}
+                  disabled={isLoading || !locationInProgress}>
+                  Yes
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
+                  onClick={() => findParticle(split.entries2)}
+                  disabled={isLoading || !locationInProgress}>
+                  No
+                </button>
+              </div>
+            </>
+          ) : null}
+          {particleName !== null ? (
+            <>
+              <div className="mb-9">
+                <p>Particle name: </p>
+                <span className="font-bold">{particleName}</span>
+              </div>
+              <button
+                type="button"
+                className="block ml-auto mr-auto btn btn-slate"
+                onClick={() => postParticles({ [particleName]: false }, setParticles)}>
+                Disable particle
+              </button>
+            </>
+          ) : null}
+        </NewWindowComponent>
+      )}
     </>
   );
 }

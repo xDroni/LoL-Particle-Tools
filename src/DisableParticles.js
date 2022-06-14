@@ -36,11 +36,11 @@ export default function DisableParticles({ setParticles }) {
   }
 
   return (
-    <div className="w-1/4 text-center">
+    <div className="w-96 text-center">
       <span className="block mb-2 uppercase">List to disable</span>
       <textarea
         id="particlesToDisable"
-        className="bg-slate-800 h-[15vh] sm:h-[25vh] md:h-[40vh] w-2/3 rounded-xl overflow-auto no-scrollbar block ml-auto mr-auto mb-4"
+        className="bg-slate-800 h-[15vh] sm:h-[25vh] md:h-[40vh] w-3/4 rounded-xl overflow-auto no-scrollbar block ml-auto mr-auto mb-4"
         onChange={(e) => setParticlesToDisable(e.target.value)}
         value={particlesToDisable}
       ></textarea>

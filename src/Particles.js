@@ -84,7 +84,7 @@ export default function Particles({ particles, setParticles }) {
 
   return (
     <div className="flex gap-2 lg:gap-8 justify-center">
-      <div className="w-96 text-center mr-8">
+      <div className="w-96 text-center">
         <span className="block mb-2 uppercase">Enabled particles</span>
         <div className="flex">
           <select
