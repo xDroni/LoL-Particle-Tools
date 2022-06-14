@@ -72,7 +72,7 @@ export default function ParticleLocator({
     <>
       <button
         type="button"
-        className="btn btn-slate btn-responsive mb-4"
+        className="btn btn-slate btn-responsive sm:mb-4 mb-1"
         onClick={() => setIsNewWindow(true)}>
         <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-crosshairs" size="lg" />
         Particle Locator
@@ -86,7 +86,7 @@ export default function ParticleLocator({
           <div className="">
             <button
               type="button"
-              className="btn btn-slate h-12 text-xl mt-2 mb-4"
+              className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
               onClick={handleParticleLocator}>
               {locationInProgress === false ? 'Start' : 'Stop'}
             </button>

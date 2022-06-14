@@ -89,7 +89,7 @@ export default function Particles({ particles, setParticles, interval, setInterv
         <div className="flex">
           <select
             multiple
-            className="h-[20vh] sm:h-[40vh] md:h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar mb-4 disabled:bg-slate-800"
+            className="h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
             disabled={locationInProgress}
             onChange={handleEnabledParticlesChange}>
             {filtered.map((particleName) => {
@@ -114,7 +114,7 @@ export default function Particles({ particles, setParticles, interval, setInterv
           value={filter}
           onChange={handleFilterChange}
           type="text"
-          className="w-3/4 text-xs lg:text-base ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 mb-4"
+          className="w-3/4 text-xs lg:text-base ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 sm:mb-4 mb-1"
           placeholder="Filter"
         />
         <ParticleLocator
@@ -135,7 +135,7 @@ export default function Particles({ particles, setParticles, interval, setInterv
           </button>
           <select
             multiple
-            className="h-[20vh] sm:h-[40vh] md:h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar mb-4 disabled:bg-slate-800"
+            className="h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
             disabled={locationInProgress}
             onChange={handleDisabledParticlesChange}>
             {particlesByState.disabled.map((particleName) => {
@@ -156,12 +156,12 @@ export default function Particles({ particles, setParticles, interval, setInterv
           value={fileName}
           onChange={handleFileNameChange}
           type="text"
-          className="w-3/4 text-xs lg:text-base ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 mb-4"
+          className="w-3/4 text-xs lg:text-base ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 sm:mb-4 mb-1"
           placeholder="File name"
         />
         <button
           type="button"
-          className="block ml-auto mr-auto btn btn-slate btn-responsive mb-4"
+          className="block ml-auto mr-auto btn btn-slate btn-responsive sm:mb-4 mb-1"
           onClick={handleSaveFile}>
           <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-file-arrow-down" size="lg" />{' '}
           Save to file
