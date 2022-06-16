@@ -9,7 +9,8 @@ export default function ParticleLocator({
   locationInProgress,
   setLocationInProgress,
   interval,
-  setInterval
+  setInterval,
+  setReplayLoad
 }) {
   const [split, setSplit] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +35,7 @@ export default function ParticleLocator({
   async function findParticle(entries) {
     if (entries.length === 1) {
       clearInterval(interval);
-      setInterval(autoFetch(setParticles));
+      setInterval(autoFetch(setParticles, setReplayLoad, 10000));
       return stopLocating(entries);
     }
 
@@ -47,12 +48,12 @@ export default function ParticleLocator({
   async function handleParticleLocator() {
     if (locationInProgress === true) {
       clearInterval(interval);
-      setInterval(autoFetch(setParticles));
+      setInterval(autoFetch(setParticles, setReplayLoad, 10000));
       return stopLocating();
     }
 
     clearInterval(interval);
-    const fetchedParticles = await fetchParticles(setParticles);
+    const fetchedParticles = await fetchParticles(setParticles, setReplayLoad);
     particlesStateToRestore.current = fetchedParticles;
     setParticleName(null);
     setLocationInProgress(true);
@@ -73,8 +74,7 @@ export default function ParticleLocator({
       <button
         type="button"
         className="btn btn-slate btn-responsive sm:mb-4 mb-1"
-        onClick={() => setIsNewWindow(true)}
-      >
+        onClick={() => setIsNewWindow(true)}>
         <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-crosshairs" size="lg" />
         Particle Locator
       </button>
@@ -83,14 +83,12 @@ export default function ParticleLocator({
           onClose={() => {
             setIsNewWindow(false);
             if (locationInProgress) void stopLocating();
-          }}
-        >
+          }}>
           <div className="">
             <button
               type="button"
               className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
-              onClick={handleParticleLocator}
-            >
+              onClick={handleParticleLocator}>
               {locationInProgress === false ? 'Start' : 'Stop'}
             </button>
             {locationInProgress === true ? (
@@ -101,16 +99,14 @@ export default function ParticleLocator({
                     type="button"
                     className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
                     onClick={() => findParticle(split.entries1)}
-                    disabled={isLoading || !locationInProgress}
-                  >
+                    disabled={isLoading || !locationInProgress}>
                     Yes
                   </button>
                   <button
                     type="button"
                     className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
                     onClick={() => findParticle(split.entries2)}
-                    disabled={isLoading || !locationInProgress}
-                  >
+                    disabled={isLoading || !locationInProgress}>
                     No
                   </button>
                 </div>
@@ -125,8 +121,7 @@ export default function ParticleLocator({
                 <button
                   type="button"
                   className="block ml-auto mr-auto btn btn-slate"
-                  onClick={() => postParticles({ [particleName]: false }, setParticles)}
-                >
+                  onClick={() => postParticles({ [particleName]: false }, setParticles)}>
                   Disable particle
                 </button>
               </>

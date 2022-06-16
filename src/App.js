@@ -5,18 +5,22 @@ import { autoFetch } from './common/fetchParticles';
 function App() {
   const [particles, setParticles] = useState([]);
   const [interval, setInterval] = useState(null);
+  const [replayLoad, setReplayLoad] = useState(true);
 
   useEffect(() => {
     if (Number(interval)) {
       clearInterval(interval);
     }
 
-    const i = autoFetch(setParticles);
+    const i =
+      replayLoad === true
+        ? autoFetch(setParticles, setReplayLoad, 2000)
+        : autoFetch(setParticles, setReplayLoad, 10000);
     setInterval(i);
     return () => {
       clearInterval(i);
     };
-  }, []);
+  }, [replayLoad]);
 
   if (particles.length === 0) {
     return (
@@ -24,6 +28,10 @@ function App() {
         <span className="text-3xl">Waiting for the replay...</span>
       </div>
     );
+  }
+
+  if (replayLoad === true) {
+    setReplayLoad(false);
   }
 
   return (
@@ -34,6 +42,7 @@ function App() {
           setParticles={setParticles}
           interval={interval}
           setInterval={setInterval}
+          setReplayLoad={setReplayLoad}
         />
       </div>
       <footer className="text-white fixed right-0 bottom-0 mr-4 mb-2">
