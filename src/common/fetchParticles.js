@@ -6,13 +6,16 @@ export default async function fetchParticles(setParticles) {
       `${config.address}:${config.port}/replay/${config.particlesEndpoint}`
     );
     const json = await result.json();
-    setParticles(json);
-    return json;
+    if (json?.errorCode === undefined) {
+      setParticles(json);
+      return json;
+    }
+    return Promise.reject(Error(json.errorCode));
   } catch (err) {
     console.error(err);
   }
 }
 
 export function autoFetch(setParticles) {
-  return setInterval(() => fetchParticles(setParticles), 5000);
+  return setInterval(() => fetchParticles(setParticles), 3000);
 }

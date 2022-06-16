@@ -11,7 +11,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1500,
     height: 770,
-    fullscreen: false,
+    autoHideMenuBar: true,
     webPreferences: { webSecurity: false, spellcheck: false },
     title: 'lol-particle-tools by dxdroni'
   });
@@ -29,7 +29,6 @@ function createWindow() {
           width: 330,
           height: 300,
           alwaysOnTop: true,
-          autoHideMenuBar: true,
           title: 'Particle Locator by dxdroni'
         }
       };
