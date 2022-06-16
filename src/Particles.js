@@ -1,9 +1,9 @@
 import React, { useDeferredValue, useState } from 'react';
-import DisableParticles from './DisableParticles';
 import ParticleLocator from './ParticleLocator';
 import { saveAs } from 'file-saver';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import postParticles from './common/postParticles';
+import fetchParticles from './common/fetchParticles';
 
 export default function Particles({
   particles,
@@ -24,21 +24,32 @@ export default function Particles({
     { enabled: [], disabled: [] }
   );
 
-  const [filter, setFilter] = useState('');
+  const [enabledParticlesFilter, setEnabledParticlesFilter] = useState('');
+  const [disabledParticlesFilter, setDisabledParticlesFilter] = useState('');
   const [fileName, setFileName] = useState('');
-  const deferredFilter = useDeferredValue(filter);
+  const enabledParticlesDeferredFilter = useDeferredValue(enabledParticlesFilter);
+  const disabledParticlesDeferredFilter = useDeferredValue(disabledParticlesFilter);
 
-  const filtered = particlesByState.enabled.filter((p) => {
-    const regex = new RegExp(deferredFilter, 'i');
-    return deferredFilter === '' ? true : regex.test(p) || regex.test(p.replaceAll('_', ''));
+  const enabledParticlesFiltered = particlesByState.enabled.filter((p) => {
+    const regex = new RegExp(enabledParticlesDeferredFilter, 'i');
+    return enabledParticlesDeferredFilter === ''
+      ? true
+      : regex.test(p) || regex.test(p.replaceAll('_', ''));
   });
 
-  function handleFilterChange(event) {
-    setFilter(event.target.value);
+  const disabledParticlesFiltered = particlesByState.disabled.filter((p) => {
+    const regex = new RegExp(disabledParticlesDeferredFilter, 'i');
+    return disabledParticlesDeferredFilter === ''
+      ? true
+      : regex.test(p) || regex.test(p.replaceAll('_', ''));
+  });
+
+  function handleEnabledParticlesFilterChange(event) {
+    setEnabledParticlesFilter(event.target.value);
   }
 
-  function handleFileNameChange(event) {
-    setFileName(event.target.value);
+  function handleDisabledParticlesFilterChange(event) {
+    setDisabledParticlesFilter(event.target.value);
   }
 
   function handleEnabledParticlesChange(event) {
@@ -88,6 +99,30 @@ export default function Particles({
     setFileName('');
   }
 
+  function handleFile() {
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.txt';
+    input.onchange = () => {
+      let file = input.files[0];
+      if (file === undefined || file.name.split('.').pop() !== 'txt') return;
+      const fileReader = new FileReader();
+      fileReader.onload = (f) => {
+        const particlesToDisable = f.target.result.toString();
+        const particlesToDisableJSON = particlesToDisable.split('\n').reduce(
+          (prev, curr) => ({
+            ...prev,
+            ...(curr.trim().length ? { [curr.trim()]: false } : {})
+          }),
+          {}
+        );
+        postParticles(particlesToDisableJSON, setParticles);
+      };
+      fileReader.readAsText(file, 'UTF-8');
+    };
+    input.click();
+  }
+
   return (
     <div className="flex gap-2 lg:gap-8 justify-center">
       <div className="w-96 text-center">
@@ -95,15 +130,17 @@ export default function Particles({
         <div className="flex">
           <select
             multiple
-            className="h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
+            className="h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-x-hidden no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
             disabled={locationInProgress}
-            onChange={handleEnabledParticlesChange}>
-            {filtered.map((particleName) => {
+            onChange={handleEnabledParticlesChange}
+          >
+            {enabledParticlesFiltered.map((particleName) => {
               return (
                 <option
                   key={particleName}
                   value={particleName}
-                  className="hover:bg-slate-700 rounded-xl">
+                  className="hover:bg-slate-700 rounded-xl"
+                >
                   {particleName}
                 </option>
               );
@@ -111,14 +148,15 @@ export default function Particles({
           </select>
           <button
             className="btn btn-slate h-8 lg:h-16 mt-auto mb-auto"
-            onClick={disableSelectedParticles}>
+            onClick={disableSelectedParticles}
+          >
             <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
           </button>
         </div>
 
         <input
-          value={filter}
-          onChange={handleFilterChange}
+          value={enabledParticlesFilter}
+          onChange={handleEnabledParticlesFilterChange}
           type="text"
           className="w-3/4 text-xs lg:text-base ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 sm:mb-4 mb-1"
           placeholder="Filter"
@@ -137,20 +175,23 @@ export default function Particles({
         <div className="flex">
           <button
             className="btn btn-slate h-8 lg:h-16 mt-auto mb-auto"
-            onClick={enableSelectedParticles}>
+            onClick={enableSelectedParticles}
+          >
             <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
           </button>
           <select
             multiple
-            className="h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
+            className="h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-x-hidden no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
             disabled={locationInProgress}
-            onChange={handleDisabledParticlesChange}>
-            {particlesByState.disabled.map((particleName) => {
+            onChange={handleDisabledParticlesChange}
+          >
+            {disabledParticlesFiltered.map((particleName) => {
               return (
                 <option
                   key={particleName}
                   value={particleName}
-                  className="hover:bg-slate-700 rounded-xl">
+                  className="hover:bg-slate-700 rounded-xl"
+                >
                   {particleName}
                 </option>
               );
@@ -159,22 +200,40 @@ export default function Particles({
         </div>
 
         <input
-          id="saveFile"
-          value={fileName}
-          onChange={handleFileNameChange}
+          value={disabledParticlesFilter}
+          onChange={handleDisabledParticlesFilterChange}
           type="text"
           className="w-3/4 text-xs lg:text-base ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 sm:mb-4 mb-1"
-          placeholder="File name"
+          placeholder="Filter"
         />
+
+        <div className="flex gap-4 justify-center">
+          <button
+            type="button"
+            className="block btn btn-slate btn-responsive sm:mb-4 mb-1"
+            onClick={handleSaveFile}
+          >
+            <FontAwesomeIcon
+              className="mr-1 initial"
+              icon="fa-solid fa-file-arrow-down"
+              size="lg"
+            />
+            Save to file
+          </button>
+          <button className="btn btn-slate btn-responsive block  sm:mb-4 mb-1" onClick={handleFile}>
+            <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-file-arrow-up" size="lg" />
+            Import data
+          </button>
+        </div>
+
         <button
-          type="button"
-          className="block ml-auto mr-auto btn btn-slate btn-responsive sm:mb-4 mb-1"
-          onClick={handleSaveFile}>
-          <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-file-arrow-down" size="lg" />{' '}
-          Save to file
+          className="btn btn-slate btn-responsive"
+          onClick={() => fetchParticles(setParticles)}
+        >
+          <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-arrows-rotate" />
+          Refresh
         </button>
       </div>
-      <DisableParticles setParticles={setParticles} />
     </div>
   );
 }

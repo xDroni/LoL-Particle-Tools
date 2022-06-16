@@ -13,7 +13,7 @@ function createWindow() {
     height: 770,
     autoHideMenuBar: true,
     webPreferences: { webSecurity: false, spellcheck: false },
-    title: 'lol-particle-tools by dxdroni'
+    title: 'LoL-Particle-Tools by dxdroni'
   });
 
   mainWindow.loadURL(
@@ -34,6 +34,9 @@ function createWindow() {
       };
     }
     return { action: 'deny' };
+  });
+  mainWindow.on('page-title-updated', (evt) => {
+    evt.preventDefault();
   });
   mainWindow.on('closed', () => (mainWindow = null));
 }
