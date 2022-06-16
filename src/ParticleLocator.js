@@ -4,14 +4,15 @@ import NewWindowComponent from './NewWindowComponent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetchParticles, { autoFetch } from './common/fetchParticles';
 
-export default function ParticleLocator({
-  setParticles,
-  locationInProgress,
-  setLocationInProgress,
-  interval,
-  setInterval,
-  setReplayLoad
-}) {
+export default function ParticleLocator({ props }) {
+  const {
+    setParticles,
+    locationInProgress,
+    setLocationInProgress,
+    interval,
+    setInterval,
+    setReplayLoad
+  } = props;
   const [split, setSplit] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [particleName, setParticleName] = useState(null);
