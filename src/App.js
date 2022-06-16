@@ -41,13 +41,7 @@ function App() {
     <>
       <header className="fixed right-0 top-0">v{process.env.REACT_APP_VERSION}</header>
       <div className="mt-4">
-        <Particles
-          particles={particles}
-          setParticles={setParticles}
-          interval={interval}
-          setInterval={setInterval}
-          setReplayLoad={setReplayLoad}
-        />
+        <Particles props={{ particles, setParticles, interval, setInterval, setReplayLoad }} />
       </div>
       <footer className="text-white fixed right-0 bottom-0 mr-4 mb-2">
         <span className="sm:text-xs text-[0px]">Created by </span>

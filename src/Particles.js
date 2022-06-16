@@ -5,13 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import postParticles from './common/postParticles';
 import fetchParticles from './common/fetchParticles';
 
-export default function Particles({
-  particles,
-  setParticles,
-  interval,
-  setInterval,
-  setReplayLoad
-}) {
+export default function Particles({ props }) {
+  const { particles, setParticles, interval, setInterval, setReplayLoad } = props;
   const [locationInProgress, setLocationInProgress] = useState(false);
   const [selectedEnabledParticles, setSelectedEnabledParticles] = useState([]);
   const [selectedDisabledParticles, setSelectedDisabledParticles] = useState([]);
@@ -162,12 +157,14 @@ export default function Particles({
           placeholder="Filter"
         />
         <ParticleLocator
-          setParticles={setParticles}
-          locationInProgress={locationInProgress}
-          setLocationInProgress={setLocationInProgress}
-          interval={interval}
-          setInterval={setInterval}
-          setReplayLoad={setReplayLoad}
+          props={{
+            setParticles,
+            locationInProgress,
+            setLocationInProgress,
+            interval,
+            setInterval,
+            setReplayLoad
+          }}
         />
       </div>
       <div className="w-96 text-center">
