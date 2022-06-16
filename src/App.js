@@ -24,9 +24,12 @@ function App() {
 
   if (particles.length === 0) {
     return (
-      <div className="w-screen flex h-screen items-center justify-center">
-        <span className="text-3xl">Waiting for the replay...</span>
-      </div>
+      <>
+        <header className="fixed right-0 top-0">v{process.env.REACT_APP_VERSION}</header>
+        <div className="w-screen flex h-screen items-center justify-center">
+          <span className="text-3xl">Waiting for the replay...</span>
+        </div>
+      </>
     );
   }
 
@@ -36,6 +39,7 @@ function App() {
 
   return (
     <>
+      <header className="fixed right-0 top-0">v{process.env.REACT_APP_VERSION}</header>
       <div className="mt-4">
         <Particles
           particles={particles}
