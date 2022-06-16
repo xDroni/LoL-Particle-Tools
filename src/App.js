@@ -18,6 +18,14 @@ function App() {
     };
   }, []);
 
+  if (particles.length === 0) {
+    return (
+      <div className="w-screen flex h-screen items-center justify-center">
+        <span className="text-3xl">Waiting for the replay...</span>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="mt-4">
@@ -28,9 +36,10 @@ function App() {
           setInterval={setInterval}
         />
       </div>
-      <footer className="text-white text-xs fixed right-0 bottom-0 mr-8 mb-2">
-        <span>Created by</span> <span className="font-bold">dx droni#9467</span>,
-        mrdroonix@gmail.com
+      <footer className="text-white fixed right-0 bottom-0 mr-4 mb-2">
+        <span className="sm:text-xs text-[0px]">Created by </span>
+        <span className="sm:text-xs text-xxs font-bold">dx droni#9467</span>
+        <span className="sm:text-xs text-[0px]"> mrdroonix@gmail.com</span>
       </footer>
     </>
   );

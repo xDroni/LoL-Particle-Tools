@@ -91,13 +91,15 @@ export default function Particles({ particles, setParticles, interval, setInterv
             multiple
             className="h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
             disabled={locationInProgress}
-            onChange={handleEnabledParticlesChange}>
+            onChange={handleEnabledParticlesChange}
+          >
             {filtered.map((particleName) => {
               return (
                 <option
                   key={particleName}
                   value={particleName}
-                  className="hover:bg-slate-700 rounded-xl">
+                  className="hover:bg-slate-700 rounded-xl"
+                >
                   {particleName}
                 </option>
               );
@@ -105,7 +107,8 @@ export default function Particles({ particles, setParticles, interval, setInterv
           </select>
           <button
             className="btn btn-slate h-8 lg:h-16 mt-auto mb-auto"
-            onClick={disableSelectedParticles}>
+            onClick={disableSelectedParticles}
+          >
             <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
           </button>
         </div>
@@ -130,20 +133,23 @@ export default function Particles({ particles, setParticles, interval, setInterv
         <div className="flex">
           <button
             className="btn btn-slate h-8 lg:h-16 mt-auto mb-auto"
-            onClick={enableSelectedParticles}>
+            onClick={enableSelectedParticles}
+          >
             <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
           </button>
           <select
             multiple
             className="h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-auto no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
             disabled={locationInProgress}
-            onChange={handleDisabledParticlesChange}>
+            onChange={handleDisabledParticlesChange}
+          >
             {particlesByState.disabled.map((particleName) => {
               return (
                 <option
                   key={particleName}
                   value={particleName}
-                  className="hover:bg-slate-700 rounded-xl">
+                  className="hover:bg-slate-700 rounded-xl"
+                >
                   {particleName}
                 </option>
               );
@@ -162,7 +168,8 @@ export default function Particles({ particles, setParticles, interval, setInterv
         <button
           type="button"
           className="block ml-auto mr-auto btn btn-slate btn-responsive sm:mb-4 mb-1"
-          onClick={handleSaveFile}>
+          onClick={handleSaveFile}
+        >
           <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-file-arrow-down" size="lg" />{' '}
           Save to file
         </button>

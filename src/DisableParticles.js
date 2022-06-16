@@ -43,10 +43,12 @@ export default function DisableParticles({ setParticles }) {
         id="particlesToDisable"
         className="bg-slate-800 h-[40vh] w-3/4 rounded-xl overflow-auto no-scrollbar block ml-auto mr-auto sm:mb-4 mb-1"
         onChange={(e) => setParticlesToDisable(e.target.value)}
-        value={particlesToDisable}></textarea>
+        value={particlesToDisable}
+      ></textarea>
       <button
         className="btn btn-slate btn-responsive block ml-auto mr-auto sm:mb-4 mb-1"
-        onClick={() => post()}>
+        onClick={() => post()}
+      >
         <FontAwesomeIcon
           className="mr-1 lg:text-base initial"
           icon="fa-solid fa-eye-slash"
@@ -57,7 +59,8 @@ export default function DisableParticles({ setParticles }) {
 
       <button
         className="btn btn-slate btn-responsive block ml-auto mr-auto sm:mb-4 mb-1"
-        onClick={handleFile}>
+        onClick={handleFile}
+      >
         <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-file-arrow-up" size="lg" />
         Import data
       </button>
