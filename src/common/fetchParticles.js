@@ -2,6 +2,10 @@ import config from '../config.json';
 
 export default async function fetchParticles(setParticles, setReplayLoad) {
   try {
+    return {
+      asd: true
+    };
+    // eslint-disable-next-line no-unreachable
     const result = await fetch(
       `${config.address}:${config.port}/replay/${config.particlesEndpoint}`
     );
@@ -13,6 +17,7 @@ export default async function fetchParticles(setParticles, setReplayLoad) {
     }
     setReplayLoad(true);
     return Promise.reject(Error(json.errorCode));
+    // eslint-disable-next-line no-unreachable
   } catch (err) {
     setReplayLoad(true);
     console.error(err);
