@@ -1,7 +1,10 @@
 {
   "name": "lol-particle-tools",
-  "version": "0.1.0",
+  "description": "Utility tool for League of Legends Creators that helps managing particles. (includes Particle Locator)",
+  "version": "1.0.0",
+  "author": "Karol Rudnikowski (dxdroni)",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
@@ -12,6 +15,7 @@
     "electron-is-dev": "^2.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-router-dom": "^6.3.0",
     "web-vitals": "^2.1.4"
   },
   "main": "public/electron.js",
@@ -22,7 +26,14 @@
     "eject": "react-scripts eject",
     "eslint": "eslint --ext .js,.jsx src",
     "format": "prettier --write \"**/*.{ts,js,css,scss,md}\"",
-    "electron-dev": "concurrently \"npm start \" \"wait-on http://localhost:3000 && electron .\""
+    "electron-dev": "concurrently \"npm start \" \"wait-on http://localhost:3000 && electron .\"",
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "dxdroni.lol-particle-tools",
+    "productName": "LoL Particles Tools",
+    "copyright": "Copyright © 2022 Karol Rudnikowski"
   },
   "browserslist": {
     "production": [

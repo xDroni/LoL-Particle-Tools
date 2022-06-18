@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Particles from './Particles';
-import { autoFetch } from './common/fetchParticles';
+import fetchParticles, { autoFetch } from './common/fetchParticles';
 
 function App() {
   const [particles, setParticles] = useState([]);
@@ -8,6 +8,7 @@ function App() {
   const [replayLoad, setReplayLoad] = useState(true);
 
   useEffect(() => {
+    fetchParticles(setParticles, setReplayLoad);
     if (Number(interval)) {
       clearInterval(interval);
     }
