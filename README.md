@@ -7,6 +7,6 @@
 
 ### How does it work
 
-It's simply making requests to League of Legends Replay API locally.
+It simply makes requests to League of Legends Replay API locally.
 
 <a href="https://github.com/xDroni/lol-particle-tools/blob/main/demo/demo-image.png?raw=true">![demo](demo/demo-image.png)
