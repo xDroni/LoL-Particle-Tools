@@ -22,13 +22,14 @@ function createWindow() {
 
   mainWindow.webContents.setWindowOpenHandler(({ frameName }) => {
     if (frameName === 'NewWindowComponent') {
-      mainWindow.minimize();
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
           width: 330,
           height: 300,
-          alwaysOnTop: true,
+          resizable: false,
+          minimizable: false,
+          maximizable: false,
           autoHideMenuBar: true,
           title: 'Particle Locator by dxdroni'
         }
@@ -36,6 +37,12 @@ function createWindow() {
     }
     return { action: 'deny' };
   });
+
+  mainWindow.webContents.on('did-create-window', (newWindowComponent) => {
+    mainWindow.minimize();
+    newWindowComponent.setAlwaysOnTop(true, 'normal');
+  });
+
   mainWindow.on('page-title-updated', (evt) => {
     evt.preventDefault();
   });
