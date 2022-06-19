@@ -3,8 +3,7 @@
 ## Features
 
 - locate particles fast
-- disable particles from file
-- disable particles from your own lists
+- disable particles from your own lists using text file
 
 ### How does it work
 
