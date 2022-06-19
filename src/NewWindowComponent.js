@@ -3,7 +3,9 @@ import * as ReactDOM from 'react-dom';
 
 function copyStyles(src, dest) {
   Array.from(src.styleSheets).forEach((styleSheet) => {
-    dest.head.appendChild(styleSheet.ownerNode.cloneNode(true));
+    const styleElement = styleSheet.ownerNode.cloneNode(true);
+    styleElement.href = styleSheet.href;
+    dest.head.appendChild(styleElement);
   });
   Array.from(src.fonts).forEach((font) => dest.fonts.add(font));
 }
