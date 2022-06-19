@@ -12,6 +12,7 @@ It simply makes requests to League of Legends Replay API locally.
 <a href="https://github.com/xDroni/lol-particle-tools/blob/main/demo/demo-image.png?raw=true">![demo](demo/demo-image.png)</a>
 
 ### Particle Locator
+
 Helps you find unwanted particle (name) and disable it
 
 ![particle-locator-1](demo/particle-locator-1.jpg)

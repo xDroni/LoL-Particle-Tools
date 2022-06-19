@@ -225,7 +225,7 @@ export default function Particles({ props }) {
 
         <button
           className="btn btn-slate btn-responsive"
-          onClick={() => fetchParticles(setParticles)}
+          onClick={() => fetchParticles(setParticles, setReplayLoad)}
         >
           <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-arrows-rotate" />
           Refresh

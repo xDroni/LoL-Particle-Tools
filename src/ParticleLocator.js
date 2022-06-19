@@ -35,7 +35,6 @@ export default function ParticleLocator({ props }) {
 
   async function findParticle(entries) {
     if (entries.length === 1) {
-      clearInterval(interval);
       setInterval(autoFetch(setParticles, setReplayLoad, 10000));
       return stopLocating(entries);
     }
@@ -48,7 +47,6 @@ export default function ParticleLocator({ props }) {
 
   async function handleParticleLocator() {
     if (locationInProgress === true) {
-      clearInterval(interval);
       setInterval(autoFetch(setParticles, setReplayLoad, 10000));
       return stopLocating();
     }
@@ -68,6 +66,8 @@ export default function ParticleLocator({ props }) {
       setParticleName(entries[0][0]);
     }
     setLocationInProgress(false);
+    clearInterval(interval);
+    setInterval(autoFetch(setParticles, setReplayLoad, 10000));
   }
 
   return (

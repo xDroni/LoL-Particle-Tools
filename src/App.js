@@ -34,10 +34,6 @@ function App() {
     );
   }
 
-  if (replayLoad === true) {
-    setReplayLoad(false);
-  }
-
   return (
     <>
       <header className="fixed right-0 top-0">v{process.env.REACT_APP_VERSION}</header>
