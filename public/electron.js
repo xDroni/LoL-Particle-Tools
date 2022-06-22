@@ -13,7 +13,7 @@ function createWindow() {
     height: 770,
     autoHideMenuBar: true,
     webPreferences: { webSecurity: false, spellcheck: false },
-    title: 'LoL Particles Tools by dxdroni'
+    title: 'LoL Particle Tools by dxdroni'
   });
 
   mainWindow.loadURL(
