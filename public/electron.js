@@ -1,20 +1,27 @@
-const electron = require('electron');
-const { app } = electron;
-const { BrowserWindow } = electron;
+const { app, BrowserWindow, ipcMain, desktopCapturer } = require('electron');
+const crypto = require('crypto');
 
 const path = require('path');
 const isDev = require('electron-is-dev');
 
 let mainWindow;
+let autoParticleLocatorHandleWindow;
 
-function createWindow() {
+function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1500,
     height: 770,
     autoHideMenuBar: true,
-    webPreferences: { webSecurity: false, spellcheck: false },
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      webSecurity: false,
+      spellcheck: false,
+      nodeIntegration: true
+    },
     title: 'LoL Particle Tools by dxdroni'
   });
+
+  mainWindow.webContents.openDevTools();
 
   mainWindow.loadURL(
     isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
@@ -49,9 +56,52 @@ function createWindow() {
   mainWindow.on('closed', () => (mainWindow = null));
 }
 
+function createAutoParticleLocatorHandleWindow() {
+  autoParticleLocatorHandleWindow = new BrowserWindow({
+    width: 1920,
+    height: 1080,
+    fullscreen: true,
+    autoHideMenuBar: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true
+    }
+  });
+
+  autoParticleLocatorHandleWindow.setAlwaysOnTop(true, 'normal');
+  autoParticleLocatorHandleWindow.loadFile(
+    path.join(__dirname, './autoParticleLocator/index.html')
+  );
+  autoParticleLocatorHandleWindow.webContents.openDevTools();
+}
+
 app.commandLine.appendSwitch('ignore-certificate-errors');
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  ipcMain.handle('autoParticleLocating', () => {
+    createAutoParticleLocatorHandleWindow();
+    return 'autoParticleLocating';
+  });
+
+  ipcMain.handle('get-sources', () => {
+    return desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async (sources) => {
+      for (const source of sources) {
+        if (source.name === 'League of Legends (TM) Client' && autoParticleLocatorHandleWindow) {
+          return source;
+        }
+      }
+    });
+  });
+
+  ipcMain.handle('calculate-hash', (_, imageSrcArg) => {
+    const hashSum = crypto.createHash('sha1');
+    hashSum.update(imageSrcArg);
+
+    return hashSum.digest('base64');
+  });
+
+  createMainWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -59,8 +109,6 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow();
-  }
+app.on('activate', function () {
+  if (BrowserWindow.getAllWindows().length === 0) createMainWindow();
 });
