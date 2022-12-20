@@ -10,7 +10,7 @@ function copyStyles(src, dest) {
   Array.from(src.fonts).forEach((font) => dest.fonts.add(font));
 }
 
-export default class NewWindowComponent extends Component {
+export default class LegacyParticleLocatorWindow extends Component {
   containerEl = document.createElement('div');
 
   externalWindow = null;
@@ -25,7 +25,7 @@ export default class NewWindowComponent extends Component {
   };
 
   componentDidMount() {
-    this.externalWindow = window.open('', 'NewWindowComponent');
+    this.externalWindow = window.open('', 'LegacyParticleLocatorWindow');
     copyStyles(window.document, this.externalWindow.document);
 
     if (this.externalWindow) {

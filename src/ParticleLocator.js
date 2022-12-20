@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import postParticles from './common/postParticles';
-import NewWindowComponent from './NewWindowComponent';
+import LegacyParticleLocatorWindow from './LegacyParticleLocatorWindow';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetchParticles, { autoFetch } from './common/fetchParticles';
 
@@ -90,7 +90,7 @@ export default function ParticleLocator({ props }) {
         Particle Locator
       </button>
       {isNewWindow === true && (
-        <NewWindowComponent
+        <LegacyParticleLocatorWindow
           handleDidChangeClick={handleDidChangeClick}
           onClose={() => {
             setIsNewWindow(false);
@@ -144,7 +144,7 @@ export default function ParticleLocator({ props }) {
               </>
             ) : null}
           </div>
-        </NewWindowComponent>
+        </LegacyParticleLocatorWindow>
       )}
     </>
   );

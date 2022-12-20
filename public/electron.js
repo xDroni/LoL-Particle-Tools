@@ -21,14 +21,14 @@ function createMainWindow() {
     title: 'LoL Particle Tools by dxdroni'
   });
 
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   mainWindow.loadURL(
     isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
   );
 
   mainWindow.webContents.setWindowOpenHandler(({ frameName }) => {
-    if (frameName === 'NewWindowComponent') {
+    if (frameName === 'LegacyParticleLocatorWindow') {
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
