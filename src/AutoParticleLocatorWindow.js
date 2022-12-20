@@ -10,34 +10,23 @@ function copyStyles(src, dest) {
   Array.from(src.fonts).forEach((font) => dest.fonts.add(font));
 }
 
-export default class LegacyParticleLocatorWindow extends Component {
+export default class AutoParticleLocatorWindow extends Component {
   containerEl = document.createElement('div');
 
   externalWindow = null;
 
-  listener = (event) => {
-    if (event.code === 'KeyY') {
-      return this.props.handleDidChange(true);
-    }
-    if (event.code === 'KeyN') {
-      return this.props.handleDidChange(false);
-    }
-  };
+  ///todo
+  f = this.props.handleDidChange;
 
   componentDidMount() {
-    this.externalWindow = window.open('', 'LegacyParticleLocatorWindow');
+    this.externalWindow = window.open('', 'AutoParticleLocatorWindow');
     copyStyles(window.document, this.externalWindow.document);
 
     if (this.externalWindow) {
       this.containerEl.className = 'text-center';
-      this.externalWindow.document.addEventListener('keydown', this.listener);
       this.externalWindow.document.body.appendChild(this.containerEl);
       this.externalWindow.onunload = () => this.props.onClose();
     }
-  }
-
-  componentWillUnmount() {
-    this.externalWindow.document.removeEventListener('keydown', this.listener);
   }
 
   render() {

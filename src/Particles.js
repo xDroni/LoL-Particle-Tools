@@ -230,13 +230,6 @@ export default function Particles({ props }) {
           <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-arrows-rotate" />
           Refresh
         </button>
-
-        <button
-          className="btn btn-slate btn-responsive"
-          onClick={() => window.electronAPI.autoParticleLocating().then((res) => console.log(res))}
-        >
-          Test
-        </button>
       </div>
     </div>
   );

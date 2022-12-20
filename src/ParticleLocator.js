@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { ipcRenderer } from 'electron';
 import postParticles from './common/postParticles';
 import LegacyParticleLocatorWindow from './LegacyParticleLocatorWindow';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetchParticles, { autoFetch } from './common/fetchParticles';
+import { MODE } from './common/types';
+import AutoParticleLocatorWindow from './AutoParticleLocatorWindow';
 
 export default function ParticleLocator({ props }) {
   const {
@@ -19,6 +22,8 @@ export default function ParticleLocator({ props }) {
   const [isNewWindow, setIsNewWindow] = useState(false);
   const particlesStateToRestore = useRef([]);
 
+  const mode = MODE.AUTO;
+
   useEffect(() => {
     if (split === null) return;
 
@@ -27,6 +32,7 @@ export default function ParticleLocator({ props }) {
       const json = Object.fromEntries(stateChanged);
       split.entries1 = stateChanged;
       await postParticles(json, setParticles);
+      ipcRenderer.send('message', { type: '' });
     }
 
     setIsLoading(true);
@@ -72,7 +78,7 @@ export default function ParticleLocator({ props }) {
     setInterval(autoFetch(setParticles, setReplayLoad, 10000));
   }
 
-  function handleDidChangeClick(didChange) {
+  function handleDidChange(didChange) {
     if (locationInProgress === false) {
       return;
     }
@@ -89,9 +95,10 @@ export default function ParticleLocator({ props }) {
         <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-crosshairs" size="lg" />
         Particle Locator
       </button>
-      {isNewWindow === true && (
+      {/* Legacy Particle Locator */}
+      {isNewWindow === true && mode === MODE.LEGACY && (
         <LegacyParticleLocatorWindow
-          handleDidChangeClick={handleDidChangeClick}
+          handleDidChange={handleDidChange}
           onClose={() => {
             setIsNewWindow(false);
             if (locationInProgress) void stopLocating();
@@ -112,7 +119,7 @@ export default function ParticleLocator({ props }) {
                   <button
                     type="button"
                     className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
-                    onClick={() => handleDidChangeClick(true)}
+                    onClick={() => handleDidChange(true)}
                     disabled={isLoading || !locationInProgress}
                   >
                     Yes
@@ -120,7 +127,7 @@ export default function ParticleLocator({ props }) {
                   <button
                     type="button"
                     className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
-                    onClick={() => handleDidChangeClick(false)}
+                    onClick={() => handleDidChange(false)}
                     disabled={isLoading || !locationInProgress}
                   >
                     No
@@ -145,6 +152,41 @@ export default function ParticleLocator({ props }) {
             ) : null}
           </div>
         </LegacyParticleLocatorWindow>
+      )}
+      {/* Auto Particle Locator */}
+      {isNewWindow === true && mode === MODE.AUTO && (
+        <AutoParticleLocatorWindow
+          handleDidChange={handleDidChange}
+          onClose={() => {
+            setIsNewWindow(false);
+            if (locationInProgress) void stopLocating();
+          }}
+        >
+          <div className="">
+            <button
+              type="button"
+              className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
+              onClick={handleParticleLocator}
+            >
+              {locationInProgress === false ? 'Auto-Start' : 'Auto-Stop'}
+            </button>
+            {particleName !== null ? (
+              <>
+                <div className="mb-9">
+                  <p>Particle name: </p>
+                  <span className="font-bold">{particleName}</span>
+                </div>
+                <button
+                  type="button"
+                  className="block ml-auto mr-auto btn btn-slate"
+                  onClick={() => postParticles({ [particleName]: false }, setParticles)}
+                >
+                  Disable particle
+                </button>
+              </>
+            ) : null}
+          </div>
+        </AutoParticleLocatorWindow>
       )}
     </>
   );
