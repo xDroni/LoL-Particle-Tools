@@ -34,7 +34,7 @@ export default function ParticleLocator({ props }) {
   }, [split, setParticles]);
 
   async function findParticle(entries) {
-    if (entries.length === 1) {
+    if (entries.length <= 1) {
       setInterval(autoFetch(setParticles, setReplayLoad, 10000));
       return stopLocating(entries);
     }
@@ -56,13 +56,15 @@ export default function ParticleLocator({ props }) {
     particlesStateToRestore.current = fetchedParticles;
     setParticleName(null);
     setLocationInProgress(true);
-    return findParticle(Object.entries(fetchedParticles));
+    const enabledParticles = Object.entries(fetchedParticles).filter(([, state]) => Boolean(state));
+
+    return findParticle(enabledParticles);
   }
 
   async function stopLocating(entries) {
     await postParticles(particlesStateToRestore.current, setParticles);
     setParticles(particlesStateToRestore.current);
-    if (entries !== undefined) {
+    if (entries !== undefined && entries.length > 0) {
       setParticleName(entries[0][0]);
     }
     setLocationInProgress(false);
