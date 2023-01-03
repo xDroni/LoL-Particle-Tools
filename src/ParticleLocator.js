@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ipcRenderer } from 'electron';
 import postParticles from './common/postParticles';
-import LegacyParticleLocatorWindow from './LegacyParticleLocatorWindow';
+import ParticleLocatorWindow from './ParticleLocatorWindow';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetchParticles, { autoFetch } from './common/fetchParticles';
 import { MODE } from './common/types';
-import AutoParticleLocatorWindow from './AutoParticleLocatorWindow';
 
 export default function ParticleLocator({ props }) {
   const {
@@ -20,8 +18,8 @@ export default function ParticleLocator({ props }) {
   const [isLoading, setIsLoading] = useState(false);
   const [particleName, setParticleName] = useState(null);
   const [isNewWindow, setIsNewWindow] = useState(false);
+  const [hashToCompare, setHashToCompare] = useState(null);
   const particlesStateToRestore = useRef([]);
-
   const mode = MODE.AUTO;
 
   useEffect(() => {
@@ -32,12 +30,33 @@ export default function ParticleLocator({ props }) {
       const json = Object.fromEntries(stateChanged);
       split.entries1 = stateChanged;
       await postParticles(json, setParticles);
-      ipcRenderer.send('message', { type: '' });
     }
 
     setIsLoading(true);
-    void post().then(() => setIsLoading(false));
+    void post().then(async () => {
+      setIsLoading(false);
+      if (mode === MODE.LEGACY) {
+        return;
+      }
+
+      // await new Promise(resolve => setTimeout(resolve, 0))
+
+      window.electronAPI.sendHashRequest();
+      const hash = await getHash();
+      console.log('hash', hash);
+      if (hash !== hashToCompare) {
+        console.log(Date.now(), 'changed!');
+        setHashToCompare(hash);
+        return await findParticle(split.entries1);
+      }
+      console.log(Date.now(), 'didnt change');
+      return await findParticle(split.entries2);
+    });
   }, [split, setParticles]);
+
+  async function getHash() {
+    return await window.electronAPI.waitForHashResponse();
+  }
 
   async function findParticle(entries) {
     if (entries.length <= 1) {
@@ -45,13 +64,14 @@ export default function ParticleLocator({ props }) {
       return stopLocating(entries);
     }
 
+    console.log('setting split');
     setSplit({
       entries1: entries.slice(0, entries.length / 2),
       entries2: entries.slice(entries.length / 2)
     });
   }
 
-  async function handleParticleLocator() {
+  async function handleParticleLocator(mode) {
     if (locationInProgress === true) {
       setInterval(autoFetch(setParticles, setReplayLoad, 10000));
       return stopLocating();
@@ -64,13 +84,27 @@ export default function ParticleLocator({ props }) {
     setLocationInProgress(true);
     const enabledParticles = Object.entries(fetchedParticles).filter(([, state]) => Boolean(state));
 
-    return findParticle(enabledParticles);
+    if (mode === MODE.LEGACY) {
+      return findParticle(enabledParticles);
+    }
+
+    // console.log('sending hash request');
+
+    // dont request because the first hash should come when user selects the area
+    // window.electronAPI.sendHashRequest();
+    const firstHash = await getHash();
+
+    console.log('#firstHasth', firstHash);
+
+    setHashToCompare(() => firstHash);
+    return findParticle(enabledParticles, MODE.AUTO);
   }
 
   async function stopLocating(entries) {
-    await postParticles(particlesStateToRestore.current, setParticles);
-    setParticles(particlesStateToRestore.current);
+    // await postParticles(particlesStateToRestore.current, setParticles);
+    // setParticles(particlesStateToRestore.current);
     if (entries !== undefined && entries.length > 0) {
+      console.log(entries);
       setParticleName(entries[0][0]);
     }
     setLocationInProgress(false);
@@ -97,7 +131,7 @@ export default function ParticleLocator({ props }) {
       </button>
       {/* Legacy Particle Locator */}
       {isNewWindow === true && mode === MODE.LEGACY && (
-        <LegacyParticleLocatorWindow
+        <ParticleLocatorWindow
           handleDidChange={handleDidChange}
           onClose={() => {
             setIsNewWindow(false);
@@ -108,7 +142,7 @@ export default function ParticleLocator({ props }) {
             <button
               type="button"
               className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
-              onClick={handleParticleLocator}
+              onClick={() => handleParticleLocator(MODE.LEGACY)}
             >
               {locationInProgress === false ? 'Start' : 'Stop'}
             </button>
@@ -151,11 +185,11 @@ export default function ParticleLocator({ props }) {
               </>
             ) : null}
           </div>
-        </LegacyParticleLocatorWindow>
+        </ParticleLocatorWindow>
       )}
       {/* Auto Particle Locator */}
       {isNewWindow === true && mode === MODE.AUTO && (
-        <AutoParticleLocatorWindow
+        <ParticleLocatorWindow
           handleDidChange={handleDidChange}
           onClose={() => {
             setIsNewWindow(false);
@@ -166,27 +200,16 @@ export default function ParticleLocator({ props }) {
             <button
               type="button"
               className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
-              onClick={handleParticleLocator}
+              onClick={() => {
+                window.electronAPI.startAutoLocating();
+                return handleParticleLocator(MODE.AUTO);
+              }}
             >
               {locationInProgress === false ? 'Auto-Start' : 'Auto-Stop'}
             </button>
-            {particleName !== null ? (
-              <>
-                <div className="mb-9">
-                  <p>Particle name: </p>
-                  <span className="font-bold">{particleName}</span>
-                </div>
-                <button
-                  type="button"
-                  className="block ml-auto mr-auto btn btn-slate"
-                  onClick={() => postParticles({ [particleName]: false }, setParticles)}
-                >
-                  Disable particle
-                </button>
-              </>
-            ) : null}
+            {/*{locationInProgress === true ? (window.electronAPI.getSources()) : null }*/}
           </div>
-        </AutoParticleLocatorWindow>
+        </ParticleLocatorWindow>
       )}
     </>
   );

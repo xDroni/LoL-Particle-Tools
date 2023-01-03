@@ -28,7 +28,7 @@ function createMainWindow() {
   );
 
   mainWindow.webContents.setWindowOpenHandler(({ frameName }) => {
-    if (frameName === 'LegacyParticleLocatorWindow') {
+    if (frameName === 'ParticleLocatorWindow') {
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
@@ -58,7 +58,7 @@ function createMainWindow() {
 
 function createAutoParticleLocatorHandleWindow() {
   autoParticleLocatorHandleWindow = new BrowserWindow({
-    width: 1920,
+    width: 1920, /// todo make it dynamic depending on resolution
     height: 1080,
     fullscreen: true,
     autoHideMenuBar: true,
@@ -68,19 +68,31 @@ function createAutoParticleLocatorHandleWindow() {
     }
   });
 
-  autoParticleLocatorHandleWindow.setAlwaysOnTop(true, 'normal');
+  // autoParticleLocatorHandleWindow.setAlwaysOnTop(true, 'normal');
   autoParticleLocatorHandleWindow.loadFile(
     path.join(__dirname, './autoParticleLocator/index.html')
   );
-  autoParticleLocatorHandleWindow.webContents.openDevTools();
+  // autoParticleLocatorHandleWindow.webContents.openDevTools();
 }
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 
 app.on('ready', () => {
-  ipcMain.handle('autoParticleLocating', () => {
+  ipcMain.on('start-auto-locating', () => {
     createAutoParticleLocatorHandleWindow();
-    return 'autoParticleLocating';
+  });
+
+  ipcMain.on('send-hash-request', () => {
+    console.log('on send-hash-request');
+    autoParticleLocatorHandleWindow.webContents.send('wait-for-hash-request');
+  });
+
+  ipcMain.handle('calculate-hash', (_, imageSrcArg) => {
+    console.log('calculating-hash');
+    const hashSum = crypto.createHash('sha1');
+    hashSum.update(imageSrcArg);
+
+    return hashSum.digest('base64');
   });
 
   ipcMain.handle('get-sources', () => {
@@ -93,11 +105,8 @@ app.on('ready', () => {
     });
   });
 
-  ipcMain.handle('calculate-hash', (_, imageSrcArg) => {
-    const hashSum = crypto.createHash('sha1');
-    hashSum.update(imageSrcArg);
-
-    return hashSum.digest('base64');
+  ipcMain.handle('send-hash-response', (_, hash) => {
+    mainWindow.webContents.send('hash-message', hash);
   });
 
   createMainWindow();
