@@ -82,7 +82,7 @@ function drawRectangle() {
   let mouseDown = false;
 
   async function sendHash() {
-    await new Promise((resolve) => setTimeout(resolve, 60));
+    await new Promise((resolve) => setTimeout(resolve, 65));
     const cropImgSrc = await refreshScreen();
     const hash = await window.electronAPI.calculateHash(cropImgSrc);
     console.log(hash);

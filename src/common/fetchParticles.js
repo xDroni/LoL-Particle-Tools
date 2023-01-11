@@ -1,6 +1,6 @@
 import config from '../config.json';
 
-export default async function fetchParticles(setParticles, setReplayLoad) {
+export default async function fetchParticles(setParticles, setReplayLoad, onlyEnabled) {
   try {
     const result = await fetch(
       `${config.address}:${config.port}/replay/${config.particlesEndpoint}`
@@ -9,7 +9,9 @@ export default async function fetchParticles(setParticles, setReplayLoad) {
     if (json?.errorCode === undefined) {
       setParticles(json);
       setReplayLoad(false);
-      return json;
+      return onlyEnabled === true
+        ? Object.entries(json).filter(([, state]) => Boolean(state))
+        : json;
     }
     setReplayLoad(true);
     return Promise.reject(Error(json.errorCode));

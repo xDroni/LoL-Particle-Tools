@@ -3,9 +3,9 @@ export const MODE = {
   AUTO: 'auto'
 };
 
-export const MESSAGE_TYPES = {
-  LOCATING_STATE: 'locating-state',
-  DID_CHANGE: 'did-change'
+export const COMPARISON_RESULT_STATE = {
+  DID_CHANGE: 'did-change',
+  DID_NOT_CHANGE: 'did-not-change'
 };
 
 export const MESSAGE_PAYLOADS = {

@@ -3,7 +3,8 @@ import postParticles from './common/postParticles';
 import ParticleLocatorWindow from './ParticleLocatorWindow';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetchParticles, { autoFetch } from './common/fetchParticles';
-import { MODE } from './common/types';
+import { COMPARISON_RESULT_STATE, MODE } from './common/types';
+import listOfItems from './common/listOfItems';
 
 export default function ParticleLocator({ props }) {
   const {
@@ -19,6 +20,8 @@ export default function ParticleLocator({ props }) {
   const [particleName, setParticleName] = useState(null);
   const [isNewWindow, setIsNewWindow] = useState(false);
   const [hashToCompare, setHashToCompare] = useState(null);
+  const [foundParticles, setFoundParticles] = useState([]);
+  const [hashComparisonsResult, setHashComparisonsResult] = useState([]);
   const particlesStateToRestore = useRef([]);
   const mode = MODE.AUTO;
 
@@ -39,17 +42,16 @@ export default function ParticleLocator({ props }) {
         return;
       }
 
-      // await new Promise(resolve => setTimeout(resolve, 0))
-
       window.electronAPI.sendHashRequest();
       const hash = await getHash();
-      console.log('hash', hash);
       if (hash !== hashToCompare) {
         console.log(Date.now(), 'changed!');
+        setHashComparisonsResult((prev) => [...prev, COMPARISON_RESULT_STATE.DID_CHANGE]);
         setHashToCompare(hash);
         return await findParticle(split.entries1);
       }
       console.log(Date.now(), 'didnt change');
+      setHashComparisonsResult((prev) => [...prev, COMPARISON_RESULT_STATE.DID_NOT_CHANGE]);
       return await findParticle(split.entries2);
     });
   }, [split, setParticles]);
@@ -59,12 +61,37 @@ export default function ParticleLocator({ props }) {
   }
 
   async function findParticle(entries) {
-    if (entries.length <= 1) {
-      setInterval(autoFetch(setParticles, setReplayLoad, 10000));
-      return stopLocating(entries);
+    if (entries.length === 0) {
+      return stopLocating();
     }
 
-    console.log('setting split');
+    if (entries.length === 1 && mode === MODE.LEGACY) {
+      // setInterval(autoFetch(setParticles, setReplayLoad, 10000)); // needed? it's also called in stopLocating
+      setParticleName(entries[0][0]);
+      return stopLocating();
+    }
+
+    if (entries.length === 1 && mode === MODE.AUTO) {
+      const allFound = hashComparisonsResult.every(
+        (result) => result === COMPARISON_RESULT_STATE.DID_NOT_CHANGE
+      );
+      setHashComparisonsResult([]);
+      console.log('#all found', allFound, hashComparisonsResult);
+      if (allFound) {
+        return stopLocating();
+      }
+      const foundParticle = entries[0][0];
+      console.log('#found', foundParticle);
+      setFoundParticles((prev) => [...prev, foundParticle]);
+      await postParticles({ [foundParticle]: false }, setParticles);
+
+      window.electronAPI.sendHashRequest();
+      const firstHash = await getHash();
+      console.log('#firstHasth', firstHash);
+      setHashToCompare(() => firstHash);
+      return findParticle(await fetchParticles(setParticles, setReplayLoad, true));
+    }
+
     setSplit({
       entries1: entries.slice(0, entries.length / 2),
       entries2: entries.slice(entries.length / 2)
@@ -78,35 +105,33 @@ export default function ParticleLocator({ props }) {
     }
 
     clearInterval(interval);
-    const fetchedParticles = await fetchParticles(setParticles, setReplayLoad);
-    particlesStateToRestore.current = fetchedParticles;
+    const enabledParticles = await fetchParticles(setParticles, setReplayLoad, true);
+    console.log('Saving particles to restore');
+    particlesStateToRestore.current = enabledParticles;
     setParticleName(null);
+    setFoundParticles([]);
     setLocationInProgress(true);
-    const enabledParticles = Object.entries(fetchedParticles).filter(([, state]) => Boolean(state));
 
     if (mode === MODE.LEGACY) {
       return findParticle(enabledParticles);
     }
 
-    // console.log('sending hash request');
-
-    // dont request because the first hash should come when user selects the area
+    // don't request because the first hash should come when user selects the area
     // window.electronAPI.sendHashRequest();
     const firstHash = await getHash();
-
     console.log('#firstHasth', firstHash);
 
     setHashToCompare(() => firstHash);
-    return findParticle(enabledParticles, MODE.AUTO);
+    return findParticle(enabledParticles);
   }
 
-  async function stopLocating(entries) {
-    // await postParticles(particlesStateToRestore.current, setParticles);
-    // setParticles(particlesStateToRestore.current);
-    if (entries !== undefined && entries.length > 0) {
-      console.log(entries);
-      setParticleName(entries[0][0]);
-    }
+  async function stopLocating() {
+    console.log('Restoring particles after locating');
+    await postParticles(particlesStateToRestore.current, setParticles);
+    setParticles(particlesStateToRestore.current);
+
+    console.log(foundParticles, particleName);
+
     setLocationInProgress(false);
     clearInterval(interval);
     setInterval(autoFetch(setParticles, setReplayLoad, 10000));
@@ -138,53 +163,51 @@ export default function ParticleLocator({ props }) {
             if (locationInProgress) void stopLocating();
           }}
         >
-          <div className="">
-            <button
-              type="button"
-              className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
-              onClick={() => handleParticleLocator(MODE.LEGACY)}
-            >
-              {locationInProgress === false ? 'Start' : 'Stop'}
-            </button>
-            {locationInProgress === true ? (
-              <>
-                <div className="mb-2 text-xl">Did change?</div>
-                <div className="flex gap-6 justify-center">
-                  <button
-                    type="button"
-                    className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
-                    onClick={() => handleDidChange(true)}
-                    disabled={isLoading || !locationInProgress}
-                  >
-                    Yes
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
-                    onClick={() => handleDidChange(false)}
-                    disabled={isLoading || !locationInProgress}
-                  >
-                    No
-                  </button>
-                </div>
-              </>
-            ) : null}
-            {particleName !== null ? (
-              <>
-                <div className="mb-9">
-                  <p>Particle name: </p>
-                  <span className="font-bold">{particleName}</span>
-                </div>
+          <button
+            type="button"
+            className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
+            onClick={() => handleParticleLocator(MODE.LEGACY)}
+          >
+            {locationInProgress === false ? 'Start' : 'Stop'}
+          </button>
+          {locationInProgress === true ? (
+            <>
+              <div className="mb-2 text-xl">Did change?</div>
+              <div className="flex gap-6 justify-center">
                 <button
                   type="button"
-                  className="block ml-auto mr-auto btn btn-slate"
-                  onClick={() => postParticles({ [particleName]: false }, setParticles)}
+                  className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
+                  onClick={() => handleDidChange(true)}
+                  disabled={isLoading || !locationInProgress}
                 >
-                  Disable particle
+                  Yes
                 </button>
-              </>
-            ) : null}
-          </div>
+                <button
+                  type="button"
+                  className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
+                  onClick={() => handleDidChange(false)}
+                  disabled={isLoading || !locationInProgress}
+                >
+                  No
+                </button>
+              </div>
+            </>
+          ) : null}
+          {particleName !== null ? (
+            <>
+              <div className="mb-9">
+                <p className="text-xl mb-2">Particle name: </p>
+                <span className="font-bold">{particleName}</span>
+              </div>
+              <button
+                type="button"
+                className="block ml-auto mr-auto btn btn-slate"
+                onClick={() => postParticles({ [particleName]: false }, setParticles)}
+              >
+                Disable particle
+              </button>
+            </>
+          ) : null}
         </ParticleLocatorWindow>
       )}
       {/* Auto Particle Locator */}
@@ -196,19 +219,32 @@ export default function ParticleLocator({ props }) {
             if (locationInProgress) void stopLocating();
           }}
         >
-          <div className="">
-            <button
-              type="button"
-              className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
-              onClick={() => {
-                window.electronAPI.startAutoLocating();
-                return handleParticleLocator(MODE.AUTO);
-              }}
-            >
-              {locationInProgress === false ? 'Auto-Start' : 'Auto-Stop'}
-            </button>
-            {/*{locationInProgress === true ? (window.electronAPI.getSources()) : null }*/}
-          </div>
+          <button
+            type="button"
+            className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
+            onClick={() => {
+              window.electronAPI.startAutoLocating();
+              return handleParticleLocator(MODE.AUTO);
+            }}
+          >
+            {locationInProgress === false ? 'Auto-Start' : 'Auto-Stop'}
+          </button>
+          {foundParticles.length > 0 && (
+            <>
+              <div className="mb-9">
+                <p className="text-xl mb-2">Found particles: </p>
+                <ul className="list-none">{listOfItems(foundParticles)}</ul>
+              </div>
+              <button
+                type="button"
+                className="block ml-auto mr-auto btn btn-slate"
+                onClick={() => postParticles({ [particleName]: false }, setParticles)}
+              >
+                Disable all
+              </button>
+            </>
+          )}
+          {/*{locationInProgress === true ? (window.electronAPI.getSources()) : null }*/}
         </ParticleLocatorWindow>
       )}
     </>
