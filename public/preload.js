@@ -6,7 +6,7 @@ const WINDOW_API = {
   startAutoLocating: () => ipcRenderer.send('start-auto-locating'),
   getSources: () => ipcRenderer.invoke('get-sources'),
   calculateHash: async (imageSrc) => {
-    console.log(Date.now(), '#calculating hash');
+    console.log('save file for testing purposes');
     fs.writeFileSync(
       `${path.join(__dirname, 'data', Date.now().toString())}.bmp`,
       imageSrc.replace(/^data:image\/png;base64,/, ''),

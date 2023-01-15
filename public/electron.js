@@ -1,5 +1,4 @@
 const { app, BrowserWindow, ipcMain, desktopCapturer } = require('electron');
-const crypto = require('crypto');
 
 const path = require('path');
 const isDev = require('electron-is-dev');
@@ -85,11 +84,11 @@ app.on('ready', () => {
   });
 
   ipcMain.handle('calculate-hash', (_, imageSrcArg) => {
-    console.log('calculating-hash');
-    const hashSum = crypto.createHash('sha1');
-    hashSum.update(imageSrcArg);
+    // const hashSum = crypto.createHash('sha1');
+    // hashSum.update(imageSrcArg);
 
-    return hashSum.digest('base64');
+    // return hashSum.digest('base64');
+    return imageSrcArg;
   });
 
   ipcMain.handle('get-sources', () => {
