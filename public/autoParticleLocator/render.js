@@ -48,15 +48,9 @@ async function refreshScreen() {
   context.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
 
   const fullScreenshotBlob = document.getElementById('screenshot').toDataURL('image/png', 1);
-  console.log('fullScreenshotBlob');
-  console.log(fullScreenshotBlob);
   const cropImg = await loadImage(fullScreenshotBlob);
-  console.log('cropImg');
-  console.log(cropImg);
 
   const cropCanvas = document.createElement('canvas');
-  console.log('screenshotAreaWidth', 'screenshotAreaHeight');
-  console.log(screenshotAreaWidth, screenshotAreaHeight);
   [cropCanvas.width, cropCanvas.height] = [screenshotAreaWidth, screenshotAreaHeight];
   const cropContext = cropCanvas.getContext('2d');
   cropContext.drawImage(
@@ -71,9 +65,7 @@ async function refreshScreen() {
     screenshotAreaHeight
   );
 
-  // console.log(cropCanvas.toDataURL('image/png', 1));
-
-  return Promise.resolve(cropCanvas.toDataURL('image/bmp', 1));
+  return Promise.resolve(cropCanvas.toDataURL('image/png', 1));
 }
 
 function drawRectangle() {
@@ -92,28 +84,21 @@ function drawRectangle() {
   let mouseDown = false;
 
   async function sendHash() {
-    await new Promise((resolve) => setTimeout(resolve, 64));
+    await new Promise((resolve) => setTimeout(resolve, 35));
     const cropImgSrc = await refreshScreen();
-    console.log('cropImgSrc');
-    console.log(cropImgSrc);
-    console.log('calculating hash...');
-    const hash = await window.electronAPI.calculateHash(cropImgSrc);
-    console.log(hash);
-    await window.electronAPI.sendHashResponse(hash);
+    // const hash = await window.electronAPI.calculateHash(cropImgSrc);
+    // console.log(hash);
+    await window.electronAPI.sendHashResponse(cropImgSrc);
   }
   function mouseDownListener(e) {
     lastMouseXOnDown = e.clientX - canvasX;
     lastMouseYOnDown = e.clientY - canvasY;
-    console.log('lastMouseXOnDown', 'lastMouseYOnDown');
-    console.log(lastMouseXOnDown, lastMouseYOnDown);
     mouseDown = true;
   }
 
   async function mouseUpListener(e) {
     lastMouseXOnUp = e.clientX - canvasX;
     lastMouseYOnUp = e.clientY - canvasY;
-    console.log(lastMouseXOnUp, lastMouseYOnUp);
-    console.log('lastMouseXOnUp', 'lastMouseYOnUp');
 
     // register the listener for the future hash requests
     window.electronAPI.waitForHashRequest(sendHash);
@@ -123,12 +108,7 @@ function drawRectangle() {
 
     screenshotAreaWidth = Math.abs(lastMouseXOnUp - lastMouseXOnDown);
     screenshotAreaHeight = Math.abs(lastMouseYOnUp - lastMouseYOnDown);
-    console.log('screenshotAreaX', 'screenshotAreaY');
-    console.log(screenshotAreaX, screenshotAreaY);
-    console.log('screenshotAreaWidth', 'screenshotAreaHeight');
-    console.log(screenshotAreaWidth, screenshotAreaHeight);
     mouseDown = false;
-    console.log('###removing listeners');
     rectangleCanvas.removeEventListener('mouseup', mouseUpListener);
     rectangleCanvas.removeEventListener('mousedown', mouseDownListener);
     rectangleCanvas.removeEventListener('mousemove', mouseMoveListener);
@@ -141,7 +121,6 @@ function drawRectangle() {
     {
       mouseX = e.clientX - canvasX;
       mouseY = e.clientY - canvasY;
-      console.log(mouseX, mouseY);
       if (mouseDown) {
         rectangleContext.clearRect(0, 0, rectangleCanvas.width, rectangleCanvas.height);
         rectangleContext.beginPath();

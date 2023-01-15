@@ -45,17 +45,11 @@ export default function ParticleLocator({ props }) {
       window.electronAPI.sendHashRequest();
       const hash = await getHash();
       if (hash !== hashToCompare) {
-        console.log(Date.now(), 'changed!');
         setHashComparisonsResult((prev) => [...prev, COMPARISON_RESULT_STATE.DID_CHANGE]);
         setHashToCompare(hash);
-        console.log('second hash', hash);
-        // eslint-disable-next-line no-unreachable
         return await findParticle(split.entries1);
       }
-      console.log(Date.now(), 'didnt change');
       setHashComparisonsResult((prev) => [...prev, COMPARISON_RESULT_STATE.DID_NOT_CHANGE]);
-      console.log('second hash', hash);
-      // eslint-disable-next-line no-unreachable
       return await findParticle(split.entries2);
     });
   }, [split, setParticles]);
@@ -80,19 +74,12 @@ export default function ParticleLocator({ props }) {
         (result) => result === COMPARISON_RESULT_STATE.DID_NOT_CHANGE
       );
       setHashComparisonsResult([]);
-      console.log('#all found', allFound, hashComparisonsResult);
       if (allFound) {
         return stopLocating();
       }
       const foundParticle = entries[0][0];
-      console.log('#found', foundParticle);
       setFoundParticles((prev) => [...prev, foundParticle]);
 
-      //| restore particles + disable found ones
-      // console.log(foundParticles);
-      // console.log('disabling found ones', {
-      //   ...foundParticles.reduce((prev, curr) => ({ ...prev, [curr]: false }), {})
-      // });
       await postParticles(
         {
           ...particlesStateToRestore.current,
@@ -104,11 +91,9 @@ export default function ParticleLocator({ props }) {
 
       window.electronAPI.sendHashRequest();
       const firstHash = await getHash();
-      console.log('#firstHash', firstHash);
       setHashToCompare(() => firstHash);
 
       const onlyEnabled = await fetchParticles(setParticles, setReplayLoad, true);
-      console.log(onlyEnabled);
       return findParticle(onlyEnabled);
     }
 
@@ -128,7 +113,6 @@ export default function ParticleLocator({ props }) {
     const currentParticles = await fetchParticles(setParticles, setReplayLoad);
     const enabledParticles = Object.entries(currentParticles).filter(([, state]) => Boolean(state));
 
-    console.log('Saving particles to restore');
     particlesStateToRestore.current = currentParticles;
     setParticleName(null);
     setFoundParticles([]);
@@ -138,22 +122,14 @@ export default function ParticleLocator({ props }) {
       return findParticle(enabledParticles);
     }
 
-    // don't request because the first hash should come when user selects the area
-    // window.electronAPI.sendHashRequest();
-    console.log(Date.now(), 'waiting for the first hash');
+    // don't request because the first screenshot should come when user selects the area
     const firstHash = await getHash();
-    console.log(Date.now(), 'Got the first hash');
-    console.log('#firstHasth', firstHash);
-
     setHashToCompare(() => firstHash);
     return findParticle(enabledParticles);
   }
 
   async function stopLocating() {
-    console.log('restoring particles', Object.keys(particlesStateToRestore.current));
     await postParticles(particlesStateToRestore.current, setParticles);
-
-    console.log(foundParticles, particleName);
 
     setLocationInProgress(false);
     clearInterval(interval);
