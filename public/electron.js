@@ -21,8 +21,6 @@ function createMainWindow() {
     title: 'LoL Particle Tools by dxdroni'
   });
 
-  // mainWindow.webContents.openDevTools();
-
   mainWindow.loadURL(
     isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
   );
@@ -32,8 +30,8 @@ function createMainWindow() {
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
-          width: 800,
-          height: 600,
+          width: 330,
+          height: 300,
           resizable: false,
           minimizable: false,
           maximizable: false,
@@ -83,8 +81,7 @@ app.on('ready', () => {
   });
 
   ipcMain.on('send-hash-request', () => {
-    console.log('on send-hash-request');
-    autoParticleLocatorHandleWindow.webContents.send('wait-for-hash-request');
+    autoParticleLocatorHandleWindow.webContents.send('hash-requested');
   });
 
   ipcMain.handle('calculate-hash', (_, imageSrcArg) => {

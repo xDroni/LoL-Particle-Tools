@@ -48,9 +48,15 @@ async function refreshScreen() {
   context.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
 
   const fullScreenshotBlob = document.getElementById('screenshot').toDataURL('image/png', 1);
+  console.log('fullScreenshotBlob');
+  console.log(fullScreenshotBlob);
   const cropImg = await loadImage(fullScreenshotBlob);
+  console.log('cropImg');
+  console.log(cropImg);
 
   const cropCanvas = document.createElement('canvas');
+  console.log('screenshotAreaWidth', 'screenshotAreaHeight');
+  console.log(screenshotAreaWidth, screenshotAreaHeight);
   [cropCanvas.width, cropCanvas.height] = [screenshotAreaWidth, screenshotAreaHeight];
   const cropContext = cropCanvas.getContext('2d');
   cropContext.drawImage(
@@ -65,7 +71,9 @@ async function refreshScreen() {
     screenshotAreaHeight
   );
 
-  return Promise.resolve(cropCanvas.toDataURL('image/png', 1));
+  // console.log(cropCanvas.toDataURL('image/png', 1));
+
+  return Promise.resolve(cropCanvas.toDataURL('image/bmp', 1));
 }
 
 function drawRectangle() {
@@ -75,52 +83,72 @@ function drawRectangle() {
   const rectangleContext = rectangleCanvas.getContext('2d');
   const canvasX = rectangleCanvas.offsetLeft;
   const canvasY = rectangleCanvas.offsetTop;
-  let lastMouseX = 0;
-  let lastMouseY = 0;
+  let lastMouseXOnDown = 0;
+  let lastMouseYOnDown = 0;
+  let lastMouseXOnUp = 0;
+  let lastMouseYOnUp = 0;
   let mouseX = 0;
   let mouseY = 0;
   let mouseDown = false;
 
   async function sendHash() {
-    await new Promise((resolve) => setTimeout(resolve, 65));
+    await new Promise((resolve) => setTimeout(resolve, 64));
     const cropImgSrc = await refreshScreen();
+    console.log('cropImgSrc');
+    console.log(cropImgSrc);
+    console.log('calculating hash...');
     const hash = await window.electronAPI.calculateHash(cropImgSrc);
     console.log(hash);
     await window.electronAPI.sendHashResponse(hash);
   }
-
   function mouseDownListener(e) {
-    lastMouseX = e.clientX - canvasX;
-    lastMouseY = e.clientY - canvasY;
+    lastMouseXOnDown = e.clientX - canvasX;
+    lastMouseYOnDown = e.clientY - canvasY;
+    console.log('lastMouseXOnDown', 'lastMouseYOnDown');
+    console.log(lastMouseXOnDown, lastMouseYOnDown);
     mouseDown = true;
   }
 
-  function mouseUpListener() {
-    window.electronAPI.waitForHashRequest(async () => {
-      await sendHash();
-    });
+  async function mouseUpListener(e) {
+    lastMouseXOnUp = e.clientX - canvasX;
+    lastMouseYOnUp = e.clientY - canvasY;
+    console.log(lastMouseXOnUp, lastMouseYOnUp);
+    console.log('lastMouseXOnUp', 'lastMouseYOnUp');
 
-    screenshotAreaX = lastMouseX;
-    screenshotAreaY = lastMouseY;
-    screenshotAreaWidth = mouseX - lastMouseX;
-    screenshotAreaHeight = mouseY - lastMouseY;
+    // register the listener for the future hash requests
+    window.electronAPI.waitForHashRequest(sendHash);
+
+    screenshotAreaX = lastMouseXOnDown > lastMouseXOnUp ? lastMouseXOnUp : lastMouseXOnDown;
+    screenshotAreaY = lastMouseYOnDown > lastMouseYOnUp ? lastMouseYOnUp : lastMouseYOnDown;
+
+    screenshotAreaWidth = Math.abs(lastMouseXOnUp - lastMouseXOnDown);
+    screenshotAreaHeight = Math.abs(lastMouseYOnUp - lastMouseYOnDown);
+    console.log('screenshotAreaX', 'screenshotAreaY');
+    console.log(screenshotAreaX, screenshotAreaY);
+    console.log('screenshotAreaWidth', 'screenshotAreaHeight');
+    console.log(screenshotAreaWidth, screenshotAreaHeight);
     mouseDown = false;
+    console.log('###removing listeners');
     rectangleCanvas.removeEventListener('mouseup', mouseUpListener);
     rectangleCanvas.removeEventListener('mousedown', mouseDownListener);
     rectangleCanvas.removeEventListener('mousemove', mouseMoveListener);
+
+    // send the first hash without requesting
+    await sendHash();
   }
 
   function mouseMoveListener(e) {
     {
       mouseX = e.clientX - canvasX;
       mouseY = e.clientY - canvasY;
+      console.log(mouseX, mouseY);
       if (mouseDown) {
         rectangleContext.clearRect(0, 0, rectangleCanvas.width, rectangleCanvas.height);
         rectangleContext.beginPath();
-        let width = mouseX - lastMouseX;
-        let height = mouseY - lastMouseY;
+        let width = mouseX - lastMouseXOnDown;
+        let height = mouseY - lastMouseYOnDown;
         rectangleContext.fillStyle = 'rgba(255, 255, 255, 0.5)';
-        rectangleContext.fillRect(lastMouseX, lastMouseY, width, height);
+        rectangleContext.fillRect(lastMouseXOnDown, lastMouseYOnDown, width, height);
         rectangleContext.strokeStyle = 'white';
         rectangleContext.lineWidth = 2;
         rectangleContext.stroke();
