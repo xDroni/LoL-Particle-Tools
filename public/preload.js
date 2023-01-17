@@ -2,8 +2,9 @@ const { contextBridge, ipcRenderer } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
-const WINDOW_API = {
+const ELECTRON_API = {
   startAutoLocating: () => ipcRenderer.send('start-auto-locating'),
+  stopAutoLocating: () => ipcRenderer.send('stop-auto-locating'),
   getSources: () => ipcRenderer.invoke('get-sources'),
   calculateHash: async (imageSrc) => {
     // save file for testing purposes
@@ -27,4 +28,4 @@ const WINDOW_API = {
   }
 };
 
-contextBridge.exposeInMainWorld('electronAPI', WINDOW_API);
+contextBridge.exposeInMainWorld('electronAPI', ELECTRON_API);

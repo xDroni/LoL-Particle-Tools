@@ -31,7 +31,7 @@ function createMainWindow() {
         overrideBrowserWindowOptions: {
           width: 330,
           height: 300,
-          resizable: false,
+          resizable: true,
           minimizable: false,
           maximizable: false,
           autoHideMenuBar: true,
@@ -72,11 +72,19 @@ function createAutoParticleLocatorHandleWindow() {
   // autoParticleLocatorHandleWindow.webContents.openDevTools();
 }
 
+function closeAutoParticleLocatorWindow() {
+  autoParticleLocatorHandleWindow.close();
+}
+
 app.commandLine.appendSwitch('ignore-certificate-errors');
 
 app.on('ready', () => {
   ipcMain.on('start-auto-locating', () => {
     createAutoParticleLocatorHandleWindow();
+  });
+
+  ipcMain.on('stop-auto-locating', () => {
+    closeAutoParticleLocatorWindow();
   });
 
   ipcMain.on('send-hash-request', () => {

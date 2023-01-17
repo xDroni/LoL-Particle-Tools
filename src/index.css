@@ -21,10 +21,16 @@
 }
 
 .btn {
-  @apply font-bold py-1 px-2 rounded;
+  @apply font-bold py-1 px-2 disabled:opacity-50 disabled:pointer-events-none;
+}
+.btn-r {
+  @apply rounded-r-full;
+}
+.btn-l {
+  @apply rounded-l-full;
 }
 .btn-slate {
-  @apply bg-slate-500 text-white;
+  @apply bg-slate-400 text-white;
 }
 .btn-slate:hover {
   @apply bg-slate-700;

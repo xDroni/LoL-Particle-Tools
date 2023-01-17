@@ -84,11 +84,11 @@ function drawRectangle() {
   let mouseDown = false;
 
   async function sendHash() {
-    await new Promise((resolve) => setTimeout(resolve, 35));
+    await new Promise((resolve) => setTimeout(resolve, 58));
     const cropImgSrc = await refreshScreen();
-    // const hash = await window.electronAPI.calculateHash(cropImgSrc);
-    // console.log(hash);
-    await window.electronAPI.sendHashResponse(cropImgSrc);
+    const hash = await window.electronAPI.calculateHash(cropImgSrc);
+    console.log(hash);
+    await window.electronAPI.sendHashResponse(hash);
   }
   function mouseDownListener(e) {
     lastMouseXOnDown = e.clientX - canvasX;

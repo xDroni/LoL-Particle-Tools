@@ -125,7 +125,7 @@ export default function Particles({ props }) {
         <div className="flex">
           <select
             multiple
-            className="h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-x-hidden no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
+            className="z-10 h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-x-hidden no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
             disabled={locationInProgress}
             onChange={handleEnabledParticlesChange}
           >
@@ -142,7 +142,7 @@ export default function Particles({ props }) {
             })}
           </select>
           <button
-            className="btn btn-slate h-8 lg:h-16 mt-auto mb-auto"
+            className="btn btn-r btn-slate h-[70vh] opacity-50 -ml-2"
             onClick={disableSelectedParticles}
           >
             <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
@@ -171,14 +171,14 @@ export default function Particles({ props }) {
         <span className="block sm:mb-2 mb-0 uppercase">Disabled particles</span>
         <div className="flex">
           <button
-            className="btn btn-slate h-8 lg:h-16 mt-auto mb-auto"
+            className="btn btn-l btn-slate h-[70vh] opacity-50 -mr-2"
             onClick={enableSelectedParticles}
           >
             <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
           </button>
           <select
             multiple
-            className="h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-x-hidden no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
+            className="z-10 h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-x-hidden no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
             disabled={locationInProgress}
             onChange={handleDisabledParticlesChange}
           >
