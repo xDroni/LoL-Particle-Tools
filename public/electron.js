@@ -29,8 +29,8 @@ function createMainWindow() {
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
-          width: 330,
-          height: 300,
+          width: 346, //  -16
+          height: 339, // -39
           resizable: true,
           minimizable: false,
           maximizable: false,

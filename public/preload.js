@@ -1,18 +1,18 @@
 const { contextBridge, ipcRenderer } = require('electron');
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
 const ELECTRON_API = {
   startAutoLocating: () => ipcRenderer.send('start-auto-locating'),
   stopAutoLocating: () => ipcRenderer.send('stop-auto-locating'),
   getSources: () => ipcRenderer.invoke('get-sources'),
   calculateHash: async (imageSrc) => {
-    // save file for testing purposes
-    fs.writeFileSync(
-      `${path.join(__dirname, 'data', Date.now().toString())}.bmp`,
-      imageSrc.replace(/^data:image\/png;base64,/, ''),
-      { encoding: 'base64' }
-    );
+    //  // save file for testing purposes
+    // fs.writeFileSync(
+    //   `${path.join(__dirname, 'data', Date.now().toString())}.bmp`,
+    //   imageSrc.replace(/^data:image\/png;base64,/, ''),
+    //   { encoding: 'base64' }
+    // );
     return ipcRenderer.invoke('calculate-hash', imageSrc);
   },
   sendHashResponse: (hash) => ipcRenderer.invoke('send-hash-response', hash),

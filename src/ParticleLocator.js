@@ -23,7 +23,7 @@ export default function ParticleLocator({ props }) {
   const [foundParticles, setFoundParticles] = useState([]);
   const [hashComparisonsResult, setHashComparisonsResult] = useState([]);
   const particlesStateToRestore = useRef([]);
-  const mode = MODE.AUTO;
+  const mode = MODE.LEGACY;
 
   useEffect(() => {
     if (split === null) return;
@@ -171,51 +171,47 @@ export default function ParticleLocator({ props }) {
             if (locationInProgress) void stopLocating();
           }}
         >
-          <button
-            type="button"
-            className="btn btn-slate h-12 text-xl mt-2 sm:mb-4 mb-1"
-            onClick={() => handleParticleLocator(MODE.LEGACY)}
-          >
-            {locationInProgress === false ? 'Start' : 'Stop'}
-          </button>
-          {locationInProgress === true ? (
-            <>
-              <div className="mb-2 text-xl">Did change?</div>
-              <div className="flex gap-6 justify-center">
-                <button
-                  type="button"
-                  className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
-                  onClick={() => handleDidChange(true)}
-                  disabled={isLoading}
-                >
-                  Yes
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
-                  onClick={() => handleDidChange(false)}
-                  disabled={isLoading}
-                >
-                  No
-                </button>
-              </div>
-            </>
-          ) : null}
-          {particleName !== null ? (
-            <>
-              <div className="mb-9">
-                <p className="text-xl mb-2">Particle name: </p>
-                <span className="font-bold">{particleName}</span>
-              </div>
+          <div className="flex flex-col h-[40vh] w-full text-center">
+            <button
+              type="button"
+              className="btn btn-slate mr-auto ml-auto h-12 w-28 text-xl mt-2 mb-2"
+              onClick={() => handleParticleLocator(MODE.LEGACY)}
+            >
+              {locationInProgress === false ? 'Start' : 'Stop'}
+            </button>
+            <div className="mb-2 text-xl">Did change?</div>
+            <div className="flex gap-6 justify-center mb-2">
               <button
                 type="button"
-                className="block ml-auto mr-auto btn btn-slate"
-                onClick={() => postParticles({ [particleName]: false }, setParticles)}
+                className="btn btn-slate h-12 text-xl disabled:bg-slate-800"
+                onClick={() => handleDidChange(true)}
+                disabled={!locationInProgress || isLoading}
               >
-                Disable particle
+                Yes
               </button>
-            </>
-          ) : null}
+              <button
+                type="button"
+                className="btn btn-slate h-12 text-xl disabled:bg-slate-800"
+                onClick={() => handleDidChange(false)}
+                disabled={!locationInProgress || isLoading}
+              >
+                No
+              </button>
+            </div>
+            {particleName !== null ? (
+              <>
+                <p className="text-base mb-1">Particle name: </p>
+                <span className="font-bold mb-4">{particleName}</span>
+                <button
+                  type="button"
+                  className="block ml-auto mr-auto btn btn-slate"
+                  onClick={() => postParticles({ [particleName]: false }, setParticles)}
+                >
+                  Disable particle
+                </button>
+              </>
+            ) : null}
+          </div>
         </ParticleLocatorWindow>
       )}
       {/* Auto Particle Locator */}
@@ -227,34 +223,51 @@ export default function ParticleLocator({ props }) {
             if (locationInProgress) void stopLocating();
           }}
         >
-          <div className="flex flex-col w-24 mr-auto ml-auto">
-            <button
-              type="button"
-              className="btn btn-slate h-12 text-xl mt-2 mb-2"
-              onClick={() => {
-                return handleParticleLocator(MODE.AUTO);
-              }}
-            >
-              {locationInProgress === false ? 'Start' : 'Stop'}
-            </button>
-            <button
-              type="button"
-              className="btn btn-slate mb-2"
-              disabled={locationInProgress || foundParticles.length === 0}
-              onClick={() =>
-                postParticles(
-                  { ...foundParticles.reduce((prev, curr) => ({ ...prev, [curr]: false }), {}) },
-                  setParticles
-                )
-              }
-            >
-              Disable all
-            </button>
-          </div>
-          {/*todo*/}
-          <p className="text-base mb-2">Found particles: </p>
-          <div className="overflow-x-hidden overflow-y-auto h-12">
-            <ul className="text-2xl list-none">{listOfItems(foundParticles)}</ul>
+          <div className="h-[100vh]">
+            <div className="mr-auto ml-auto flex flex-col h-[40vh] w-28">
+              <button
+                type="button"
+                className="btn btn-slate h-12 text-xl mt-2 mb-2"
+                onClick={() => {
+                  return handleParticleLocator(MODE.AUTO);
+                }}
+              >
+                {locationInProgress === false ? 'Start' : 'Stop'}
+              </button>
+              <button
+                type="button"
+                className="btn btn-slate mb-2"
+                disabled={locationInProgress || foundParticles.length === 0}
+                onClick={() =>
+                  postParticles(
+                    { ...foundParticles.reduce((prev, curr) => ({ ...prev, [curr]: false }), {}) },
+                    setParticles
+                  )
+                }
+              >
+                Disable all
+              </button>
+              <p className="text-base">Found particles:</p>
+            </div>
+            <div className="no-scrollbar h-[57vh] overflow-x-hidden pt-1">
+              {/*{listOfItems(foundParticles)}*/}
+              {listOfItems([
+                'a',
+                'asd',
+                'aasddasdasdas',
+                '234234234',
+                'asdasdasdas',
+                'asdasdasdasdasdasdasdasdasdasd',
+                'asdasdasdasdasdasdasdasdasdasd',
+                'asdasdasdasdasdasdasdasdasdasd',
+                'asdasdasdasdasdasdasdasdasdasd',
+                'asdasdasdasdasdasdasdasdasdasd',
+                'asdasdasdasdasdasdasdasdasdasd',
+                'asdasdasdasdasdasdasdasdasdasd',
+                'asdasdasdasdasdasdasdasdasdasd',
+                'asdasdasdasdasdasdasdasdasdasd'
+              ])}
+            </div>
           </div>
         </ParticleLocatorWindow>
       )}

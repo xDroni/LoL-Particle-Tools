@@ -29,7 +29,7 @@ export default class ParticleLocatorWindow extends Component {
     copyStyles(window.document, this.externalWindow.document);
 
     if (this.externalWindow) {
-      this.containerEl.className = 'text-center';
+      // this.containerEl.className = 'text-center';
       this.externalWindow.document.addEventListener('keydown', this.listener);
       this.externalWindow.document.body.appendChild(this.containerEl);
       this.externalWindow.onunload = () => this.props.onClose();
