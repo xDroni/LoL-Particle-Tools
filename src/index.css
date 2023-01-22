@@ -2,34 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+/* reserve space for the scrollbar */
+html {
+  scrollbar-gutter: stable both-edges;
+}
+
 @layer utilities {
   /* Chrome, Safari and Opera */
+
+  /* styled scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-700 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-400 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-200;
+  }
+
   /* hide scrollbar */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
 
-  /* show styled scrollbar */
-  .scrollbar::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-
-  .scrollbar::-webkit-scrollbar-track {
-    @apply bg-slate-700 rounded-full;
-  }
-
-  .scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-slate-400 rounded-full;
-  }
-
-  .scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-200;
-  }
-
-  /* reserve space for the scrollbar */
-  .scrollbar-gutter {
+  .scrollbar-gutter-enable {
     scrollbar-gutter: stable both-edges;
+  }
+
+  .scrollbar-gutter-disable {
+    scrollbar-gutter: auto;
   }
 }
 

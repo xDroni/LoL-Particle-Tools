@@ -121,7 +121,7 @@ export default function Particles({ props }) {
   }
 
   return (
-    <div className="flex gap-2 lg:gap-8 justify-center">
+    <div className="flex gap-2 mt-4 lg:gap-8 justify-center">
       <div className="w-96 text-center">
         <span className="block sm:mb-2 mb-0 uppercase">Enabled particles</span>
         <div className="flex">

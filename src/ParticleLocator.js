@@ -235,7 +235,7 @@ export default function ParticleLocator({ props }) {
           <div
             className={`scrollbar overflow-x-hidden ${
               mode === MODE.LEGACY ? 'h-12' : 'h-40'
-            } pt-1 flex flex-col items-center scrollbar-gutter`}
+            } pt-1 flex flex-col items-center scrollbar-gutter-enable`}
           >
             {mode === MODE.LEGACY
               ? listOfItems(foundParticleLegacy, locationInProgress, particles, setParticles)

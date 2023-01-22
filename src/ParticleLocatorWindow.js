@@ -29,7 +29,8 @@ export default class ParticleLocatorWindow extends Component {
     copyStyles(window.document, this.externalWindow.document);
 
     if (this.externalWindow) {
-      // this.containerEl.className = 'text-center';
+      this.externalWindow.document.getElementsByTagName('html')[0].className =
+        'scrollbar-gutter-disable';
       this.externalWindow.document.addEventListener('keydown', this.listener);
       this.externalWindow.document.body.appendChild(this.containerEl);
       this.externalWindow.onunload = () => this.props.onClose();
