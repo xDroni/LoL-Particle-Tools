@@ -8,6 +8,7 @@ import listOfItems from './common/listOfItems';
 
 export default function ParticleLocator({ props }) {
   const {
+    particles,
     setParticles,
     locationInProgress,
     setLocationInProgress,
@@ -17,10 +18,10 @@ export default function ParticleLocator({ props }) {
   } = props;
   const [split, setSplit] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [foundParticleLegacy, setFoundParticleLegacy] = useState(null);
+  const [foundParticleLegacy, setFoundParticleLegacy] = useState([]);
+  const [foundParticlesAuto, setFoundParticlesAuto] = useState([]);
   const [isNewWindow, setIsNewWindow] = useState(false);
   const [hashToCompare, setHashToCompare] = useState(null);
-  const [foundParticlesAuto, setFoundParticlesAuto] = useState([]);
   const [hashComparisonsResult, setHashComparisonsResult] = useState([]);
   const [mode, setMode] = useState(MODE.AUTO);
   const particlesStateToRestore = useRef([]);
@@ -67,7 +68,7 @@ export default function ParticleLocator({ props }) {
 
     if (entries.length === 1 && mode === MODE.LEGACY) {
       // setInterval(autoFetch(setParticles, setReplayLoad, 10000)); // needed? it's also called in stopLocating
-      setFoundParticleLegacy(entries[0][0]);
+      setFoundParticleLegacy([entries[0][0]]);
       return stopLocating();
     }
 
@@ -75,8 +76,6 @@ export default function ParticleLocator({ props }) {
       const allFound = hashComparisonsResult.every(
         (result) => result === COMPARISON_RESULT_STATE.DID_NOT_CHANGE
       );
-      console.log('allFound');
-      console.log(allFound);
       setHashComparisonsResult([]);
       if (allFound) {
         return stopLocating();
@@ -97,7 +96,7 @@ export default function ParticleLocator({ props }) {
       const firstHash = await getHash();
       setHashToCompare(() => firstHash);
 
-      const onlyEnabled = await fetchParticles(setParticles, setReplayLoad, true);
+      const onlyEnabled = Object.entries(await fetchParticles(setParticles, setReplayLoad, true));
       return findParticle(onlyEnabled);
     }
 
@@ -118,7 +117,7 @@ export default function ParticleLocator({ props }) {
     const enabledParticles = Object.entries(currentParticles).filter(([, state]) => Boolean(state));
 
     particlesStateToRestore.current = currentParticles;
-    setFoundParticleLegacy(null);
+    setFoundParticleLegacy([]);
     setFoundParticlesAuto([]);
     setLocationInProgress(true);
 
@@ -192,7 +191,7 @@ export default function ParticleLocator({ props }) {
               className="btn btn-slate"
               disabled={
                 locationInProgress ||
-                (mode === MODE.LEGACY && foundParticleLegacy === null) ||
+                (mode === MODE.LEGACY && foundParticleLegacy.length === 0) ||
                 (mode === MODE.AUTO && foundParticlesAuto.length === 0)
               }
               onClick={() =>
@@ -209,7 +208,7 @@ export default function ParticleLocator({ props }) {
                     )
               }
             >
-              {mode === MODE.LEGACY ? 'Disable' : 'Disable all'}
+              {mode === MODE.LEGACY ? 'Disable found' : 'Disable all found'}
             </button>
             <p className="text-base text-center">
               {mode === MODE.LEGACY ? 'Found particle' : 'Found particles'}
@@ -221,8 +220,8 @@ export default function ParticleLocator({ props }) {
             } pt-1 flex flex-col items-center`}
           >
             {mode === MODE.LEGACY
-              ? listOfItems(foundParticleLegacy)
-              : listOfItems(foundParticlesAuto)}
+              ? listOfItems(foundParticleLegacy, locationInProgress, particles, setParticles)
+              : listOfItems(foundParticlesAuto, locationInProgress, particles, setParticles)}
           </div>
           {mode === MODE.LEGACY && (
             <div className="flex flex-col fixed bottom-6 w-full">

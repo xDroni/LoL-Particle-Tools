@@ -30,7 +30,7 @@
   @apply rounded-l-full;
 }
 .btn-slate {
-  @apply bg-slate-400 text-white;
+  @apply bg-slate-500 text-white;
 }
 .btn-slate:hover {
   @apply bg-slate-700;

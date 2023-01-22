@@ -10,7 +10,7 @@ export default async function fetchParticles(setParticles, setReplayLoad, onlyEn
       setParticles(json);
       setReplayLoad(false);
       return onlyEnabled === true
-        ? Object.entries(json).filter(([, state]) => Boolean(state))
+        ? Object.fromEntries(Object.entries(json).filter(([, state]) => Boolean(state)))
         : json;
     }
     setReplayLoad(true);

@@ -19,6 +19,8 @@ export default function Particles({ props }) {
     { enabled: [], disabled: [] }
   );
 
+  console.log(particlesByState);
+
   const [enabledParticlesFilter, setEnabledParticlesFilter] = useState('');
   const [disabledParticlesFilter, setDisabledParticlesFilter] = useState('');
   const [fileName, setFileName] = useState('');
@@ -141,10 +143,7 @@ export default function Particles({ props }) {
               );
             })}
           </select>
-          <button
-            className="btn btn-r btn-slate h-[70vh] opacity-50 -ml-2"
-            onClick={disableSelectedParticles}
-          >
+          <button className="btn btn-r btn-slate h-[70vh] -ml-2" onClick={disableSelectedParticles}>
             <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
           </button>
         </div>
@@ -158,6 +157,7 @@ export default function Particles({ props }) {
         />
         <ParticleLocator
           props={{
+            particles,
             setParticles,
             locationInProgress,
             setLocationInProgress,
@@ -170,10 +170,7 @@ export default function Particles({ props }) {
       <div className="w-96 text-center">
         <span className="block sm:mb-2 mb-0 uppercase">Disabled particles</span>
         <div className="flex">
-          <button
-            className="btn btn-l btn-slate h-[70vh] opacity-50 -mr-2"
-            onClick={enableSelectedParticles}
-          >
+          <button className="btn btn-l btn-slate h-[70vh] -mr-2" onClick={enableSelectedParticles}>
             <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
           </button>
           <select
