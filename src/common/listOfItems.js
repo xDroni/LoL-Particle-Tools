@@ -1,7 +1,7 @@
 export default function listOfItems(items) {
   return items.map((item) => {
     return (
-      <label key={item} className="flex items-top w-[95vh] justify-center mr-auto ml-auto mb-1">
+      <label key={item} className="flex w-[95vh] justify-center mb-1">
         <span className="mr-2 no-scrollbar overflow-auto">{item}</span>
         <input
           checked
