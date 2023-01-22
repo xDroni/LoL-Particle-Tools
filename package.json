@@ -13,8 +13,8 @@
     "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
     "electron-is-dev": "^2.0.0",
-	"react": "^18.1.0",
-	"react-dom": "^18.1.0"
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0"
   },
   "main": "public/electron.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "eslint": "eslint --ext .js,.jsx src",
-    "format": "prettier --write \"**/*.{ts,js,css,scss,md}\"",
+    "format": "prettier --config .prettierrc --write \"**/*.{ts,js,jsx,tsx,css,scss,md}\"",
     "electron-dev": "concurrently \"npm start \" \"wait-on http://localhost:3000 && electron .\"",
     "pack": "npm run deploy && electron-builder --dir",
     "dist": "npm run deploy && electron-builder",
@@ -67,9 +67,9 @@
     "copyfiles": "^2.4.1",
     "electron": "^22.0.0",
     "electron-builder": "^23.0.3",
-    "eslint": "^8.16.0",
+    "eslint": "^8.32.0",
     "eslint-config-react-app": "^7.0.1",
-    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-react": "^7.32.1",
     "file-saver": "^2.0.5",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.2",
