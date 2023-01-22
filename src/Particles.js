@@ -134,9 +134,9 @@ export default function Particles({ props }) {
             {enabledParticlesFiltered.map((particleName) => {
               return (
                 <option
+                  className="hover:bg-slate-700 rounded-xl"
                   key={particleName}
                   value={particleName}
-                  className="hover:bg-slate-700 rounded-xl"
                 >
                   {particleName}
                 </option>
@@ -149,11 +149,11 @@ export default function Particles({ props }) {
         </div>
 
         <input
-          value={enabledParticlesFilter}
-          onChange={handleEnabledParticlesFilterChange}
           type="text"
           className="w-3/4 text-xs lg:text-base ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 sm:mb-4 mb-1"
           placeholder="Filter"
+          value={enabledParticlesFilter}
+          onChange={handleEnabledParticlesFilterChange}
         />
         <ParticleLocator
           props={{
@@ -182,9 +182,9 @@ export default function Particles({ props }) {
             {disabledParticlesFiltered.map((particleName) => {
               return (
                 <option
+                  className="hover:bg-slate-700 rounded-xl"
                   key={particleName}
                   value={particleName}
-                  className="hover:bg-slate-700 rounded-xl"
                 >
                   {particleName}
                 </option>
@@ -194,11 +194,11 @@ export default function Particles({ props }) {
         </div>
 
         <input
-          value={disabledParticlesFilter}
-          onChange={handleDisabledParticlesFilterChange}
           type="text"
           className="w-3/4 text-xs lg:text-base ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 sm:mb-4 mb-1"
           placeholder="Filter"
+          value={disabledParticlesFilter}
+          onChange={handleDisabledParticlesFilterChange}
         />
 
         <div className="flex gap-4 justify-center">

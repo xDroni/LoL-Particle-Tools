@@ -4,13 +4,32 @@
 
 @layer utilities {
   /* Chrome, Safari and Opera */
+  /* hide scrollbar */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
 
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+  /* show styled scrollbar */
+  .scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    @apply bg-slate-700 rounded-full;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-slate-400 rounded-full;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-200;
+  }
+
+  /* reserve space for the scrollbar */
+  .scrollbar-gutter {
+    scrollbar-gutter: stable both-edges;
   }
 }
 
@@ -38,6 +57,10 @@
 
 .btn-responsive {
   @apply lg:text-base md:text-xs sm:text-xs text-[0px];
+}
+
+.checkbox {
+  @apply focus:ring-offset-0;
 }
 
 .initial {

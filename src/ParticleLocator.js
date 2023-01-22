@@ -117,8 +117,6 @@ export default function ParticleLocator({ props }) {
     const enabledParticles = Object.entries(currentParticles).filter(([, state]) => Boolean(state));
 
     particlesStateToRestore.current = currentParticles;
-    setFoundParticleLegacy([]);
-    setFoundParticlesAuto([]);
     setLocationInProgress(true);
 
     if (mode === MODE.LEGACY) {
@@ -152,7 +150,11 @@ export default function ParticleLocator({ props }) {
   }
 
   function handleModeChange() {
-    setMode(mode === MODE.LEGACY ? MODE.AUTO : MODE.LEGACY);
+    return setMode(mode === MODE.LEGACY ? MODE.AUTO : MODE.LEGACY);
+  }
+
+  function clearFoundParticles() {
+    return mode === MODE.LEGACY ? setFoundParticleLegacy([]) : setFoundParticlesAuto([]);
   }
 
   return (
@@ -173,12 +175,25 @@ export default function ParticleLocator({ props }) {
             if (locationInProgress) void stopLocating();
           }}
         >
-          <div className="mr-auto ml-auto flex flex-col w-28 gap-y-2 mt-2">
-            <input
-              onChange={handleModeChange}
-              type="checkbox"
-              className="fixed top-0 mt-2 right-0 mr-2"
-            />
+          <div className="mr-auto ml-auto flex flex-col w-28 gap-y-1 mt-2">
+            <label
+              htmlFor="ModeToggle"
+              className="fixed top-0 mt-2 right-0 mr-2 inline-flex items-center space-x-1 cursor-pointer dark:text-slate-100"
+            >
+              <span className="text-xxs">Legacy</span>
+              <span className="relative">
+                <input
+                  id="ModeToggle"
+                  type="checkbox"
+                  className="hidden peer"
+                  checked={mode === MODE.AUTO}
+                  onChange={handleModeChange}
+                />
+                <div className="w-7 h-3 rounded-full shadow-inner dark:bg-slate-600 peer-checked:dark:bg-green-700"></div>
+                <div className="absolute -inset-y-1 left-0 w-3 h-3 mx-0 my-1 rounded-full transition duration-300 peer-checked:right-0 peer-checked:left-auto dark:bg-slate-800"></div>
+              </span>
+              <span className="text-xxs">Auto</span>
+            </label>
             <button
               type="button"
               className="btn btn-slate h-12 text-xl"
@@ -210,21 +225,24 @@ export default function ParticleLocator({ props }) {
             >
               {mode === MODE.LEGACY ? 'Disable found' : 'Disable all found'}
             </button>
+            <button type="button" className="btn btn-slate" onClick={clearFoundParticles}>
+              Clear the list
+            </button>
             <p className="text-base text-center">
               {mode === MODE.LEGACY ? 'Found particle' : 'Found particles'}
             </p>
           </div>
           <div
-            className={`no-scrollbar overflow-x-hidden ${
-              mode === MODE.LEGACY ? 'h-12 justify-center' : 'h-44'
-            } pt-1 flex flex-col items-center`}
+            className={`scrollbar overflow-x-hidden ${
+              mode === MODE.LEGACY ? 'h-12' : 'h-40'
+            } pt-1 flex flex-col items-center scrollbar-gutter`}
           >
             {mode === MODE.LEGACY
               ? listOfItems(foundParticleLegacy, locationInProgress, particles, setParticles)
               : listOfItems(foundParticlesAuto, locationInProgress, particles, setParticles)}
           </div>
           {mode === MODE.LEGACY && (
-            <div className="flex flex-col fixed bottom-6 w-full">
+            <div className="flex flex-col fixed bottom-2 w-full">
               <p className="mb-2 text-xl text-center">Did change?</p>
               <div className="flex gap-6 justify-center">
                 <button
