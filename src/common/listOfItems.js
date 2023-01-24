@@ -14,7 +14,7 @@ export default function listOfItems(items, locationInProgress, particles, setPar
           disabled={locationInProgress}
           checked={!particles[item]}
           onChange={() => postParticles({ [item]: !particles[item] }, setParticles)}
-          className="checkbox mr-2 h-4 w-4 text-red-800 rounded bg-slate-800 focus:ring-slate-600 transition duration-100 cursor-pointer"
+          className="checkbox-focus mr-2 h-4 w-4 text-red-800 rounded bg-slate-800 transition duration-100 cursor-pointer"
         />
         <label htmlFor={item}>OFF</label>
       </div>

@@ -196,7 +196,7 @@ export default function ParticleLocator({ props }) {
             </label>
             <button
               type="button"
-              className="btn btn-slate h-12 text-xl"
+              className="btn btn-slate text-base"
               onClick={() => handleParticleLocator(mode)}
             >
               {locationInProgress === false ? 'Start' : 'Stop'}
@@ -228,18 +228,26 @@ export default function ParticleLocator({ props }) {
             <button type="button" className="btn btn-slate" onClick={clearFoundParticles}>
               Clear the list
             </button>
-            <p className="text-base text-center">
-              {mode === MODE.LEGACY ? 'Found particle' : 'Found particles'}
-            </p>
+            <p className="text-base text-center">Found particles</p>
           </div>
           <div
             className={`scrollbar overflow-x-hidden ${
-              mode === MODE.LEGACY ? 'h-12' : 'h-40'
+              mode === MODE.LEGACY ? 'h-16' : 'h-44'
             } pt-1 flex flex-col items-center scrollbar-gutter-enable`}
           >
             {mode === MODE.LEGACY
-              ? listOfItems(foundParticleLegacy, locationInProgress, particles, setParticles)
-              : listOfItems(foundParticlesAuto, locationInProgress, particles, setParticles)}
+              ? listOfItems(
+                  ['foundParticleLegacy', '1', '2', '3', '4'],
+                  locationInProgress,
+                  particles,
+                  setParticles
+                )
+              : listOfItems(
+                  ['foundParticlesAuto', '1', '2', '3', '4', '5', '6', '7', '8'],
+                  locationInProgress,
+                  particles,
+                  setParticles
+                )}
           </div>
           {mode === MODE.LEGACY && (
             <div className="flex flex-col fixed bottom-2 w-full">
@@ -247,7 +255,7 @@ export default function ParticleLocator({ props }) {
               <div className="flex gap-6 justify-center">
                 <button
                   type="button"
-                  className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
+                  className="btn btn-slate w-16 h-16 text-xl"
                   onClick={() => handleParticleChange(true)}
                   disabled={isLoading || !locationInProgress}
                 >
@@ -255,7 +263,7 @@ export default function ParticleLocator({ props }) {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-slate w-16 h-16 text-xl disabled:bg-slate-800"
+                  className="btn btn-slate w-16 h-16 text-xl"
                   onClick={() => handleParticleChange(false)}
                   disabled={isLoading || !locationInProgress}
                 >

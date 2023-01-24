@@ -19,8 +19,6 @@ export default function Particles({ props }) {
     { enabled: [], disabled: [] }
   );
 
-  console.log(particlesByState);
-
   const [enabledParticlesFilter, setEnabledParticlesFilter] = useState('');
   const [disabledParticlesFilter, setDisabledParticlesFilter] = useState('');
   const [fileName, setFileName] = useState('');
@@ -127,7 +125,7 @@ export default function Particles({ props }) {
         <div className="flex">
           <select
             multiple
-            className="z-10 h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-x-hidden no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
+            className="particle-list"
             disabled={locationInProgress}
             onChange={handleEnabledParticlesChange}
           >
@@ -143,14 +141,14 @@ export default function Particles({ props }) {
               );
             })}
           </select>
-          <button className="btn btn-r btn-slate h-[70vh] -ml-2" onClick={disableSelectedParticles}>
+          <button className="btn btn-r btn-slate h-[70vh] -ml-1" onClick={disableSelectedParticles}>
             <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
           </button>
         </div>
 
         <input
           type="text"
-          className="w-3/4 text-xs lg:text-base ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 sm:mb-4 mb-1"
+          className="filter-button"
           placeholder="Filter"
           value={enabledParticlesFilter}
           onChange={handleEnabledParticlesFilterChange}
@@ -170,12 +168,12 @@ export default function Particles({ props }) {
       <div className="w-96 text-center">
         <span className="block sm:mb-2 mb-0 uppercase">Disabled particles</span>
         <div className="flex">
-          <button className="btn btn-l btn-slate h-[70vh] -mr-2" onClick={enableSelectedParticles}>
+          <button className="btn btn-l btn-slate h-[70vh] -mr-1" onClick={enableSelectedParticles}>
             <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
           </button>
           <select
             multiple
-            className="z-10 h-[70vh] text-xs lg:text-base bg-slate-800 w-full rounded-xl overflow-x-hidden no-scrollbar sm:mb-4 mb-1 disabled:bg-slate-800"
+            className="particle-list"
             disabled={locationInProgress}
             onChange={handleDisabledParticlesChange}
           >
@@ -195,7 +193,7 @@ export default function Particles({ props }) {
 
         <input
           type="text"
-          className="w-3/4 text-xs lg:text-base ml-auto mr-auto block bg-slate-800 placeholder-cyan-100 sm:mb-4 mb-1"
+          className="filter-button"
           placeholder="Filter"
           value={disabledParticlesFilter}
           onChange={handleDisabledParticlesFilterChange}
