@@ -18,8 +18,7 @@ export default function ParticleLocator({ props }) {
   } = props;
   const [split, setSplit] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [foundParticleLegacy, setFoundParticleLegacy] = useState([]);
-  const [foundParticlesAuto, setFoundParticlesAuto] = useState([]);
+  const [foundParticles, setFoundParticles] = useState([]);
   const [isNewWindow, setIsNewWindow] = useState(false);
   const [hashToCompare, setHashToCompare] = useState(null);
   const [hashComparisonsResult, setHashComparisonsResult] = useState([]);
@@ -68,7 +67,8 @@ export default function ParticleLocator({ props }) {
 
     if (entries.length === 1 && mode === MODE.LEGACY) {
       // setInterval(autoFetch(setParticles, setReplayLoad, 10000)); // needed? it's also called in stopLocating
-      setFoundParticleLegacy([entries[0][0]]);
+      const foundParticle = entries[0][0];
+      setFoundParticles((prev) => [...prev, foundParticle]);
       return stopLocating();
     }
 
@@ -81,12 +81,12 @@ export default function ParticleLocator({ props }) {
         return stopLocating();
       }
       const foundParticle = entries[0][0];
-      setFoundParticlesAuto((prev) => [...prev, foundParticle]);
+      setFoundParticles((prev) => [...prev, foundParticle]);
 
       await postParticles(
         {
           ...particlesStateToRestore.current,
-          ...foundParticlesAuto.reduce((prev, curr) => ({ ...prev, [curr]: false }), {}),
+          ...foundParticles.reduce((prev, curr) => ({ ...prev, [curr]: false }), {}),
           [foundParticle]: false
         },
         setParticles
@@ -154,7 +154,7 @@ export default function ParticleLocator({ props }) {
   }
 
   function clearFoundParticles() {
-    return mode === MODE.LEGACY ? setFoundParticleLegacy([]) : setFoundParticlesAuto([]);
+    return setFoundParticles([]);
   }
 
   return (
@@ -204,26 +204,17 @@ export default function ParticleLocator({ props }) {
             <button
               type="button"
               className="btn btn-slate"
-              disabled={
-                locationInProgress ||
-                (mode === MODE.LEGACY && foundParticleLegacy.length === 0) ||
-                (mode === MODE.AUTO && foundParticlesAuto.length === 0)
-              }
+              disabled={locationInProgress || foundParticles.length === 0}
               onClick={() =>
-                mode === MODE.LEGACY
-                  ? postParticles({ [foundParticleLegacy]: false }, setParticles)
-                  : postParticles(
-                      {
-                        ...foundParticlesAuto.reduce(
-                          (prev, curr) => ({ ...prev, [curr]: false }),
-                          {}
-                        )
-                      },
-                      setParticles
-                    )
+                postParticles(
+                  {
+                    ...foundParticles.reduce((prev, curr) => ({ ...prev, [curr]: false }), {})
+                  },
+                  setParticles
+                )
               }
             >
-              {mode === MODE.LEGACY ? 'Disable found' : 'Disable all found'}
+              Disable all found
             </button>
             <button type="button" className="btn btn-slate" onClick={clearFoundParticles}>
               Clear the list
@@ -235,19 +226,7 @@ export default function ParticleLocator({ props }) {
               mode === MODE.LEGACY ? 'h-16' : 'h-44'
             } pt-1 flex flex-col items-center scrollbar-gutter-enable`}
           >
-            {mode === MODE.LEGACY
-              ? listOfItems(
-                  ['foundParticleLegacy', '1', '2', '3', '4'],
-                  locationInProgress,
-                  particles,
-                  setParticles
-                )
-              : listOfItems(
-                  ['foundParticlesAuto', '1', '2', '3', '4', '5', '6', '7', '8'],
-                  locationInProgress,
-                  particles,
-                  setParticles
-                )}
+            {listOfItems(foundParticles, locationInProgress, particles, setParticles)}
           </div>
           {mode === MODE.LEGACY && (
             <div className="flex flex-col fixed bottom-2 w-full">
