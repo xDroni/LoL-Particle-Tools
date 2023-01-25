@@ -85,7 +85,7 @@ export default function Particles({ props }) {
     postParticles(json, setParticles);
   }
 
-  function handleSaveFile() {
+  function handleExportFile() {
     const data = particlesByState.disabled.reduce((prev, curr) => {
       return prev + curr + '\n';
     }, '');
@@ -94,7 +94,7 @@ export default function Particles({ props }) {
     setFileName('');
   }
 
-  function handleFile() {
+  function handleImportFile() {
     let input = document.createElement('input');
     input.type = 'file';
     input.accept = '.txt';
@@ -104,13 +104,25 @@ export default function Particles({ props }) {
       const fileReader = new FileReader();
       fileReader.onload = (f) => {
         const particlesToDisable = f.target.result.toString();
-        const particlesToDisableJSON = particlesToDisable.split('\n').reduce(
-          (prev, curr) => ({
+        const particlesToDisableJSON = particlesToDisable.split('\n').reduce((prev, curr) => {
+          const trimmed = curr.trim();
+          if (!/^[0-9A-Za-z_-]+$/.test(trimmed)) return; /// todo error toast notification
+          /* typo, there is space at the end of these 2 particle names,
+             so we need to add that space to match the name in API */
+          if (
+            trimmed === 'SRUAP_Order_Nexus_Idle1_sound' ||
+            trimmed === 'SRUAP_Order_Nexus_Spawn_sound'
+          ) {
+            return {
+              ...prev,
+              ...{ [trimmed + ' ']: false }
+            };
+          }
+          return {
             ...prev,
-            ...(curr.trim().length ? { [curr.trim()]: false } : {})
-          }),
-          {}
-        );
+            ...{ [curr.trim()]: false }
+          };
+        }, {});
         postParticles(particlesToDisableJSON, setParticles);
       };
       fileReader.readAsText(file, 'UTF-8');
@@ -203,7 +215,7 @@ export default function Particles({ props }) {
           <button
             type="button"
             className="block btn btn-slate btn-responsive sm:mb-4 mb-1"
-            onClick={handleSaveFile}
+            onClick={handleExportFile}
           >
             <FontAwesomeIcon
               className="mr-1 initial"
@@ -212,7 +224,10 @@ export default function Particles({ props }) {
             />
             Save to file
           </button>
-          <button className="btn btn-slate btn-responsive block  sm:mb-4 mb-1" onClick={handleFile}>
+          <button
+            className="btn btn-slate btn-responsive block  sm:mb-4 mb-1"
+            onClick={handleImportFile}
+          >
             <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-file-arrow-up" size="lg" />
             Import data
           </button>
