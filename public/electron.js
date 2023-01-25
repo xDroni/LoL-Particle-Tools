@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, desktopCapturer } = require('electron');
 
 const path = require('path');
 const isDev = require('electron-is-dev');
+const { TOAST_NOTIFICATION_TYPES } = require('../src/common/types');
 
 let mainWindow;
 let autoParticleLocatorHandleWindow;
@@ -69,7 +70,8 @@ function createAutoParticleLocatorHandleWindow() {
   autoParticleLocatorHandleWindow.loadFile(
     path.join(__dirname, './autoParticleLocator/index.html')
   );
-  // autoParticleLocatorHandleWindow.webContents.openDevTools();
+
+  autoParticleLocatorHandleWindow.on('closed', () => (autoParticleLocatorHandleWindow = null));
 }
 
 function closeAutoParticleLocatorWindow() {
@@ -99,14 +101,29 @@ app.on('ready', () => {
     return imageSrcArg;
   });
 
-  ipcMain.handle('get-sources', () => {
-    return desktopCapturer.getSources({ types: ['window', 'screen'] }).then(async (sources) => {
-      for (const source of sources) {
-        if (source.name === 'League of Legends (TM) Client' && autoParticleLocatorHandleWindow) {
-          return source;
-        }
-      }
-    });
+  ipcMain.handle('get-league-client', async () => {
+    const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });
+
+    if (autoParticleLocatorHandleWindow === undefined) {
+      return mainWindow.webContents.send(
+        'toast-notification',
+        TOAST_NOTIFICATION_TYPES.ERROR,
+        `Some error occurred. Try again.`
+      );
+    }
+
+    const leagueGameClient = sources.find(
+      (source) => source.name === 'League of Legends (TM) Client'
+    );
+    if (leagueGameClient === undefined) {
+      closeAutoParticleLocatorWindow();
+      return mainWindow.webContents.send(
+        'toast-notification',
+        TOAST_NOTIFICATION_TYPES.ERROR,
+        `Couldn't find the opened replay. If it's open make sure window mode is set to Borderless or Windowed.`
+      );
+    }
+    return leagueGameClient;
   });
 
   ipcMain.handle('send-hash-response', (_, hash) => {

@@ -167,6 +167,9 @@ export default function ParticleLocator({ props }) {
         <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-crosshairs" size="lg" />
         Particle Locator
       </button>
+      {/*<button type="button" className="btn btn-slate btn-responsive sm:mb-4 mb-1" onClick={window.electronAPI.toastNotify}>*/}
+      {/*  Notify*/}
+      {/*</button>*/}
       {isNewWindow && (
         <ParticleLocatorWindow
           handleDidChange={handleParticleChange}

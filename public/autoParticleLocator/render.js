@@ -2,14 +2,16 @@ const trackClones = [];
 let context;
 
 (async () => {
-  const source = await window.electronAPI.getSources();
+  const leagueGameClient = await window.electronAPI.getLeagueClient();
+
+  if (leagueGameClient === undefined) return;
 
   const constraints = {
     audio: false,
     video: {
       mandatory: {
         chromeMediaSource: 'desktop',
-        chromeMediaSourceId: source.id
+        chromeMediaSourceId: leagueGameClient.id
       }
     }
   };
@@ -87,7 +89,6 @@ function drawRectangle() {
     await new Promise((resolve) => setTimeout(resolve, 58));
     const cropImgSrc = await refreshScreen();
     const hash = await window.electronAPI.calculateHash(cropImgSrc);
-    console.log(hash);
     await window.electronAPI.sendHashResponse(hash);
   }
   function mouseDownListener(e) {

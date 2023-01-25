@@ -1,11 +1,14 @@
 const { contextBridge, ipcRenderer } = require('electron');
-// const fs = require('fs');
-// const path = require('path');
 
 const ELECTRON_API = {
   startAutoLocating: () => ipcRenderer.send('start-auto-locating'),
   stopAutoLocating: () => ipcRenderer.send('stop-auto-locating'),
-  getSources: () => ipcRenderer.invoke('get-sources'),
+  getLeagueClient: () => ipcRenderer.invoke('get-league-client'),
+  waitForToastNotification: (f) =>
+    ipcRenderer.on('toast-notification', async (event, ...args) => {
+      console.log(...args);
+      return await f(...args);
+    }),
   calculateHash: async (imageSrc) => {
     //  // save file for testing purposes
     // fs.writeFileSync(

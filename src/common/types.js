@@ -8,8 +8,7 @@ export const COMPARISON_RESULT_STATE = {
   DID_NOT_CHANGE: 'did-not-change'
 };
 
-export const MESSAGE_PAYLOADS = {
-  START: 'start',
-  STOP: 'stop',
-  PARTICLES_SET: 'particles-set'
+export const TOAST_NOTIFICATION_TYPES = {
+  ERROR: 'error',
+  INFO: 'info'
 };
