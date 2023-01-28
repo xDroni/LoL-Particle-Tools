@@ -78,6 +78,10 @@ function closeAutoParticleLocatorWindow() {
   autoParticleLocatorHandleWindow.close();
 }
 
+function sendToastNotification(type, message) {
+  return mainWindow.webContents.send('toast-notification', type, message);
+}
+
 app.commandLine.appendSwitch('ignore-certificate-errors');
 
 app.on('ready', () => {
@@ -105,8 +109,7 @@ app.on('ready', () => {
     const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });
 
     if (autoParticleLocatorHandleWindow === undefined) {
-      return mainWindow.webContents.send(
-        'toast-notification',
+      return sendToastNotification(
         TOAST_NOTIFICATION_TYPES.ERROR,
         `Some error occurred. Try again.`
       );
@@ -117,17 +120,20 @@ app.on('ready', () => {
     );
     if (leagueGameClient === undefined) {
       closeAutoParticleLocatorWindow();
-      return mainWindow.webContents.send(
-        'toast-notification',
+      return sendToastNotification(
         TOAST_NOTIFICATION_TYPES.ERROR,
-        `Couldn't find the opened replay. If it's open make sure window mode is set to Borderless or Windowed.`
+        `Couldn't find the opened replay. Try to focus the window with game. Make sure window mode is set to Borderless or Windowed.`
       );
     }
     return leagueGameClient;
   });
 
+  ipcMain.handle('send-toast-notification', (_, type, message) => {
+    return sendToastNotification(type, message);
+  });
+
   ipcMain.handle('send-hash-response', (_, hash) => {
-    mainWindow.webContents.send('hash-message', hash);
+    return mainWindow.webContents.send('hash-message', hash);
   });
 
   createMainWindow();

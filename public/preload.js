@@ -9,6 +9,7 @@ const ELECTRON_API = {
       console.log(...args);
       return await f(...args);
     }),
+  sendToastNotification: (type, args) => ipcRenderer.invoke('send-toast-notification', type, args),
   calculateHash: async (imageSrc) => {
     //  // save file for testing purposes
     // fs.writeFileSync(

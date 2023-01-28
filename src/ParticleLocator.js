@@ -45,12 +45,10 @@ export default function ParticleLocator({ props }) {
       window.electronAPI.sendHashRequest();
       const hash = await getHash();
       if (hash !== hashToCompare) {
-        console.log(Date.now(), 'changed');
         setHashComparisonsResult((prev) => [...prev, COMPARISON_RESULT_STATE.DID_CHANGE]);
         setHashToCompare(hash);
         return await findParticle(split.entries1);
       }
-      console.log(Date.now(), 'did not change');
       setHashComparisonsResult((prev) => [...prev, COMPARISON_RESULT_STATE.DID_NOT_CHANGE]);
       return await findParticle(split.entries2);
     });

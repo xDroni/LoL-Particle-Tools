@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { TOAST_NOTIFICATION_TYPES } from './common/types';
 
 function App() {
-  const [particles, setParticles] = useState(['asd']);
+  const [particles, setParticles] = useState([]);
   const [interval, setInterval] = useState(null);
   const [replayLoad, setReplayLoad] = useState(true);
 
@@ -23,6 +23,9 @@ function App() {
     switch (type) {
       case TOAST_NOTIFICATION_TYPES.ERROR:
         toast.error(message, options);
+        break;
+      case TOAST_NOTIFICATION_TYPES.WARN:
+        toast.warn(message, options);
         break;
       default:
         toast.info(message, options);
@@ -73,7 +76,7 @@ function App() {
         position="bottom-right"
         transition={Slide}
         autoClose={10000}
-        limit={8}
+        limit={5}
         hideProgressBar={false}
         newestOnTop
         closeOnClick

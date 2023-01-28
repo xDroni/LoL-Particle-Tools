@@ -4,6 +4,7 @@ import { saveAs } from 'file-saver';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import postParticles from './common/postParticles';
 import fetchParticles from './common/fetchParticles';
+import { TOAST_NOTIFICATION_TYPES } from './common/types';
 
 export default function Particles({ props }) {
   const { particles, setParticles, interval, setInterval, setReplayLoad } = props;
@@ -96,6 +97,7 @@ export default function Particles({ props }) {
 
   function handleImportFile() {
     let input = document.createElement('input');
+    let errorOccurred = false;
     input.type = 'file';
     input.accept = '.txt';
     input.onchange = () => {
@@ -106,7 +108,10 @@ export default function Particles({ props }) {
         const particlesToDisable = f.target.result.toString();
         const particlesToDisableJSON = particlesToDisable.split('\n').reduce((prev, curr) => {
           const trimmed = curr.trim();
-          if (!/^[0-9A-Za-z_-]+$/.test(trimmed)) return; /// todo error toast notification
+          if (!/^[0-9A-Za-z_-]+$/.test(trimmed)) {
+            errorOccurred = true;
+            return prev;
+          }
           /* typo, there is space at the end of these 2 particle names,
              so we need to add that space to match the name in API */
           if (
@@ -124,6 +129,13 @@ export default function Particles({ props }) {
           };
         }, {});
         postParticles(particlesToDisableJSON, setParticles);
+        if (errorOccurred === true) {
+          console.log('error occurred, sending notification');
+          return window.electronAPI.sendToastNotification(
+            TOAST_NOTIFICATION_TYPES.WARN,
+            `Not all of the particle names have been imported due to not supported characters. Validate the file.`
+          );
+        }
       };
       fileReader.readAsText(file, 'UTF-8');
     };
@@ -137,7 +149,7 @@ export default function Particles({ props }) {
         <div className="flex">
           <select
             multiple
-            className="particle-list"
+            className="particle-list particle-list-scrollbar"
             disabled={locationInProgress}
             onChange={handleEnabledParticlesChange}
           >
@@ -185,7 +197,7 @@ export default function Particles({ props }) {
           </button>
           <select
             multiple
-            className="particle-list"
+            className="particle-list particle-list-scrollbar"
             disabled={locationInProgress}
             onChange={handleDisabledParticlesChange}
           >
