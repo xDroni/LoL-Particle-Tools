@@ -5,7 +5,7 @@ const isDev = require('electron-is-dev');
 const { TOAST_NOTIFICATION_TYPES } = require('../src/common/types');
 
 let mainWindow;
-let autoParticleLocatorHandleWindow;
+let autoParticleLocatorGameWindow;
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -55,7 +55,7 @@ function createMainWindow() {
 }
 
 function createAutoParticleLocatorHandleWindow() {
-  autoParticleLocatorHandleWindow = new BrowserWindow({
+  autoParticleLocatorGameWindow = new BrowserWindow({
     width: 1920, /// todo make it dynamic depending on resolution
     height: 1080,
     fullscreen: true,
@@ -66,20 +66,33 @@ function createAutoParticleLocatorHandleWindow() {
     }
   });
 
-  // autoParticleLocatorHandleWindow.setAlwaysOnTop(true, 'normal');
-  autoParticleLocatorHandleWindow.loadFile(
-    path.join(__dirname, './autoParticleLocator/index.html')
-  );
+  // autoParticleLocatorGameWindow.setAlwaysOnTop(true, 'normal');
+  autoParticleLocatorGameWindow.loadFile(path.join(__dirname, './autoParticleLocator/index.html'));
 
-  autoParticleLocatorHandleWindow.on('closed', () => (autoParticleLocatorHandleWindow = null));
+  autoParticleLocatorGameWindow.on('closed', () => (autoParticleLocatorGameWindow = null));
 }
 
-function closeAutoParticleLocatorWindow() {
-  autoParticleLocatorHandleWindow.close();
+function closeAutoParticleLocatorGameWindow() {
+  if (autoParticleLocatorGameWindow !== null) {
+    autoParticleLocatorGameWindow.close();
+  }
 }
 
 function sendToastNotification(type, message) {
+  if (type === TOAST_NOTIFICATION_TYPES.ERROR) {
+    restoreMainWindow();
+  }
   return mainWindow.webContents.send('toast-notification', type, message);
+}
+
+function sendClientNotFoundMessage() {
+  return mainWindow.webContents.send('client-not-found');
+}
+
+function restoreMainWindow() {
+  if (mainWindow.isMinimized()) {
+    return mainWindow.restore();
+  }
 }
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
@@ -90,11 +103,11 @@ app.on('ready', () => {
   });
 
   ipcMain.on('stop-auto-locating', () => {
-    closeAutoParticleLocatorWindow();
+    closeAutoParticleLocatorGameWindow();
   });
 
   ipcMain.on('send-hash-request', () => {
-    autoParticleLocatorHandleWindow.webContents.send('hash-requested');
+    autoParticleLocatorGameWindow.webContents.send('hash-requested');
   });
 
   ipcMain.handle('calculate-hash', (_, imageSrcArg) => {
@@ -108,7 +121,8 @@ app.on('ready', () => {
   ipcMain.handle('get-league-client', async () => {
     const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });
 
-    if (autoParticleLocatorHandleWindow === undefined) {
+    if (autoParticleLocatorGameWindow === undefined) {
+      sendClientNotFoundMessage();
       return sendToastNotification(
         TOAST_NOTIFICATION_TYPES.ERROR,
         `Some error occurred. Try again.`
@@ -119,7 +133,8 @@ app.on('ready', () => {
       (source) => source.name === 'League of Legends (TM) Client'
     );
     if (leagueGameClient === undefined) {
-      closeAutoParticleLocatorWindow();
+      closeAutoParticleLocatorGameWindow();
+      sendClientNotFoundMessage();
       return sendToastNotification(
         TOAST_NOTIFICATION_TYPES.ERROR,
         `Couldn't find the opened replay. Try to focus the window with game. Make sure window mode is set to Borderless or Windowed.`

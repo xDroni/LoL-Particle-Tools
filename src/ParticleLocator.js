@@ -26,6 +26,10 @@ export default function ParticleLocator({ props }) {
   const particlesStateToRestore = useRef([]);
 
   useEffect(() => {
+    window.electronAPI.onClientNotFound(stopLocating);
+  }, []);
+
+  useEffect(() => {
     if (split === null) return;
 
     async function post() {
@@ -47,15 +51,15 @@ export default function ParticleLocator({ props }) {
       if (hash !== hashToCompare) {
         setHashComparisonsResult((prev) => [...prev, COMPARISON_RESULT_STATE.DID_CHANGE]);
         setHashToCompare(hash);
-        return await findParticle(split.entries1);
+        return findParticle(split.entries1);
       }
       setHashComparisonsResult((prev) => [...prev, COMPARISON_RESULT_STATE.DID_NOT_CHANGE]);
-      return await findParticle(split.entries2);
+      return findParticle(split.entries2);
     });
   }, [split, setParticles]);
 
   async function getHash() {
-    return await window.electronAPI.waitForHashResponse();
+    return window.electronAPI.waitForHashResponse();
   }
 
   async function findParticle(entries) {
@@ -64,7 +68,6 @@ export default function ParticleLocator({ props }) {
     }
 
     if (entries.length === 1 && mode === MODE.LEGACY) {
-      // setInterval(autoFetch(setParticles, setReplayLoad, 10000)); // needed? it's also called in stopLocating
       const foundParticle = entries[0][0];
       setFoundParticles((prev) => [...prev, foundParticle]);
       return stopLocating();
