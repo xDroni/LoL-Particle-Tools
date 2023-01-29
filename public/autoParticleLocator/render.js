@@ -4,7 +4,9 @@ let context;
 (async () => {
   const leagueGameClient = await window.electronAPI.getLeagueClient();
 
-  if (leagueGameClient === undefined) return;
+  if (leagueGameClient === undefined) {
+    return;
+  }
 
   const constraints = {
     audio: false,
@@ -20,15 +22,14 @@ let context;
   trackClones.push(track.clone());
   const image = new ImageCapture(track);
   const bitmap = await image.grabFrame();
-
-  // track.stop();
-
   const canvas = document.getElementById('screenshot');
   canvas.width = screen.width;
   canvas.height = screen.height;
   context = canvas.getContext('2d');
   context.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
   drawRectangle(bitmap.width, bitmap.height);
+
+  window.electronAPI.sendLeagueClientReady();
 })();
 
 let screenshotAreaX, screenshotAreaY, screenshotAreaWidth, screenshotAreaHeight;

@@ -130,7 +130,6 @@ export default function Particles({ props }) {
         }, {});
         postParticles(particlesToDisableJSON, setParticles);
         if (errorOccurred === true) {
-          console.log('error occurred, sending notification');
           return window.electronAPI.sendToastNotification(
             TOAST_NOTIFICATION_TYPES.WARN,
             `Not all of the particle names have been imported due to not supported characters. Validate the file.`

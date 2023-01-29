@@ -12,11 +12,11 @@ function createMainWindow() {
     width: 1500,
     height: 770,
     autoHideMenuBar: true,
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       webSecurity: false,
-      spellcheck: false,
-      nodeIntegration: true
+      spellcheck: false
     },
     title: 'LoL Particle Tools by dxdroni'
   });
@@ -48,6 +48,8 @@ function createMainWindow() {
     newWindowComponent.setAlwaysOnTop(true, 'normal');
   });
 
+  mainWindow.on('ready-to-show', () => mainWindow.show());
+
   mainWindow.on('page-title-updated', (evt) => {
     evt.preventDefault();
   });
@@ -60,13 +62,12 @@ function createAutoParticleLocatorHandleWindow() {
     height: 1080,
     fullscreen: true,
     autoHideMenuBar: true,
+    show: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true
+      preload: path.join(__dirname, 'preload.js')
     }
   });
 
-  // autoParticleLocatorGameWindow.setAlwaysOnTop(true, 'normal');
   autoParticleLocatorGameWindow.loadFile(path.join(__dirname, './autoParticleLocator/index.html'));
 
   autoParticleLocatorGameWindow.on('closed', () => (autoParticleLocatorGameWindow = null));
@@ -79,9 +80,7 @@ function closeAutoParticleLocatorGameWindow() {
 }
 
 function sendToastNotification(type, message) {
-  if (type === TOAST_NOTIFICATION_TYPES.ERROR) {
-    restoreMainWindow();
-  }
+  restoreAndFocusMainWindow();
   return mainWindow.webContents.send('toast-notification', type, message);
 }
 
@@ -89,9 +88,13 @@ function sendClientNotFoundMessage() {
   return mainWindow.webContents.send('client-not-found');
 }
 
-function restoreMainWindow() {
+function restoreAndFocusMainWindow() {
   if (mainWindow.isMinimized()) {
-    return mainWindow.restore();
+    mainWindow.restore();
+  }
+
+  if (!mainWindow.isFocused()) {
+    return mainWindow.focus();
   }
 }
 
@@ -104,6 +107,10 @@ app.on('ready', () => {
 
   ipcMain.on('stop-auto-locating', () => {
     closeAutoParticleLocatorGameWindow();
+  });
+
+  ipcMain.on('league-client-ready', () => {
+    autoParticleLocatorGameWindow.show();
   });
 
   ipcMain.on('send-hash-request', () => {
