@@ -7,7 +7,8 @@ const ELECTRON_API = {
   sendLeagueClientReady: () => ipcRenderer.send('league-client-ready'),
   onClientNotFound: (stopLocatingFunc) => ipcRenderer.on('client-not-found', stopLocatingFunc),
   waitForToastNotification: (f) => ipcRenderer.on('toast-notification', (_, ...args) => f(...args)),
-  sendToastNotification: (type, args) => ipcRenderer.invoke('send-toast-notification', type, args),
+  sendToastNotification: (type, message) =>
+    ipcRenderer.invoke('send-toast-notification', type, message),
   calculateHash: async (imageSrc) => ipcRenderer.invoke('calculate-hash', imageSrc),
   sendHashResponse: (hash) => ipcRenderer.invoke('send-hash-response', hash),
   sendHashRequest: () => ipcRenderer.send('send-hash-request'),

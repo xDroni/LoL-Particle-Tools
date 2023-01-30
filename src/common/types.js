@@ -11,7 +11,8 @@ const COMPARISON_RESULT_STATE = {
 const TOAST_NOTIFICATION_TYPES = {
   ERROR: 'error',
   WARN: 'warn',
-  INFO: 'info'
+  INFO: 'info',
+  LOADING: 'loading'
 };
 
 module.exports = {

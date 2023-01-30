@@ -3,7 +3,7 @@ import postParticles from './common/postParticles';
 import ParticleLocatorWindow from './ParticleLocatorWindow';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetchParticles, { autoFetch } from './common/fetchParticles';
-import { COMPARISON_RESULT_STATE, MODE } from './common/types';
+import { COMPARISON_RESULT_STATE, MODE, TOAST_NOTIFICATION_TYPES } from './common/types';
 import listOfItems from './common/listOfItems';
 
 export default function ParticleLocator({ props }) {
@@ -14,6 +14,7 @@ export default function ParticleLocator({ props }) {
     setLocationInProgress,
     interval,
     setInterval,
+    replayLoad,
     setReplayLoad
   } = props;
   const [split, setSplit] = useState(null);
@@ -97,7 +98,9 @@ export default function ParticleLocator({ props }) {
       const firstHash = await getHash();
       setHashToCompare(() => firstHash);
 
-      const onlyEnabled = Object.entries(await fetchParticles(setParticles, setReplayLoad, true));
+      const onlyEnabled = Object.entries(
+        await fetchParticles(setParticles, replayLoad, setReplayLoad, true)
+      );
       return findParticle(onlyEnabled);
     }
 
@@ -108,13 +111,19 @@ export default function ParticleLocator({ props }) {
   }
 
   async function handleParticleLocator(mode) {
+    if (replayLoad === true) {
+      return window.electronAPI.sendToastNotification(
+        TOAST_NOTIFICATION_TYPES.ERROR,
+        "Couldn't find the opened replay."
+      );
+    }
     if (locationInProgress === true) {
-      setInterval(autoFetch(setParticles, setReplayLoad, 10000));
+      setInterval(autoFetch(setParticles, replayLoad, setReplayLoad, 7000));
       return stopLocating();
     }
 
     clearInterval(interval);
-    const currentParticles = await fetchParticles(setParticles, setReplayLoad);
+    const currentParticles = await fetchParticles(setParticles, replayLoad, setReplayLoad);
     const enabledParticles = Object.entries(currentParticles).filter(([, state]) => Boolean(state));
 
     particlesStateToRestore.current = currentParticles;
@@ -140,7 +149,7 @@ export default function ParticleLocator({ props }) {
 
     setLocationInProgress(false);
     clearInterval(interval);
-    setInterval(autoFetch(setParticles, setReplayLoad, 10000));
+    setInterval(autoFetch(setParticles, replayLoad, setReplayLoad, 7000));
   }
 
   function handleParticleChange(didChange) {
@@ -162,15 +171,12 @@ export default function ParticleLocator({ props }) {
     <>
       <button
         type="button"
-        className="btn btn-slate btn-responsive sm:mb-4 mb-1"
+        className="btn btn-slate btn-responsive sm:mb-4 mb-1 block mr-auto ml-auto  "
         onClick={() => setIsNewWindow(true)}
       >
         <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-crosshairs" size="lg" />
         Particle Locator
       </button>
-      {/*<button type="button" className="btn btn-slate btn-responsive sm:mb-4 mb-1" onClick={window.electronAPI.toastNotify}>*/}
-      {/*  Notify*/}
-      {/*</button>*/}
       {isNewWindow && (
         <ParticleLocatorWindow
           handleDidChange={handleParticleChange}

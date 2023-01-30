@@ -8,12 +8,13 @@ import { TOAST_NOTIFICATION_TYPES } from './common/types';
 function App() {
   const [particles, setParticles] = useState([]);
   const [interval, setInterval] = useState(null);
-  const [replayLoad, setReplayLoad] = useState(true);
+  const [replayLoad, setReplayLoad] = useState(null);
+  const [loadingToastId, setLoadingToastId] = useState(null);
 
   const toastNotificationHandler = (type, message) => {
     const options = {
       position: 'bottom-right',
-      autoClose: 10000,
+      autoClose: 7000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -27,6 +28,9 @@ function App() {
       case TOAST_NOTIFICATION_TYPES.WARN:
         toast.warn(message, options);
         break;
+      case TOAST_NOTIFICATION_TYPES.LOADING:
+        setLoadingToastId(toast.loading(message));
+        break;
       default:
         toast.info(message, options);
     }
@@ -37,16 +41,33 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetchParticles(setParticles, setReplayLoad);
+    fetchParticles(setParticles, replayLoad, setReplayLoad);
     if (Number(interval)) {
       clearInterval(interval);
     }
 
     const i =
-      replayLoad === true
-        ? autoFetch(setParticles, setReplayLoad, 2000)
-        : autoFetch(setParticles, setReplayLoad, 10000);
+      replayLoad === true || replayLoad === null
+        ? autoFetch(setParticles, replayLoad, setReplayLoad, 2000)
+        : autoFetch(setParticles, replayLoad, setReplayLoad, 7000);
     setInterval(i);
+
+    if (replayLoad === true) {
+      toastNotificationHandler(
+        TOAST_NOTIFICATION_TYPES.LOADING,
+        'Cannot find the replay. Save the disabled particles to file to not lose them!'
+      );
+    }
+
+    if (replayLoad === false && loadingToastId !== null) {
+      toast.update(loadingToastId, {
+        render: 'The replay has been found',
+        type: 'success',
+        autoClose: 3000,
+        isLoading: false
+      });
+    }
+
     return () => {
       clearInterval(i);
     };
@@ -75,15 +96,8 @@ function App() {
       <ToastContainer
         position="bottom-right"
         transition={Slide}
-        autoClose={10000}
-        limit={5}
-        hideProgressBar={false}
+        limit={7}
         newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
         theme="dark"
       />
     </>

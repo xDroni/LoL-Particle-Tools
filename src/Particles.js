@@ -7,7 +7,7 @@ import fetchParticles from './common/fetchParticles';
 import { TOAST_NOTIFICATION_TYPES } from './common/types';
 
 export default function Particles({ props }) {
-  const { particles, setParticles, interval, setInterval, setReplayLoad } = props;
+  const { particles, setParticles, interval, setInterval, replayLoad, setReplayLoad } = props;
   const [locationInProgress, setLocationInProgress] = useState(false);
   const [selectedEnabledParticles, setSelectedEnabledParticles] = useState([]);
   const [selectedDisabledParticles, setSelectedDisabledParticles] = useState([]);
@@ -132,7 +132,7 @@ export default function Particles({ props }) {
         if (errorOccurred === true) {
           return window.electronAPI.sendToastNotification(
             TOAST_NOTIFICATION_TYPES.WARN,
-            `Not all of the particle names have been imported due to not supported characters. Validate the file.`
+            'Not all of the particle names have been imported due to not supported characters. Validate the file.'
           );
         }
       };
@@ -184,6 +184,7 @@ export default function Particles({ props }) {
             setLocationInProgress,
             interval,
             setInterval,
+            replayLoad,
             setReplayLoad
           }}
         />
@@ -246,7 +247,7 @@ export default function Particles({ props }) {
 
         <button
           className="btn btn-slate btn-responsive"
-          onClick={() => fetchParticles(setParticles, setReplayLoad)}
+          onClick={() => fetchParticles(setParticles, replayLoad, setReplayLoad)}
         >
           <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-arrows-rotate" />
           Refresh

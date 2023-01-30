@@ -45,7 +45,7 @@ app.whenReady().then(() => {
       sendClientNotFoundMessage();
       return sendToastNotification(
         TOAST_NOTIFICATION_TYPES.ERROR,
-        `Some error occurred. Try again.`
+        'Some error occurred. Try again.'
       );
     }
 
@@ -57,7 +57,7 @@ app.whenReady().then(() => {
       sendClientNotFoundMessage();
       return sendToastNotification(
         TOAST_NOTIFICATION_TYPES.ERROR,
-        `Couldn't find the opened replay. Try to focus the window with game. Make sure window mode is set to Borderless or Windowed.`
+        "Couldn't find the opened replay. Try to focus the window with game. Make sure window mode is set to Borderless or Windowed."
       );
     }
     return leagueGameClient;
