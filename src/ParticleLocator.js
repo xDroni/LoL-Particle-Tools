@@ -188,7 +188,9 @@ export default function ParticleLocator({ props }) {
           <div className="mr-auto ml-auto flex flex-col w-28 gap-y-1 mt-2">
             <label
               htmlFor="ModeToggle"
-              className="fixed top-0 mt-2 right-0 mr-2 inline-flex items-center space-x-1 cursor-pointer dark:text-slate-100"
+              className={`${
+                locationInProgress ? 'opacity-40' : ''
+              } fixed top-0 mt-2 right-0 mr-2 inline-flex items-center space-x-1 cursor-pointer dark:text-slate-100`}
             >
               <span className="text-xxs">Legacy</span>
               <span className="relative">
@@ -198,6 +200,7 @@ export default function ParticleLocator({ props }) {
                   className="hidden peer"
                   checked={mode === MODE.AUTO}
                   onChange={handleModeChange}
+                  disabled={locationInProgress}
                 />
                 <div className="w-7 h-3 rounded-full shadow-inner dark:bg-slate-600 peer-checked:dark:bg-green-700"></div>
                 <div className="absolute -inset-y-1 left-0 w-3 h-3 mx-0 my-1 rounded-full transition duration-300 peer-checked:right-0 peer-checked:left-auto dark:bg-slate-800"></div>
