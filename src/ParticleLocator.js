@@ -19,7 +19,7 @@ export default function ParticleLocator({ props }) {
   } = props;
   const [split, setSplit] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [foundParticles, setFoundParticles] = useState([]);
+  const [foundParticles, setFoundParticles] = useState(new Set());
   const [isNewWindow, setIsNewWindow] = useState(false);
   const [hashToCompare, setHashToCompare] = useState(null);
   const [hashComparisonsResult, setHashComparisonsResult] = useState([]);
@@ -70,7 +70,7 @@ export default function ParticleLocator({ props }) {
 
     if (entries.length === 1 && mode === MODE.LEGACY) {
       const foundParticle = entries[0][0];
-      setFoundParticles((prev) => [...prev, foundParticle]);
+      setFoundParticles((prev) => new Set([...prev, foundParticle]));
       return stopLocating();
     }
 
@@ -83,12 +83,12 @@ export default function ParticleLocator({ props }) {
         return stopLocating();
       }
       const foundParticle = entries[0][0];
-      setFoundParticles((prev) => [...prev, foundParticle]);
+      setFoundParticles((prev) => new Set([...prev, foundParticle]));
 
       await postParticles(
         {
           ...particlesStateToRestore.current,
-          ...foundParticles.reduce((prev, curr) => ({ ...prev, [curr]: false }), {}),
+          ...Array.from(foundParticles).reduce((prev, curr) => ({ ...prev, [curr]: false }), {}),
           [foundParticle]: false
         },
         setParticles
@@ -164,7 +164,7 @@ export default function ParticleLocator({ props }) {
   }
 
   function clearFoundParticles() {
-    return setFoundParticles([]);
+    return setFoundParticles(new Set());
   }
 
   return (
@@ -214,11 +214,14 @@ export default function ParticleLocator({ props }) {
             <button
               type="button"
               className="btn btn-slate"
-              disabled={locationInProgress || foundParticles.length === 0}
+              disabled={locationInProgress || foundParticles.size === 0}
               onClick={() =>
                 postParticles(
                   {
-                    ...foundParticles.reduce((prev, curr) => ({ ...prev, [curr]: false }), {})
+                    ...Array.from(foundParticles).reduce(
+                      (prev, curr) => ({ ...prev, [curr]: false }),
+                      {}
+                    )
                   },
                   setParticles
                 )
@@ -236,7 +239,7 @@ export default function ParticleLocator({ props }) {
               mode === MODE.LEGACY ? 'h-16' : 'h-44'
             } pt-1 flex flex-col items-center scrollbar-gutter-enable`}
           >
-            {listOfItems(foundParticles, locationInProgress, particles, setParticles)}
+            {listOfItems(Array.from(foundParticles), locationInProgress, particles, setParticles)}
           </div>
           {mode === MODE.LEGACY && (
             <div className="flex flex-col fixed bottom-2 w-full">
