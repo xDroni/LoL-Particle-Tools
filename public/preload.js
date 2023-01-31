@@ -14,9 +14,11 @@ const ELECTRON_API = {
   sendHashRequest: () => ipcRenderer.send('send-hash-request'),
   waitForHashResponse: () =>
     new Promise((resolve) => {
-      ipcRenderer.on('hash-message', (_, message) => {
+      const listener = (_, message) => {
+        ipcRenderer.removeListener('hash-message', listener);
         resolve(message);
-      });
+      };
+      ipcRenderer.on('hash-message', listener);
     }),
   waitForHashRequest: (f) => ipcRenderer.on('hash-requested', (_, ...args) => f(...args))
 };
