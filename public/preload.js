@@ -9,18 +9,17 @@ const ELECTRON_API = {
   waitForToastNotification: (f) => ipcRenderer.on('toast-notification', (_, ...args) => f(...args)),
   sendToastNotification: (type, message) =>
     ipcRenderer.invoke('send-toast-notification', type, message),
-  calculateHash: async (imageSrc) => ipcRenderer.invoke('calculate-hash', imageSrc),
-  sendHashResponse: (hash) => ipcRenderer.invoke('send-hash-response', hash),
-  sendHashRequest: () => ipcRenderer.send('send-hash-request'),
-  waitForHashResponse: () =>
+  sendImageSrcResponse: (imageSrc) => ipcRenderer.invoke('send-imgsrc-response', imageSrc),
+  sendImageSrcRequest: () => ipcRenderer.send('send-imgsrc-request'),
+  waitForImageSrcResponse: () =>
     new Promise((resolve) => {
       const listener = (_, message) => {
-        ipcRenderer.removeListener('hash-message', listener);
+        ipcRenderer.removeListener('imgsrc-message', listener);
         resolve(message);
       };
-      ipcRenderer.on('hash-message', listener);
+      return ipcRenderer.on('imgsrc-message', listener);
     }),
-  waitForHashRequest: (f) => ipcRenderer.on('hash-requested', (_, ...args) => f(...args))
+  waitForImageSrcRequest: (f) => ipcRenderer.on('imgsrc-requested', () => f())
 };
 
 contextBridge.exposeInMainWorld('electronAPI', ELECTRON_API);

@@ -51,13 +51,13 @@ async function refreshScreen() {
   context.drawImage(bitmap, 0, 0, bitmap.width, bitmap.height);
 
   const fullScreenshotBlob = document.getElementById('screenshot').toDataURL('image/png', 1);
-  const cropImg = await loadImage(fullScreenshotBlob);
+  const cropImage = await loadImage(fullScreenshotBlob);
 
   const cropCanvas = document.createElement('canvas');
   [cropCanvas.width, cropCanvas.height] = [screenshotAreaWidth, screenshotAreaHeight];
   const cropContext = cropCanvas.getContext('2d');
   cropContext.drawImage(
-    cropImg,
+    cropImage,
     screenshotAreaX,
     screenshotAreaY,
     screenshotAreaWidth,
@@ -86,11 +86,10 @@ function drawRectangle() {
   let mouseY = 0;
   let mouseDown = false;
 
-  async function sendHash() {
+  async function sendImageSrc() {
     await new Promise((resolve) => setTimeout(resolve, 58));
-    const cropImgSrc = await refreshScreen();
-    const hash = await window.electronAPI.calculateHash(cropImgSrc);
-    await window.electronAPI.sendHashResponse(hash);
+    const cropImageSrc = await refreshScreen();
+    await window.electronAPI.sendImageSrcResponse(cropImageSrc);
   }
   function mouseDownListener(e) {
     lastMouseXOnDown = e.clientX - canvasX;
@@ -102,8 +101,8 @@ function drawRectangle() {
     lastMouseXOnUp = e.clientX - canvasX;
     lastMouseYOnUp = e.clientY - canvasY;
 
-    // register the listener for the future hash requests
-    window.electronAPI.waitForHashRequest(sendHash);
+    // register the listener for the future image source requests
+    window.electronAPI.waitForImageSrcRequest(sendImageSrc);
 
     screenshotAreaX = lastMouseXOnDown > lastMouseXOnUp ? lastMouseXOnUp : lastMouseXOnDown;
     screenshotAreaY = lastMouseYOnDown > lastMouseYOnUp ? lastMouseYOnUp : lastMouseYOnDown;
@@ -115,8 +114,8 @@ function drawRectangle() {
     rectangleCanvas.removeEventListener('mousedown', mouseDownListener);
     rectangleCanvas.removeEventListener('mousemove', mouseMoveListener);
 
-    // send the first hash without requesting
-    await sendHash();
+    // send the first image source without requesting
+    await sendImageSrc();
   }
 
   function mouseMoveListener(e) {

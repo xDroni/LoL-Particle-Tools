@@ -21,8 +21,8 @@ export default function ParticleLocator({ props }) {
   const [isLoading, setIsLoading] = useState(false);
   const [foundParticles, setFoundParticles] = useState(new Set());
   const [isNewWindow, setIsNewWindow] = useState(false);
-  const [hashToCompare, setHashToCompare] = useState(null);
-  const [hashComparisonsResult, setHashComparisonsResult] = useState([]);
+  const [imageSrcToCompare, setImageSrcToCompare] = useState(null);
+  const [imageSrcComparisonResults, setImageSrcComparisonResults] = useState([]);
   const [mode, setMode] = useState(MODE.AUTO);
   const particlesStateToRestore = useRef([]);
 
@@ -47,20 +47,20 @@ export default function ParticleLocator({ props }) {
         return;
       }
 
-      window.electronAPI.sendHashRequest();
-      const hash = await getHash();
-      if (hash !== hashToCompare) {
-        setHashComparisonsResult((prev) => [...prev, COMPARISON_RESULT_STATE.DID_CHANGE]);
-        setHashToCompare(hash);
+      window.electronAPI.sendImageSrcRequest();
+      const imageSource = await getImageSrc();
+      if (imageSource !== imageSrcToCompare) {
+        setImageSrcComparisonResults((prev) => [...prev, COMPARISON_RESULT_STATE.DID_CHANGE]);
+        setImageSrcToCompare(imageSource);
         return findParticle(split.entries1);
       }
-      setHashComparisonsResult((prev) => [...prev, COMPARISON_RESULT_STATE.DID_NOT_CHANGE]);
+      setImageSrcComparisonResults((prev) => [...prev, COMPARISON_RESULT_STATE.DID_NOT_CHANGE]);
       return findParticle(split.entries2);
     });
   }, [split, setParticles]);
 
-  async function getHash() {
-    return window.electronAPI.waitForHashResponse();
+  async function getImageSrc() {
+    return window.electronAPI.waitForImageSrcResponse();
   }
 
   async function findParticle(entries) {
@@ -75,10 +75,10 @@ export default function ParticleLocator({ props }) {
     }
 
     if (entries.length === 1 && mode === MODE.AUTO) {
-      const allFound = hashComparisonsResult.every(
+      const allFound = imageSrcComparisonResults.every(
         (result) => result === COMPARISON_RESULT_STATE.DID_NOT_CHANGE
       );
-      setHashComparisonsResult([]);
+      setImageSrcComparisonResults([]);
       if (allFound) {
         return stopLocating();
       }
@@ -94,9 +94,11 @@ export default function ParticleLocator({ props }) {
         setParticles
       );
 
-      window.electronAPI.sendHashRequest();
-      const firstHash = await getHash();
-      setHashToCompare(() => firstHash);
+      window.electronAPI.sendImageSrcRequest();
+
+      // actually not the first source of the image, but the first in this circulation
+      const firstImageSrc = await getImageSrc();
+      setImageSrcToCompare(() => firstImageSrc);
 
       const onlyEnabled = Object.entries(
         await fetchParticles(setParticles, replayLoad, setReplayLoad, true)
@@ -136,8 +138,8 @@ export default function ParticleLocator({ props }) {
     window.electronAPI.startAutoLocating();
 
     // don't request because the first screenshot should come when user selects the area
-    const firstHash = await getHash();
-    setHashToCompare(() => firstHash);
+    const firstImageSrc = await getImageSrc();
+    setImageSrcToCompare(() => firstImageSrc);
     return findParticle(enabledParticles);
   }
 

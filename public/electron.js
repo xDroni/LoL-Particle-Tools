@@ -26,16 +26,8 @@ app.whenReady().then(() => {
     autoParticleLocatorGameWindow.show();
   });
 
-  ipcMain.on('send-hash-request', () => {
-    autoParticleLocatorGameWindow.webContents.send('hash-requested');
-  });
-
-  ipcMain.handle('calculate-hash', (_, imageSrcArg) => {
-    // const hashSum = crypto.createHash('sha1');
-    // hashSum.update(imageSrcArg);
-
-    // return hashSum.digest('base64');
-    return imageSrcArg;
+  ipcMain.on('send-imgsrc-request', () => {
+    autoParticleLocatorGameWindow.webContents.send('imgsrc-requested');
   });
 
   ipcMain.handle('get-league-client', async () => {
@@ -67,8 +59,8 @@ app.whenReady().then(() => {
     return sendToastNotification(type, message);
   });
 
-  ipcMain.handle('send-hash-response', (_, hash) => {
-    return mainWindow.webContents.send('hash-message', hash);
+  ipcMain.handle('send-imgsrc-response', (_, imageSrc) => {
+    return mainWindow.webContents.send('imgsrc-message', imageSrc);
   });
 
   createMainWindow();
