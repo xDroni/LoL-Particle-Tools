@@ -30,6 +30,8 @@ app.whenReady().then(() => {
     autoParticleLocatorGameWindow.webContents.send('imgsrc-requested');
   });
 
+  ipcMain.on('send-toast-notification', (_, type, message) => sendToastNotification(type, message));
+
   ipcMain.handle('get-league-client', async () => {
     const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });
 
@@ -49,14 +51,10 @@ app.whenReady().then(() => {
       sendClientNotFoundMessage();
       return sendToastNotification(
         TOAST_NOTIFICATION_TYPES.ERROR,
-        "Couldn't find the opened replay. Try to focus the window with game. Make sure window mode is set to Borderless or Windowed."
+        'Cannot find the opened replay. Try to focus the window with game. Make sure window mode is set to Borderless or Windowed.'
       );
     }
     return leagueGameClient;
-  });
-
-  ipcMain.handle('send-toast-notification', (_, type, message) => {
-    return sendToastNotification(type, message);
   });
 
   ipcMain.handle('send-imgsrc-response', (_, imageSrc) => {

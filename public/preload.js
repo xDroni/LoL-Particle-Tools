@@ -8,7 +8,7 @@ const ELECTRON_API = {
   onClientNotFound: (stopLocatingFunc) => ipcRenderer.on('client-not-found', stopLocatingFunc),
   waitForToastNotification: (f) => ipcRenderer.on('toast-notification', (_, ...args) => f(...args)),
   sendToastNotification: (type, message) =>
-    ipcRenderer.invoke('send-toast-notification', type, message),
+    ipcRenderer.send('send-toast-notification', type, message),
   sendImageSrcResponse: (imageSrc) => ipcRenderer.invoke('send-imgsrc-response', imageSrc),
   sendImageSrcRequest: () => ipcRenderer.send('send-imgsrc-request'),
   waitForImageSrcResponse: () =>
