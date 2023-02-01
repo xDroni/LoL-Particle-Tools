@@ -30,6 +30,7 @@ function App() {
         break;
       case TOAST_NOTIFICATION_TYPES.LOADING:
         setLoadingToastId(toast.loading(message));
+        window.electronAPI.focusMainWindow();
         break;
       default:
         toast.info(message, options);

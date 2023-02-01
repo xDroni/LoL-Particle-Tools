@@ -14,23 +14,22 @@ app.whenReady().then(() => {
     createMainWindow();
   }
 
-  ipcMain.on('start-auto-locating', () => {
-    createAutoParticleLocatorHandleWindow();
+  ipcMain.on('start-auto-locating', createAutoParticleLocatorHandleWindow);
+
+  ipcMain.on('stop-auto-locating', closeAutoParticleLocatorGameWindow);
+
+  ipcMain.on('league-client-ready', async () => {
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    return autoParticleLocatorGameWindow.show();
   });
 
-  ipcMain.on('stop-auto-locating', () => {
-    closeAutoParticleLocatorGameWindow();
-  });
-
-  ipcMain.on('league-client-ready', () => {
-    autoParticleLocatorGameWindow.show();
-  });
-
-  ipcMain.on('send-imgsrc-request', () => {
-    autoParticleLocatorGameWindow.webContents.send('imgsrc-requested');
-  });
+  ipcMain.on('send-imgsrc-request', () =>
+    autoParticleLocatorGameWindow.webContents.send('imgsrc-requested')
+  );
 
   ipcMain.on('send-toast-notification', (_, type, message) => sendToastNotification(type, message));
+
+  ipcMain.on('focus-main-window', restoreAndFocusMainWindow);
 
   ipcMain.handle('get-league-client', async () => {
     const sources = await desktopCapturer.getSources({ types: ['window', 'screen'] });

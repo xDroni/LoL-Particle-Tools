@@ -5,6 +5,7 @@ const ELECTRON_API = {
   stopAutoLocating: () => ipcRenderer.send('stop-auto-locating'),
   getLeagueClient: () => ipcRenderer.invoke('get-league-client'),
   sendLeagueClientReady: () => ipcRenderer.send('league-client-ready'),
+  focusMainWindow: () => ipcRenderer.send('focus-main-window'),
   onClientNotFound: (stopLocatingFunc) => ipcRenderer.on('client-not-found', stopLocatingFunc),
   waitForToastNotification: (f) => ipcRenderer.on('toast-notification', (_, ...args) => f(...args)),
   sendToastNotification: (type, message) =>
