@@ -5,6 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import fetchParticles, { autoFetch } from './common/fetchParticles';
 import { COMPARISON_RESULT_STATE, MODE, TOAST_NOTIFICATION_TYPES } from './common/types';
 import listOfItems from './common/listOfItems';
+import fetchRenderProperties from './common/fetchRenderProperties';
+import postRenderProperties from './common/postRenderProperties';
+import config from './config.json';
 
 export default function ParticleLocator({ props }) {
   const {
@@ -24,7 +27,8 @@ export default function ParticleLocator({ props }) {
   const [imageSrcToCompare, setImageSrcToCompare] = useState(null);
   const [imageSrcComparisonResults, setImageSrcComparisonResults] = useState([]);
   const [mode, setMode] = useState(MODE.AUTO);
-  const particlesStateToRestore = useRef([]);
+  const particlesStateToRestore = useRef(null);
+  const renderPropertiesToRestore = useRef(null);
 
   useEffect(() => {
     window.electronAPI.onClientNotFound(stopLocating);
@@ -131,6 +135,21 @@ export default function ParticleLocator({ props }) {
     particlesStateToRestore.current = currentParticles;
     setLocationInProgress(true);
 
+    try {
+      const currentRenderProperties = await fetchRenderProperties(replayLoad, setReplayLoad);
+      renderPropertiesToRestore.current = currentRenderProperties;
+
+      const preparedRenderProperties = prepareRequiredRenderProperties(
+        currentRenderProperties,
+        false
+      );
+
+      // needed to switch off interface, outlines etc. which may affect the results
+      await postRenderProperties(preparedRenderProperties);
+    } catch (e) {
+      console.error(e);
+    }
+
     if (mode === MODE.LEGACY) {
       return findParticle(enabledParticles);
     }
@@ -148,6 +167,10 @@ export default function ParticleLocator({ props }) {
       window.electronAPI.stopAutoLocating();
     }
     await postParticles(particlesStateToRestore.current, setParticles);
+
+    await postRenderProperties(
+      prepareRequiredRenderProperties(renderPropertiesToRestore.current, true)
+    );
 
     setLocationInProgress(false);
     clearInterval(interval);
@@ -167,6 +190,16 @@ export default function ParticleLocator({ props }) {
 
   function clearFoundParticles() {
     return setFoundParticles(new Set());
+  }
+
+  function prepareRequiredRenderProperties(properties, restore) {
+    const requiredProperties = config.requiredRenderProperties;
+    return Object.entries(properties).reduce((result, [key, value]) => {
+      if (requiredProperties.includes(key)) {
+        return { ...result, [key]: restore === true ? value : false };
+      }
+      return result;
+    }, {});
   }
 
   return (
