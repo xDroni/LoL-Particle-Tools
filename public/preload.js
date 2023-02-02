@@ -2,7 +2,11 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 const ELECTRON_API = {
   startAutoLocating: () => ipcRenderer.send('start-auto-locating'),
-  stopAutoLocating: () => ipcRenderer.send('stop-auto-locating'),
+  stopAutoLocating: () => {
+    ipcRenderer.removeAllListeners('imgsrc-message');
+    ipcRenderer.removeAllListeners('imgsrc-requested');
+    return ipcRenderer.send('stop-auto-locating');
+  },
   getLeagueClient: () => ipcRenderer.invoke('get-league-client'),
   sendLeagueClientReady: () => ipcRenderer.send('league-client-ready'),
   focusMainWindow: () => ipcRenderer.send('focus-main-window'),

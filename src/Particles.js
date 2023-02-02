@@ -108,6 +108,9 @@ export default function Particles({ props }) {
         const particlesToDisable = f.target.result.toString();
         const particlesToDisableJSON = particlesToDisable.split('\n').reduce((prev, curr) => {
           const trimmed = curr.trim();
+          if (trimmed.length === 0) {
+            return prev;
+          }
           if (!/^[0-9A-Za-z_-]+$/.test(trimmed)) {
             errorOccurred = true;
             return prev;
