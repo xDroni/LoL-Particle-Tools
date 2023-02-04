@@ -202,10 +202,10 @@ export default function ParticleLocator({ props }) {
     <>
       <button
         type="button"
-        className="btn btn-slate btn-responsive sm:mb-4 mb-1 block mr-auto ml-auto  "
+        className="btn btn-slate btn-responsive mb-1 mr-auto ml-auto block sm:mb-4  "
         onClick={() => setIsNewWindow(true)}
       >
-        <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-crosshairs" size="lg" />
+        <FontAwesomeIcon className="initial mr-1" icon="fa-solid fa-crosshairs" size="lg" />
         Particle Locator
       </button>
       {isNewWindow && (
@@ -216,25 +216,25 @@ export default function ParticleLocator({ props }) {
             if (locationInProgress) void stopLocating();
           }}
         >
-          <div className="mr-auto ml-auto flex flex-col w-28 gap-y-1 mt-2">
+          <div className="mr-auto ml-auto mt-2 flex w-28 flex-col gap-y-1">
             <label
               htmlFor="ModeToggle"
               className={`${
                 locationInProgress ? 'opacity-40' : ''
-              } fixed top-0 mt-2 right-0 mr-2 inline-flex items-center space-x-1 cursor-pointer dark:text-slate-100`}
+              } fixed top-0 right-0 mt-2 mr-2 inline-flex cursor-pointer items-center space-x-1 dark:text-slate-100`}
             >
               <span className="text-xxs">Legacy</span>
               <span className="relative">
                 <input
                   id="ModeToggle"
                   type="checkbox"
-                  className="hidden peer"
+                  className="peer hidden"
                   checked={mode === MODE.AUTO}
                   onChange={handleModeChange}
                   disabled={locationInProgress}
                 />
-                <div className="w-7 h-3 rounded-full shadow-inner dark:bg-slate-600 peer-checked:dark:bg-green-700"></div>
-                <div className="absolute -inset-y-1 left-0 w-3 h-3 mx-0 my-1 rounded-full transition duration-300 peer-checked:right-0 peer-checked:left-auto dark:bg-slate-800"></div>
+                <div className="h-3 w-7 rounded-full shadow-inner dark:bg-slate-600 peer-checked:dark:bg-green-700"></div>
+                <div className="absolute -inset-y-1 left-0 mx-0 my-1 h-3 w-3 rounded-full transition duration-300 peer-checked:right-0 peer-checked:left-auto dark:bg-slate-800"></div>
               </span>
               <span className="text-xxs">Auto</span>
             </label>
@@ -266,22 +266,22 @@ export default function ParticleLocator({ props }) {
             <button type="button" className="btn btn-slate" onClick={clearFoundParticles}>
               Clear the list
             </button>
-            <p className="text-base text-center">Found particles</p>
+            <p className="text-center text-base">Found particles</p>
           </div>
           <div
             className={`scrollbar overflow-x-hidden ${
               mode === MODE.LEGACY ? 'h-16' : 'h-44'
-            } pt-1 flex flex-col items-center scrollbar-gutter-enable`}
+            } scrollbar-gutter-enable flex flex-col items-center pt-1`}
           >
             {listOfItems(Array.from(foundParticles), locationInProgress, particles, setParticles)}
           </div>
           {mode === MODE.LEGACY && (
-            <div className="flex flex-col fixed bottom-2 w-full">
-              <p className="mb-2 text-xl text-center">Did change?</p>
-              <div className="flex gap-6 justify-center">
+            <div className="fixed bottom-2 flex w-full flex-col">
+              <p className="mb-2 text-center text-xl">Did change?</p>
+              <div className="flex justify-center gap-6">
                 <button
                   type="button"
-                  className="btn btn-slate w-16 h-16 text-xl"
+                  className="btn btn-slate h-16 w-16 text-xl"
                   onClick={() => handleParticleChange(true)}
                   disabled={isLoading || !locationInProgress}
                 >
@@ -289,7 +289,7 @@ export default function ParticleLocator({ props }) {
                 </button>
                 <button
                   type="button"
-                  className="btn btn-slate w-16 h-16 text-xl"
+                  className="btn btn-slate h-16 w-16 text-xl"
                   onClick={() => handleParticleChange(false)}
                   disabled={isLoading || !locationInProgress}
                 >

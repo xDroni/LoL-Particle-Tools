@@ -80,7 +80,7 @@ function App() {
     return (
       <>
         <header className="absolute right-0 top-0">v{process.env.REACT_APP_VERSION}</header>
-        <div className="w-screen flex h-screen items-center justify-center">
+        <div className="flex h-screen w-screen items-center justify-center">
           <span className="text-3xl">Waiting for the replay...</span>
         </div>
       </>
@@ -91,10 +91,10 @@ function App() {
     <>
       <header className="absolute right-0 top-0">v{process.env.REACT_APP_VERSION}</header>
       <Particles />
-      <footer className="text-white absolute right-0 bottom-0 mb-2">
-        <span className="sm:text-xs text-[0px]">Created by </span>
-        <span className="sm:text-xs text-xxs font-bold">dx droni#9467</span>
-        <span className="sm:text-xs text-[0px]"> mrdroonix@gmail.com</span>
+      <footer className="absolute right-0 bottom-0 mb-2 text-white">
+        <span className="text-[0px] sm:text-xs">Created by </span>
+        <span className="text-xxs font-bold sm:text-xs">dx droni#9467</span>
+        <span className="text-[0px] sm:text-xs"> mrdroonix@gmail.com</span>
       </footer>
       <ToastContainer
         position="bottom-right"

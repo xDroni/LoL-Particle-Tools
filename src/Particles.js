@@ -148,9 +148,9 @@ export default function Particles() {
   }
 
   return (
-    <div className="flex gap-2 mt-4 lg:gap-8 justify-center">
+    <div className="mt-4 flex justify-center gap-2 lg:gap-8">
       <div className="w-96 text-center">
-        <span className="block sm:mb-2 mb-0 uppercase">Enabled particles</span>
+        <span className="mb-0 block uppercase sm:mb-2">Enabled particles</span>
         <div className="flex">
           <select
             multiple
@@ -161,7 +161,7 @@ export default function Particles() {
             {enabledParticlesFiltered.map((particleName) => {
               return (
                 <option
-                  className="hover:bg-slate-700 rounded-xl"
+                  className="rounded-xl hover:bg-slate-700"
                   key={particleName}
                   value={particleName}
                 >
@@ -170,7 +170,7 @@ export default function Particles() {
               );
             })}
           </select>
-          <button className="btn btn-r btn-slate h-[70vh] -ml-1" onClick={disableSelectedParticles}>
+          <button className="btn btn-r btn-slate -ml-1 h-[70vh]" onClick={disableSelectedParticles}>
             <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
           </button>
         </div>
@@ -185,9 +185,9 @@ export default function Particles() {
         <ParticleLocator props={{ locationInProgress, setLocationInProgress }} />
       </div>
       <div className="w-96 text-center">
-        <span className="block sm:mb-2 mb-0 uppercase">Disabled particles</span>
+        <span className="mb-0 block uppercase sm:mb-2">Disabled particles</span>
         <div className="flex">
-          <button className="btn btn-l btn-slate h-[70vh] -mr-1" onClick={enableSelectedParticles}>
+          <button className="btn btn-l btn-slate -mr-1 h-[70vh]" onClick={enableSelectedParticles}>
             <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
           </button>
           <select
@@ -199,7 +199,7 @@ export default function Particles() {
             {disabledParticlesFiltered.map((particleName) => {
               return (
                 <option
-                  className="hover:bg-slate-700 rounded-xl"
+                  className="rounded-xl hover:bg-slate-700"
                   key={particleName}
                   value={particleName}
                 >
@@ -218,24 +218,24 @@ export default function Particles() {
           onChange={handleDisabledParticlesFilterChange}
         />
 
-        <div className="flex gap-4 justify-center">
+        <div className="flex justify-center gap-4">
           <button
             type="button"
-            className="block btn btn-slate btn-responsive sm:mb-4 mb-1"
+            className="btn btn-slate btn-responsive mb-1 block sm:mb-4"
             onClick={handleExportFile}
           >
             <FontAwesomeIcon
-              className="mr-1 initial"
+              className="initial mr-1"
               icon="fa-solid fa-file-arrow-down"
               size="lg"
             />
             Save to file
           </button>
           <button
-            className="btn btn-slate btn-responsive block  sm:mb-4 mb-1"
+            className="btn btn-slate btn-responsive mb-1  block sm:mb-4"
             onClick={handleImportFile}
           >
-            <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-file-arrow-up" size="lg" />
+            <FontAwesomeIcon className="initial mr-1" icon="fa-solid fa-file-arrow-up" size="lg" />
             Import data
           </button>
         </div>
@@ -244,7 +244,7 @@ export default function Particles() {
           className="btn btn-slate btn-responsive"
           onClick={() => fetchParticles(setParticles, replayLoad, setReplayLoad)}
         >
-          <FontAwesomeIcon className="mr-1 initial" icon="fa-solid fa-arrows-rotate" />
+          <FontAwesomeIcon className="initial mr-1" icon="fa-solid fa-arrows-rotate" />
           Refresh
         </button>
       </div>
