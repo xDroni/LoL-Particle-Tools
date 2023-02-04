@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Particles from './Particles';
 import fetchParticles, { autoFetch } from './common/fetchParticles';
 import { Slide, toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { TOAST_NOTIFICATION_TYPES } from './common/types';
+import { LoadingContext, ParticlesContext } from './AppContext';
 
 function App() {
-  const [particles, setParticles] = useState([]);
-  const [interval, setInterval] = useState(null);
-  const [replayLoad, setReplayLoad] = useState(null);
+  const { interval, setInterval, replayLoad, setReplayLoad } = useContext(LoadingContext);
+  const { particles, setParticles } = useContext(ParticlesContext);
   const [loadingToastId, setLoadingToastId] = useState(null);
 
   const toastNotificationHandler = (type, message) => {
@@ -88,9 +88,7 @@ function App() {
   return (
     <>
       <header className="absolute right-0 top-0">v{process.env.REACT_APP_VERSION}</header>
-      <Particles
-        props={{ particles, setParticles, interval, setInterval, replayLoad, setReplayLoad }}
-      />
+      <Particles />
       <footer className="text-white absolute right-0 bottom-0 mb-2">
         <span className="sm:text-xs text-[0px]">Created by </span>
         <span className="sm:text-xs text-xxs font-bold">dx droni#9467</span>

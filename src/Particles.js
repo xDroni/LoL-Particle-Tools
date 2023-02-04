@@ -1,13 +1,15 @@
-import React, { useDeferredValue, useState } from 'react';
+import React, { useContext, useDeferredValue, useState } from 'react';
 import ParticleLocator from './ParticleLocator';
 import { saveAs } from 'file-saver';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import postParticles from './common/postParticles';
 import fetchParticles from './common/fetchParticles';
 import { TOAST_NOTIFICATION_TYPES } from './common/types';
+import { LoadingContext, ParticlesContext } from './AppContext';
 
-export default function Particles({ props }) {
-  const { particles, setParticles, interval, setInterval, replayLoad, setReplayLoad } = props;
+export default function Particles() {
+  const { replayLoad, setReplayLoad } = useContext(LoadingContext);
+  const { particles, setParticles } = useContext(ParticlesContext);
   const [locationInProgress, setLocationInProgress] = useState(false);
   const [selectedEnabledParticles, setSelectedEnabledParticles] = useState([]);
   const [selectedDisabledParticles, setSelectedDisabledParticles] = useState([]);
@@ -179,18 +181,7 @@ export default function Particles({ props }) {
           value={enabledParticlesFilter}
           onChange={handleEnabledParticlesFilterChange}
         />
-        <ParticleLocator
-          props={{
-            particles,
-            setParticles,
-            locationInProgress,
-            setLocationInProgress,
-            interval,
-            setInterval,
-            replayLoad,
-            setReplayLoad
-          }}
-        />
+        <ParticleLocator props={{ locationInProgress, setLocationInProgress }} />
       </div>
       <div className="w-96 text-center">
         <span className="block sm:mb-2 mb-0 uppercase">Disabled particles</span>

@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { ParticlesContextProvider } from './AppContext';
+import { LoadingContextProvider } from './AppContext';
 import App from './App';
 import './index.css';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -26,6 +28,10 @@ library.add(
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <LoadingContextProvider>
+      <ParticlesContextProvider>
+        <App />
+      </ParticlesContextProvider>
+    </LoadingContextProvider>
   </React.StrictMode>
 );

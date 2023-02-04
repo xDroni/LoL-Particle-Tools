@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import postParticles from './common/postParticles';
 import ParticleLocatorWindow from './ParticleLocatorWindow';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,18 +8,12 @@ import listOfItems from './common/listOfItems';
 import fetchRenderProperties from './common/fetchRenderProperties';
 import postRenderProperties from './common/postRenderProperties';
 import config from './config.json';
+import { LoadingContext, ParticlesContext } from './AppContext';
 
 export default function ParticleLocator({ props }) {
-  const {
-    particles,
-    setParticles,
-    locationInProgress,
-    setLocationInProgress,
-    interval,
-    setInterval,
-    replayLoad,
-    setReplayLoad
-  } = props;
+  const { locationInProgress, setLocationInProgress } = props;
+  const { interval, setInterval, replayLoad, setReplayLoad } = useContext(LoadingContext);
+  const { particles, setParticles } = useContext(ParticlesContext);
   const [split, setSplit] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [foundParticles, setFoundParticles] = useState(new Set());
