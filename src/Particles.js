@@ -1,11 +1,12 @@
-import React, { useContext, useDeferredValue, useState } from 'react';
-import ParticleLocator from './ParticleLocator';
-import { saveAs } from 'file-saver';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import postParticles from './common/postParticles';
-import fetchParticles from './common/fetchParticles';
-import { TOAST_NOTIFICATION_TYPES } from './common/types';
+import { saveAs } from 'file-saver';
+import React, { useContext, useDeferredValue, useState } from 'react';
+
 import { LoadingContext, ParticlesContext } from './AppContext';
+import fetchParticles from './common/fetchParticles';
+import postParticles from './common/postParticles';
+import { TOAST_NOTIFICATION_TYPES } from './common/types';
+import ParticleLocator from './ParticleLocator';
 
 export default function Particles() {
   const { replayLoad, setReplayLoad } = useContext(LoadingContext);

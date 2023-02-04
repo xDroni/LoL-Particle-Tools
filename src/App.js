@@ -1,10 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import Particles from './Particles';
-import fetchParticles, { autoFetch } from './common/fetchParticles';
-import { Slide, toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { TOAST_NOTIFICATION_TYPES } from './common/types';
+
+import React, { useContext, useEffect, useState } from 'react';
+import { Slide, toast, ToastContainer } from 'react-toastify';
+
 import { LoadingContext, ParticlesContext } from './AppContext';
+import fetchParticles, { autoFetch } from './common/fetchParticles';
+import { TOAST_NOTIFICATION_TYPES } from './common/types';
+import Particles from './Particles';
 
 function App() {
   const { interval, setInterval, replayLoad, setReplayLoad } = useContext(LoadingContext);

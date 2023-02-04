@@ -1,9 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { ParticlesContextProvider } from './AppContext';
-import { LoadingContextProvider } from './AppContext';
-import App from './App';
 import './index.css';
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faArrowLeft,
@@ -14,6 +10,12 @@ import {
   faFileArrowDown,
   faFileArrowUp
 } from '@fortawesome/free-solid-svg-icons';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
+import App from './App';
+import { ParticlesContextProvider } from './AppContext';
+import { LoadingContextProvider } from './AppContext';
 
 library.add(
   faFileArrowUp,

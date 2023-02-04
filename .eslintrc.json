@@ -4,11 +4,14 @@
     "browser": true,
     "es2021": true
   },
+  "plugins": ["react", "simple-import-sort"],
   "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react-hooks/recommended"],
   "rules": {
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
-    "react/jsx-closing-bracket-location": "warn"
+    "react/jsx-closing-bracket-location": "warn",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error"
   },
   "parserOptions": {
     "ecmaFeatures": {
@@ -16,6 +19,5 @@
     },
     "ecmaVersion": "latest",
     "sourceType": "module"
-  },
-  "plugins": ["react"]
+  }
 }

@@ -1,14 +1,15 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import postParticles from './common/postParticles';
-import ParticleLocatorWindow from './ParticleLocatorWindow';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import fetchParticles, { autoFetch } from './common/fetchParticles';
-import { COMPARISON_RESULT_STATE, MODE, TOAST_NOTIFICATION_TYPES } from './common/types';
-import listOfItems from './common/listOfItems';
-import fetchRenderProperties from './common/fetchRenderProperties';
-import postRenderProperties from './common/postRenderProperties';
-import config from './config.json';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+
 import { LoadingContext, ParticlesContext } from './AppContext';
+import fetchParticles, { autoFetch } from './common/fetchParticles';
+import fetchRenderProperties from './common/fetchRenderProperties';
+import listOfItems from './common/listOfItems';
+import postParticles from './common/postParticles';
+import postRenderProperties from './common/postRenderProperties';
+import { COMPARISON_RESULT_STATE, MODE, TOAST_NOTIFICATION_TYPES } from './common/types';
+import config from './config.json';
+import ParticleLocatorWindow from './ParticleLocatorWindow';
 
 export default function ParticleLocator({ props }) {
   const { locationInProgress, setLocationInProgress } = props;

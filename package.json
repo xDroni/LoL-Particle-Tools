@@ -29,7 +29,9 @@
     "electron-dev": "concurrently \"npm start \" \"wait-on http://localhost:3000 && electron .\"",
     "pack": "npm run deploy && electron-builder --dir",
     "dist": "npm run deploy && electron-builder",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint:test": "eslint \"{src,public}/**/*.{js,jsx}\"",
+    "lint:fix": "eslint --fix \"{src,public}/**/*.{js,jsx}\""
   },
   "build": {
     "appId": "dxdroni.lol-particle-tools",
@@ -71,6 +73,7 @@
     "eslint": "^8.32.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react": "^7.32.1",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
     "file-saver": "^2.0.5",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.2",
