@@ -117,15 +117,16 @@ export default function ParticleLocator({ props }) {
   }
 
   async function handleParticleLocator(mode) {
+    if (locationInProgress === true) {
+      setInterval(autoFetch(setParticles, replayLoad, setReplayLoad, 7000));
+      return stopLocating();
+    }
+
     if (replayLoad === true) {
       return window.electronAPI.sendToastNotification(
         TOAST_NOTIFICATION_TYPES.ERROR,
         "Couldn't find the opened replay."
       );
-    }
-    if (locationInProgress === true) {
-      setInterval(autoFetch(setParticles, replayLoad, setReplayLoad, 7000));
-      return stopLocating();
     }
 
     clearInterval(interval);

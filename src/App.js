@@ -88,7 +88,9 @@ function App() {
   return (
     <>
       <header className="absolute right-0 top-0">v{process.env.REACT_APP_VERSION}</header>
-      <Particles props={{ particles, setParticles, interval, setInterval, setReplayLoad }} />
+      <Particles
+        props={{ particles, setParticles, interval, setInterval, replayLoad, setReplayLoad }}
+      />
       <footer className="text-white absolute right-0 bottom-0 mb-2">
         <span className="sm:text-xs text-[0px]">Created by </span>
         <span className="sm:text-xs text-xxs font-bold">dx droni#9467</span>
