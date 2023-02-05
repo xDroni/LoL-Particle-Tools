@@ -202,10 +202,10 @@ export default function ParticleLocator({ props }) {
     <>
       <button
         type="button"
-        className="btn btn-slate btn-responsive mb-1 mr-auto ml-auto block sm:mb-4  "
+        className="btn btn-slate btn-responsive mb-4 mr-auto ml-auto block"
         onClick={() => setIsNewWindow(true)}
       >
-        <FontAwesomeIcon className="initial mr-1" icon="fa-solid fa-crosshairs" size="lg" />
+        <FontAwesomeIcon className="initial md:mr-1" icon="fa-solid fa-crosshairs" size="lg" />
         Particle Locator
       </button>
       {isNewWindow && (

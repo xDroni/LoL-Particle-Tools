@@ -5,6 +5,7 @@ import {
   faArrowLeft,
   faArrowRight,
   faArrowsRotate,
+  faCircleQuestion,
   faCrosshairs,
   faEyeSlash,
   faFileArrowDown,
@@ -24,7 +25,8 @@ library.add(
   faEyeSlash,
   faArrowRight,
   faArrowLeft,
-  faArrowsRotate
+  faArrowsRotate,
+  faCircleQuestion
 );
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

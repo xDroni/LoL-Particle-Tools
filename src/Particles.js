@@ -148,9 +148,9 @@ export default function Particles() {
   }
 
   return (
-    <div className="mt-4 flex justify-center gap-2 lg:gap-8">
+    <div className="mt-10 flex justify-center gap-3 md:mt-4 md:gap-8">
       <div className="w-96 text-center">
-        <span className="mb-0 block uppercase sm:mb-2">Enabled particles</span>
+        <span className="block hidden uppercase md:mb-2 md:block">Enabled particles</span>
         <div className="flex">
           <select
             multiple
@@ -185,7 +185,7 @@ export default function Particles() {
         <ParticleLocator props={{ locationInProgress, setLocationInProgress }} />
       </div>
       <div className="w-96 text-center">
-        <span className="mb-0 block uppercase sm:mb-2">Disabled particles</span>
+        <span className="block hidden uppercase md:mb-2 md:block">Disabled particles</span>
         <div className="flex">
           <button className="btn btn-l btn-slate -mr-1 h-[70vh]" onClick={enableSelectedParticles}>
             <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
@@ -221,30 +221,31 @@ export default function Particles() {
         <div className="flex justify-center gap-4">
           <button
             type="button"
-            className="btn btn-slate btn-responsive mb-1 block sm:mb-4"
+            className="btn btn-slate btn-responsive block"
             onClick={handleExportFile}
           >
             <FontAwesomeIcon
-              className="initial mr-1"
+              className="initial md:mr-1"
               icon="fa-solid fa-file-arrow-down"
               size="lg"
             />
             Save to file
           </button>
-          <button
-            className="btn btn-slate btn-responsive mb-1  block sm:mb-4"
-            onClick={handleImportFile}
-          >
-            <FontAwesomeIcon className="initial mr-1" icon="fa-solid fa-file-arrow-up" size="lg" />
+          <button className="btn btn-slate btn-responsive block" onClick={handleImportFile}>
+            <FontAwesomeIcon
+              className="initial md:mr-1"
+              icon="fa-solid fa-file-arrow-up"
+              size="lg"
+            />
             Import data
           </button>
         </div>
 
         <button
-          className="btn btn-slate btn-responsive"
+          className="btn btn-slate btn-responsive mt-2 md:mt-4"
           onClick={() => fetchParticles(setParticles, replayLoad, setReplayLoad)}
         >
-          <FontAwesomeIcon className="initial mr-1" icon="fa-solid fa-arrows-rotate" />
+          <FontAwesomeIcon className="initial md:mr-1" icon="fa-solid fa-arrows-rotate" />
           Refresh
         </button>
       </div>

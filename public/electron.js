@@ -82,7 +82,7 @@ function createMainWindow() {
     isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
   );
 
-  mainWindow.webContents.setWindowOpenHandler(({ frameName }) => {
+  mainWindow.webContents.setWindowOpenHandler(({ frameName, url }) => {
     if (frameName === 'ParticleLocatorWindow') {
       return {
         action: 'allow',
@@ -97,6 +97,10 @@ function createMainWindow() {
         }
       };
     }
+    if (url.includes('http')) {
+      void shell.openExternal(url);
+      return { action: 'deny' };
+    }
     return { action: 'deny' };
   });
 
@@ -109,11 +113,6 @@ function createMainWindow() {
 
   mainWindow.on('page-title-updated', (evt) => {
     evt.preventDefault();
-  });
-
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    void shell.openExternal(url);
-    return { action: 'deny' };
   });
 
   mainWindow.on('closed', () => (mainWindow = null));

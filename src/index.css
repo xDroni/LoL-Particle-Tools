@@ -23,7 +23,7 @@
 
 @layer components {
   .btn {
-    @apply py-1 px-2 font-bold disabled:pointer-events-none disabled:opacity-50;
+    @apply rounded py-1 px-2 font-bold disabled:pointer-events-none disabled:opacity-50;
   }
 
   .btn-r {
@@ -47,11 +47,11 @@
   }
 
   .btn-responsive {
-    @apply text-[0px] sm:text-xs md:text-xs lg:text-base;
+    @apply text-[0px] md:text-xs lg:text-base;
   }
 
   .particle-list {
-    @apply z-10 mb-1 h-[70vh] w-full rounded bg-slate-800 text-xs focus:border-slate-200 focus:ring-0 disabled:bg-slate-800 sm:mb-4 lg:text-base;
+    @apply z-10 mb-1 h-[70vh] w-full rounded bg-slate-800 text-xs focus:border-slate-200 focus:ring-0 disabled:bg-slate-800 md:mb-4 lg:text-base;
   }
 
   .particle-list-scrollbar::-webkit-scrollbar-track {
@@ -59,7 +59,7 @@
   }
 
   .filter-button {
-    @apply ml-auto mr-auto mb-1 w-3/4 bg-slate-800 text-xs placeholder-slate-100 focus:border-slate-200 focus:ring-0 sm:mb-4 lg:text-base;
+    @apply ml-auto mr-auto mb-1 w-3/4 bg-slate-800 text-xs placeholder-slate-100 focus:border-slate-200 focus:ring-0 md:mb-4 lg:text-base;
   }
 
   .checkbox-focus {
@@ -91,7 +91,7 @@
 
 @layer utilities {
   :root {
-    --toastify-color-dark: #1e293b;
+    --toastify-color-dark: #334155 !important;
   }
 
   /* styled scrollbar */

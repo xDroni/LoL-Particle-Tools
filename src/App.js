@@ -1,5 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useEffect, useState } from 'react';
 import { Slide, toast, ToastContainer } from 'react-toastify';
 
@@ -32,7 +33,7 @@ function App() {
         toast.warn(message, options);
         break;
       case TOAST_NOTIFICATION_TYPES.LOADING:
-        setLoadingToastId(toast.loading(message));
+        setLoadingToastId(toast.loading(message, { ...options, autoClose: false }));
         window.electronAPI.focusMainWindow();
         break;
       default:
@@ -102,15 +103,18 @@ function App() {
 
   return (
     <>
-      <header className="absolute right-3 top-0 flex gap-4">
-        <button onClick={handleModal}>Help</button>
+      <header className="absolute right-3 top-1 flex items-center gap-4">
+        <button type="button" className="btn btn-slate btn-responsive" onClick={handleModal}>
+          <FontAwesomeIcon className="initial md:mr-1" icon="fa-solid fa-circle-question" />
+          Help
+        </button>
         <span>v{process.env.REACT_APP_VERSION}</span>
       </header>
       <Particles />
       <footer className="absolute bottom-2 right-3 text-white">
-        <span className="text-[0px] sm:text-xs">Created by </span>
-        <span className="text-xxs font-bold sm:text-xs">dx droni#9467</span>
-        <span className="text-[0px] sm:text-xs"> mrdroonix@gmail.com</span>
+        <span className="hidden lg:inline lg:text-xs">Created by </span>
+        <span className="text-xs font-bold">dx droni#9467</span>
+        <span className="hidden lg:inline lg:text-xs"> mrdroonix@gmail.com</span>
       </footer>
       <ToastContainer
         position="bottom-right"
@@ -133,8 +137,8 @@ function App() {
             <button onClick={handleModal}>Close</button>
             {/* icon */}
           </div>
-          <h4 className="mb-2 text-xl font-bold">Particle Locator</h4>
-          <h5 className="text-lg text-teal-400">Auto mode</h5>
+          <h4 className="text-xl font-bold">Particle Locator</h4>
+          <h5 className="mt-2 text-lg text-teal-400">Auto mode</h5>
           <div className="ml-1.5">
             <p>
               Video tutorial:{' '}
@@ -142,9 +146,9 @@ function App() {
                 className="text-blue-400 underline"
                 target="_blank"
                 rel="noreferrer"
-                href="https://youtu.be/FvQJKjt-hYk?t=28"
+                href="https://youtu.be/F4FTJY52NtU?t=28"
               >
-                https://youtu.be/FvQJKjt-hYk?t=28
+                https://youtu.be/F4FTJY52NtU
               </a>
             </p>
             <ol className="ml-8 list-decimal">
@@ -161,7 +165,7 @@ function App() {
               </li>
             </ol>
           </div>
-          <h5 className="text-lg text-red-400">Legacy mode</h5>
+          <h5 className="mt-2 text-lg text-red-400">Legacy mode</h5>
           <div className="ml-1.5">
             <p>
               Video tutorial:{' '}
