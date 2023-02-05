@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, desktopCapturer, screen } = require('electron');
+const { app, BrowserWindow, ipcMain, desktopCapturer, screen, shell } = require('electron');
 
 const path = require('path');
 const isDev = require('electron-is-dev');
@@ -110,6 +110,12 @@ function createMainWindow() {
   mainWindow.on('page-title-updated', (evt) => {
     evt.preventDefault();
   });
+
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    void shell.openExternal(url);
+    return { action: 'deny' };
+  });
+
   mainWindow.on('closed', () => (mainWindow = null));
 }
 

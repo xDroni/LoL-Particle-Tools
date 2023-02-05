@@ -2,9 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
-/* reserve space for the scrollbar */
-html {
-  scrollbar-gutter: stable both-edges;
+@layer base {
+  html {
+    overflow-y: overlay;
+  }
+
+  body {
+    @apply bg-slate-900 text-xs text-slate-200 lg:text-base;
+  }
+
+  .text-xxs {
+    font-size: 0.625rem;
+    line-height: 0.75rem;
+  }
+
+  .initial {
+    font-size: initial;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply py-1 px-2 font-bold disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-r {
+    @apply rounded-r-full;
+  }
+
+  .btn-l {
+    @apply rounded-l-full;
+  }
+
+  .btn-slate {
+    @apply bg-slate-500 text-white;
+  }
+
+  .btn-slate:hover {
+    @apply bg-slate-600;
+  }
+
+  .btn-slate:disabled {
+    @apply bg-slate-800;
+  }
+
+  .btn-responsive {
+    @apply text-[0px] sm:text-xs md:text-xs lg:text-base;
+  }
+
+  .particle-list {
+    @apply z-10 mb-1 h-[70vh] w-full rounded bg-slate-800 text-xs focus:border-slate-200 focus:ring-0 disabled:bg-slate-800 sm:mb-4 lg:text-base;
+  }
+
+  .particle-list-scrollbar::-webkit-scrollbar-track {
+    @apply rounded-full bg-slate-800;
+  }
+
+  .filter-button {
+    @apply ml-auto mr-auto mb-1 w-3/4 bg-slate-800 text-xs placeholder-slate-100 focus:border-slate-200 focus:ring-0 sm:mb-4 lg:text-base;
+  }
+
+  .checkbox-focus {
+    @apply focus:ring-slate-500 focus:ring-offset-0;
+  }
+
+  .modal-transition {
+    transition: opacity 0.5s ease;
+  }
+
+  .modal-container-transition {
+    transition: opacity 0.5s ease;
+    backdrop-filter: brightness(35%) blur(5px);
+  }
+
+  .text-loader {
+    animation: pulse 0.9s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
 }
 
 @layer utilities {
@@ -14,8 +96,7 @@ html {
 
   /* styled scrollbar */
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 0.5rem;
   }
 
   ::-webkit-scrollbar-track {
@@ -38,70 +119,4 @@ html {
   .scrollbar-gutter-enable {
     scrollbar-gutter: stable both-edges;
   }
-
-  .scrollbar-gutter-disable {
-    scrollbar-gutter: auto;
-  }
-}
-
-@layer base {
-  body {
-    @apply bg-slate-900 text-xs text-slate-200 lg:text-base;
-  }
-}
-
-/*.btn {*/
-/*  @apply font-bold py-1 px-2 focus:outline-1 focus:outline-slate-200  disabled:opacity-50 disabled:pointer-events-none;*/
-/*}*/
-
-.btn {
-  @apply py-1 px-2 font-bold disabled:pointer-events-none disabled:opacity-50;
-}
-.btn-r {
-  @apply rounded-r-full;
-}
-.btn-l {
-  @apply rounded-l-full;
-}
-.btn-slate {
-  @apply bg-slate-500 text-white;
-}
-.btn-slate:hover {
-  @apply bg-slate-600;
-}
-.btn-slate:disabled {
-  @apply bg-slate-800;
-}
-
-.btn-responsive {
-  @apply text-[0px] sm:text-xs md:text-xs lg:text-base;
-}
-
-.checkbox-focus {
-  @apply focus:ring-slate-500 focus:ring-offset-0;
-}
-
-.input-focus-border {
-  /*@apply */
-}
-
-.particle-list {
-  @apply z-10 mb-1 h-[70vh] w-full rounded bg-slate-800 text-xs focus:border-slate-200 focus:ring-0 disabled:bg-slate-800 sm:mb-4 lg:text-base;
-}
-
-.particle-list-scrollbar::-webkit-scrollbar-track {
-  @apply rounded-full bg-slate-800;
-}
-
-.filter-button {
-  @apply ml-auto mr-auto mb-1 w-3/4 bg-slate-800 text-xs placeholder-slate-100 focus:border-slate-200 focus:ring-0 sm:mb-4 lg:text-base;
-}
-
-.initial {
-  font-size: initial;
-}
-
-.text-xxs {
-  font-size: 0.625rem;
-  line-height: 0.75rem;
 }
