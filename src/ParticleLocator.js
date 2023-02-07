@@ -7,9 +7,12 @@ import fetchRenderProperties from './common/fetchRenderProperties';
 import listOfItems from './common/listOfItems';
 import postParticles from './common/postParticles';
 import postRenderProperties from './common/postRenderProperties';
-import { COMPARISON_RESULT_STATE, MODE, TOAST_NOTIFICATION_TYPES } from './common/types';
+import { COMPARISON_RESULT_STATE, MODE } from './common/types';
 import config from './config.json';
 import ParticleLocatorWindow from './ParticleLocatorWindow';
+
+const electronAPI = window.electronAPI;
+const TOAST_NOTIFICATION_TYPES = window.TOAST_NOTIFICATION_TYPES;
 
 export default function ParticleLocator({ props }) {
   const { locationInProgress, setLocationInProgress } = props;
@@ -26,7 +29,7 @@ export default function ParticleLocator({ props }) {
   const renderPropertiesToRestore = useRef(null);
 
   useEffect(() => {
-    window.electronAPI.onClientNotFound(stopLocating);
+    electronAPI.onClientNotFound(stopLocating);
   }, []);
 
   useEffect(() => {
@@ -46,7 +49,7 @@ export default function ParticleLocator({ props }) {
         return;
       }
 
-      window.electronAPI.sendImageSrcRequest();
+      electronAPI.sendImageSrcRequest();
       const imageSource = await getImageSrc();
       if (imageSource !== imageSrcToCompare) {
         setImageSrcComparisonResults((prev) => [...prev, COMPARISON_RESULT_STATE.DID_CHANGE]);
@@ -59,7 +62,7 @@ export default function ParticleLocator({ props }) {
   }, [split, setParticles]);
 
   async function getImageSrc() {
-    return window.electronAPI.waitForImageSrcResponse();
+    return electronAPI.waitForImageSrcResponse();
   }
 
   async function findParticle(entries) {
@@ -93,7 +96,7 @@ export default function ParticleLocator({ props }) {
         setParticles
       );
 
-      window.electronAPI.sendImageSrcRequest();
+      electronAPI.sendImageSrcRequest();
 
       // actually not the first source of the image, but the first in this circulation
       const firstImageSrc = await getImageSrc();
@@ -118,10 +121,7 @@ export default function ParticleLocator({ props }) {
     }
 
     if (replayLoad === true) {
-      return window.electronAPI.sendToastNotification(
-        TOAST_NOTIFICATION_TYPES.ERROR,
-        "Couldn't find the opened replay."
-      );
+      return electronAPI.sendToastNotification(TOAST_NOTIFICATION_TYPES.ERROR, 'Replay not found');
     }
 
     clearInterval(interval);
@@ -150,7 +150,7 @@ export default function ParticleLocator({ props }) {
       return findParticle(enabledParticles);
     }
 
-    window.electronAPI.startAutoLocating();
+    electronAPI.startAutoLocating();
 
     // don't request because the first screenshot should come when user selects the area
     const firstImageSrc = await getImageSrc();
@@ -160,7 +160,7 @@ export default function ParticleLocator({ props }) {
 
   async function stopLocating() {
     if (mode === MODE.AUTO) {
-      window.electronAPI.stopAutoLocating();
+      electronAPI.stopAutoLocating();
     }
     await postParticles(particlesStateToRestore.current, setParticles);
 

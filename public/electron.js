@@ -2,9 +2,8 @@ const { app, BrowserWindow, ipcMain, desktopCapturer, screen, shell } = require(
 
 const path = require('path');
 const isDev = require('electron-is-dev');
-const { TOAST_NOTIFICATION_TYPES } = require('../src/common/types');
 
-let mainWindow, autoParticleLocatorGameWindow, width, height;
+let mainWindow, autoParticleLocatorGameWindow, width, height, TOAST_NOTIFICATION_TYPES;
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 
@@ -13,6 +12,14 @@ app.whenReady().then(() => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createMainWindow();
   }
+
+  const getSharedTypesListener = (_, sharedTypes) => {
+    ({ TOAST_NOTIFICATION_TYPES } = sharedTypes);
+    console.log(TOAST_NOTIFICATION_TYPES);
+    ipcMain.removeListener('shared-types', getSharedTypesListener);
+  };
+
+  ipcMain.on('shared-types', getSharedTypesListener);
 
   ipcMain.on('start-auto-locating', createAutoParticleLocatorHandleWindow);
 
@@ -50,7 +57,7 @@ app.whenReady().then(() => {
       sendClientNotFoundMessage();
       return sendToastNotification(
         TOAST_NOTIFICATION_TYPES.ERROR,
-        'Cannot find the opened replay. Try to focus the window with game. Make sure window mode is set to Borderless or Windowed.'
+        'Replay not found. Try to focus the window with game. Make sure window mode is set to Borderless or Windowed.'
       );
     }
     return leagueGameClient;
@@ -64,7 +71,6 @@ app.whenReady().then(() => {
 });
 
 function createMainWindow() {
-  console.log(Math.floor(width * 0.78125), Math.floor(height * 0.712962962962963));
   mainWindow = new BrowserWindow({
     width: Math.floor(width * 0.78125),
     height: Math.floor(height * 0.712962962962963),

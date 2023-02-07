@@ -27,4 +27,15 @@ const ELECTRON_API = {
   waitForImageSrcRequest: (f) => ipcRenderer.on('imgsrc-requested', () => f())
 };
 
+// shared types
+const TOAST_NOTIFICATION_TYPES = {
+  ERROR: 'error',
+  WARN: 'warn',
+  INFO: 'info',
+  LOADING: 'loading'
+};
+
+ipcRenderer.send('shared-types', { TOAST_NOTIFICATION_TYPES });
+
 contextBridge.exposeInMainWorld('electronAPI', ELECTRON_API);
+contextBridge.exposeInMainWorld('TOAST_NOTIFICATION_TYPES', TOAST_NOTIFICATION_TYPES);

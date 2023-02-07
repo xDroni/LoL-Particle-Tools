@@ -6,8 +6,10 @@ import { Slide, toast, ToastContainer } from 'react-toastify';
 
 import { LoadingContext, ParticlesContext } from './AppContext';
 import fetchParticles, { autoFetch } from './common/fetchParticles';
-import { TOAST_NOTIFICATION_TYPES } from './common/types';
 import Particles from './Particles';
+
+const electronAPI = window.electronAPI;
+const TOAST_NOTIFICATION_TYPES = window.TOAST_NOTIFICATION_TYPES;
 
 function App() {
   const { interval, setInterval, replayLoad, setReplayLoad } = useContext(LoadingContext);
@@ -34,7 +36,7 @@ function App() {
         break;
       case TOAST_NOTIFICATION_TYPES.LOADING:
         setLoadingToastId(toast.loading(message, { ...options, autoClose: false }));
-        window.electronAPI.focusMainWindow();
+        electronAPI.focusMainWindow();
         break;
       default:
         toast.info(message, options);
@@ -42,7 +44,7 @@ function App() {
   };
 
   useEffect(() => {
-    window.electronAPI.waitForToastNotification(toastNotificationHandler);
+    electronAPI.waitForToastNotification(toastNotificationHandler);
   }, []);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ function App() {
     if (replayLoad === true) {
       toastNotificationHandler(
         TOAST_NOTIFICATION_TYPES.LOADING,
-        'Cannot find the replay. Save the disabled particles to file to not lose them!'
+        'Replay not found. Save the disabled particles to file to not lose them!'
       );
     }
 
@@ -81,7 +83,7 @@ function App() {
   if (particles.length === 0) {
     return (
       <>
-        <header className="absolute right-0 top-0">v{process.env.REACT_APP_VERSION}</header>
+        <header className="absolute right-3 top-2">v{process.env.REACT_APP_VERSION}</header>
         <div className="flex h-screen w-screen items-center justify-center">
           <span className="text-loader text-3xl">Waiting for the replay...</span>
         </div>
@@ -157,6 +159,7 @@ function App() {
                 Set in-game window mode to either <span className="font-bold">Borderless</span> or{' '}
                 <span className="font-bold">Windowed</span>
               </li>
+              <li>Pause the replay</li>
               <li>
                 Open Particle Locator and click <span className="font-bold">Start</span>
               </li>

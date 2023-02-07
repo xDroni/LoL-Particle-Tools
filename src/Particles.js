@@ -5,8 +5,10 @@ import React, { useContext, useDeferredValue, useState } from 'react';
 import { LoadingContext, ParticlesContext } from './AppContext';
 import fetchParticles from './common/fetchParticles';
 import postParticles from './common/postParticles';
-import { TOAST_NOTIFICATION_TYPES } from './common/types';
 import ParticleLocator from './ParticleLocator';
+
+const electronAPI = window.electronAPI;
+const TOAST_NOTIFICATION_TYPES = window.TOAST_NOTIFICATION_TYPES;
 
 export default function Particles() {
   const { replayLoad, setReplayLoad } = useContext(LoadingContext);
@@ -136,7 +138,7 @@ export default function Particles() {
         }, {});
         postParticles(particlesToDisableJSON, setParticles);
         if (errorOccurred === true) {
-          return window.electronAPI.sendToastNotification(
+          return electronAPI.sendToastNotification(
             TOAST_NOTIFICATION_TYPES.WARN,
             'Not all of the particle names have been imported due to not supported characters. Validate the file.'
           );

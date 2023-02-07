@@ -8,15 +8,7 @@ const COMPARISON_RESULT_STATE = {
   DID_NOT_CHANGE: 'did-not-change'
 };
 
-const TOAST_NOTIFICATION_TYPES = {
-  ERROR: 'error',
-  WARN: 'warn',
-  INFO: 'info',
-  LOADING: 'loading'
-};
-
 module.exports = {
   MODE,
-  COMPARISON_RESULT_STATE,
-  TOAST_NOTIFICATION_TYPES
+  COMPARISON_RESULT_STATE
 };
