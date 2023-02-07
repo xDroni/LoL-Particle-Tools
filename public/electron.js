@@ -15,7 +15,6 @@ app.whenReady().then(() => {
 
   const getSharedTypesListener = (_, sharedTypes) => {
     ({ TOAST_NOTIFICATION_TYPES } = sharedTypes);
-    console.log(TOAST_NOTIFICATION_TYPES);
     ipcMain.removeListener('shared-types', getSharedTypesListener);
   };
 
