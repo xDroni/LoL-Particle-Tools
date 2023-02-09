@@ -56,7 +56,7 @@ app.whenReady().then(() => {
       sendClientNotFoundMessage();
       return sendToastNotification(
         TOAST_NOTIFICATION_TYPES.ERROR,
-        'Replay not found. Try to focus the window with game. Make sure window mode is set to Borderless or Windowed.'
+        'Replay not found. Try to focus the window with the game. Make sure the window mode is set to borderless or windowed.'
       );
     }
     return leagueGameClient;

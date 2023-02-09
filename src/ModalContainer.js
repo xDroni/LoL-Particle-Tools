@@ -33,15 +33,15 @@ export default function ModalContainer({ handleModal }) {
           <ol className="ml-8 list-decimal">
             <li>Open the replay</li>
             <li>
-              Set in-game window mode to either <span className="font-bold">Borderless</span> or{' '}
-              <span className="font-bold">Windowed</span>
+              Set in-game window mode to either <span className="font-bold">borderless</span> or{' '}
+              <span className="font-bold">windowed</span>
             </li>
             <li>Pause the replay</li>
             <li>
               Open Particle Locator and click <span className="font-bold">Start</span>
             </li>
             <li>
-              Select the particle(s) that you want to disable (and automatically find their name)
+              Select the particle(s) that you want to deactivate (and automatically find their name)
             </li>
           </ol>
         </div>

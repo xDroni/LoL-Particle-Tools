@@ -60,7 +60,7 @@ function App() {
         : autoFetch(setParticles, replayLoad, setReplayLoad, 7000);
     setInterval(i);
 
-    if (replayLoad === true && particlesByState.disabled.length > 0) {
+    if (replayLoad === true && particlesByState.inactive.length > 0) {
       toastNotificationHandler(
         TOAST_NOTIFICATION_TYPES.LOADING,
         'Replay not found. Save the deactivated particles to a file to not lose them!'

@@ -15,59 +15,59 @@ export default function Particles() {
   const { particles, setParticles, particlesByState, setParticlesByState } =
     useContext(ParticlesContext);
   const [locationInProgress, setLocationInProgress] = useState(false);
-  const [selectedEnabledParticles, setSelectedEnabledParticles] = useState([]);
-  const [selectedDisabledParticles, setSelectedDisabledParticles] = useState([]);
+  const [selectedActiveParticles, setSelectedActiveParticles] = useState([]);
+  const [selectedInactiveParticles, setSelectedInactiveParticles] = useState([]);
 
   useEffect(() => {
     setParticlesByState(
       Object.entries(particles).reduce(
         (prev, curr) => ({
-          enabled: curr[1] ? [...prev.enabled, curr[0]] : [...prev.enabled],
-          disabled: !curr[1] ? [...prev.disabled, curr[0]] : [...prev.disabled]
+          active: curr[1] ? [...prev.active, curr[0]] : [...prev.active],
+          inactive: !curr[1] ? [...prev.inactive, curr[0]] : [...prev.inactive]
         }),
-        { enabled: [], disabled: [] }
+        { active: [], inactive: [] }
       )
     );
   }, [particles, setParticlesByState]);
 
-  const [enabledParticlesFilter, setEnabledParticlesFilter] = useState('');
-  const [disabledParticlesFilter, setDisabledParticlesFilter] = useState('');
+  const [activeParticlesFilter, setActiveParticlesFilter] = useState('');
+  const [inactiveParticlesFilter, setInactiveParticlesFilter] = useState('');
   const [fileName, setFileName] = useState('');
-  const enabledParticlesDeferredFilter = useDeferredValue(enabledParticlesFilter);
-  const disabledParticlesDeferredFilter = useDeferredValue(disabledParticlesFilter);
+  const activeParticlesDeferredFilter = useDeferredValue(activeParticlesFilter);
+  const inactiveParticlesDeferredFilter = useDeferredValue(inactiveParticlesFilter);
 
-  const enabledParticlesFiltered = particlesByState.enabled.filter((p) => {
-    const regex = new RegExp(enabledParticlesDeferredFilter, 'i');
-    return enabledParticlesDeferredFilter === ''
+  const activeParticlesFiltered = particlesByState.active.filter((p) => {
+    const regex = new RegExp(activeParticlesDeferredFilter, 'i');
+    return activeParticlesDeferredFilter === ''
       ? true
       : regex.test(p) || regex.test(p.replaceAll('_', ''));
   });
 
-  const disabledParticlesFiltered = particlesByState.disabled.filter((p) => {
-    const regex = new RegExp(disabledParticlesDeferredFilter, 'i');
-    return disabledParticlesDeferredFilter === ''
+  const inactiveParticlesFiltered = particlesByState.inactive.filter((p) => {
+    const regex = new RegExp(inactiveParticlesDeferredFilter, 'i');
+    return inactiveParticlesDeferredFilter === ''
       ? true
       : regex.test(p) || regex.test(p.replaceAll('_', ''));
   });
 
-  function handleEnabledParticlesFilterChange(event) {
-    setEnabledParticlesFilter(event.target.value);
+  function handleActiveParticlesFilterChange(event) {
+    setActiveParticlesFilter(event.target.value);
   }
 
-  function handleDisabledParticlesFilterChange(event) {
-    setDisabledParticlesFilter(event.target.value);
+  function handleInactiveParticlesFilterChange(event) {
+    setInactiveParticlesFilter(event.target.value);
   }
 
-  function handleEnabledParticlesChange(event) {
+  function handleActiveParticlesChange(event) {
     const selectedOptions = event.target.selectedOptions;
     const values = Array.from(selectedOptions).map(({ value }) => value);
-    setSelectedEnabledParticles(values);
+    setSelectedActiveParticles(values);
   }
 
-  function handleDisabledParticlesChange(event) {
+  function handleInactiveParticlesChange(event) {
     const selectedOptions = event.target.selectedOptions;
     const values = Array.from(selectedOptions).map(({ value }) => value);
-    setSelectedDisabledParticles(values);
+    setSelectedInactiveParticles(values);
   }
 
   function makeJSON(particles, state) {
@@ -80,24 +80,24 @@ export default function Particles() {
     );
   }
 
-  function disableSelectedParticles() {
-    if (selectedEnabledParticles.length === 0) {
+  function deactivateSelectedParticles() {
+    if (selectedActiveParticles.length === 0) {
       return;
     }
-    const json = makeJSON(selectedEnabledParticles, false);
+    const json = makeJSON(selectedActiveParticles, false);
     postParticles(json, setParticles);
   }
 
-  function enableSelectedParticles() {
-    if (selectedDisabledParticles.length === 0) {
+  function activateSelectedParticles() {
+    if (selectedInactiveParticles.length === 0) {
       return;
     }
-    const json = makeJSON(selectedDisabledParticles, true);
+    const json = makeJSON(selectedInactiveParticles, true);
     postParticles(json, setParticles);
   }
 
   function handleExportFile() {
-    const data = particlesByState.disabled.reduce((prev, curr) => {
+    const data = particlesByState.inactive.reduce((prev, curr) => {
       return prev + curr + '\n';
     }, '');
     const blob = new Blob([data]);
@@ -115,8 +115,8 @@ export default function Particles() {
       if (file === undefined || file.name.split('.').pop() !== 'txt') return;
       const fileReader = new FileReader();
       fileReader.onload = (f) => {
-        const particlesToDisable = f.target.result.toString();
-        const particlesToDisableJSON = particlesToDisable.split('\n').reduce((prev, curr) => {
+        const particlesToDeactivate = f.target.result.toString();
+        const particlesToDeactivateJSON = particlesToDeactivate.split('\n').reduce((prev, curr) => {
           const trimmed = curr.trim();
           if (trimmed.length === 0) {
             return prev;
@@ -141,11 +141,11 @@ export default function Particles() {
             ...{ [curr.trim()]: false }
           };
         }, {});
-        postParticles(particlesToDisableJSON, setParticles);
+        postParticles(particlesToDeactivateJSON, setParticles);
         if (errorOccurred === true) {
           return electronAPI.sendToastNotification(
             TOAST_NOTIFICATION_TYPES.WARN,
-            'Not all of the particle names have been imported due to not supported characters. Validate the file.'
+            'Due to the unsupported characters, not all of the particles were imported. Validate the file.'
           );
         }
       };
@@ -157,15 +157,15 @@ export default function Particles() {
   return (
     <div className="mt-10 flex justify-center gap-3 md:mt-4 md:gap-8">
       <div className="w-96 text-center">
-        <span className="block hidden uppercase md:mb-2 md:block">Enabled particles</span>
+        <span className="block hidden uppercase md:mb-2 md:block">Active particles</span>
         <div className="flex">
           <select
             multiple
             className="particle-list particle-list-scrollbar"
             disabled={locationInProgress || replayLoad}
-            onChange={handleEnabledParticlesChange}
+            onChange={handleActiveParticlesChange}
           >
-            {enabledParticlesFiltered.map((particleName) => {
+            {activeParticlesFiltered.map((particleName) => {
               return (
                 <option
                   className="rounded-xl hover:bg-slate-700"
@@ -179,7 +179,7 @@ export default function Particles() {
           </select>
           <button
             className="btn btn-r btn-slate -ml-1 h-[70vh]"
-            onClick={disableSelectedParticles}
+            onClick={deactivateSelectedParticles}
             disabled={locationInProgress || replayLoad}
           >
             <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
@@ -190,17 +190,17 @@ export default function Particles() {
           type="text"
           className="filter-button"
           placeholder="Filter"
-          value={enabledParticlesFilter}
-          onChange={handleEnabledParticlesFilterChange}
+          value={activeParticlesFilter}
+          onChange={handleActiveParticlesFilterChange}
         />
         <ParticleLocator props={{ locationInProgress, setLocationInProgress }} />
       </div>
       <div className="w-96 text-center">
-        <span className="block hidden uppercase md:mb-2 md:block">Disabled particles</span>
+        <span className="block hidden uppercase md:mb-2 md:block">Inactive particles</span>
         <div className="flex">
           <button
             className="btn btn-l btn-slate -mr-1 h-[70vh]"
-            onClick={enableSelectedParticles}
+            onClick={activateSelectedParticles}
             disabled={locationInProgress || replayLoad}
           >
             <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
@@ -209,9 +209,9 @@ export default function Particles() {
             multiple
             className="particle-list particle-list-scrollbar"
             disabled={locationInProgress || replayLoad}
-            onChange={handleDisabledParticlesChange}
+            onChange={handleInactiveParticlesChange}
           >
-            {disabledParticlesFiltered.map((particleName) => {
+            {inactiveParticlesFiltered.map((particleName) => {
               return (
                 <option
                   className="rounded-xl hover:bg-slate-700"
@@ -229,8 +229,8 @@ export default function Particles() {
           type="text"
           className="filter-button"
           placeholder="Filter"
-          value={disabledParticlesFilter}
-          onChange={handleDisabledParticlesFilterChange}
+          value={inactiveParticlesFilter}
+          onChange={handleInactiveParticlesFilterChange}
         />
 
         <div className="flex justify-center gap-4">

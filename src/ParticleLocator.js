@@ -102,10 +102,10 @@ export default function ParticleLocator({ props }) {
       const firstImageSrc = await getImageSrc();
       setImageSrcToCompare(() => firstImageSrc);
 
-      const onlyEnabled = Object.entries(
+      const onlyActiveParticles = Object.entries(
         await fetchParticles(setParticles, replayLoad, setReplayLoad, true)
       );
-      return findParticle(onlyEnabled);
+      return findParticle(onlyActiveParticles);
     }
 
     setSplit({
@@ -126,7 +126,7 @@ export default function ParticleLocator({ props }) {
 
     clearInterval(interval);
     const currentParticles = await fetchParticles(setParticles, replayLoad, setReplayLoad);
-    const enabledParticles = Object.entries(currentParticles).filter(([, state]) => Boolean(state));
+    const activeParticles = Object.entries(currentParticles).filter(([, state]) => Boolean(state));
 
     particlesStateToRestore.current = currentParticles;
     setLocationInProgress(true);
@@ -147,7 +147,7 @@ export default function ParticleLocator({ props }) {
     }
 
     if (mode === MODE.LEGACY) {
-      return findParticle(enabledParticles);
+      return findParticle(activeParticles);
     }
 
     electronAPI.startAutoLocating();
@@ -155,7 +155,7 @@ export default function ParticleLocator({ props }) {
     // don't request because the first screenshot should come when user selects the area
     const firstImageSrc = await getImageSrc();
     setImageSrcToCompare(() => firstImageSrc);
-    return findParticle(enabledParticles);
+    return findParticle(activeParticles);
   }
 
   async function stopLocating() {
@@ -247,7 +247,7 @@ export default function ParticleLocator({ props }) {
             </button>
             <button
               type="button"
-              className="btn btn-slate"
+              className="btn btn-slate text-xxs"
               disabled={locationInProgress || foundParticles.size === 0}
               onClick={() =>
                 postParticles(
@@ -261,7 +261,7 @@ export default function ParticleLocator({ props }) {
                 )
               }
             >
-              Disable all found
+              Deactivate all found
             </button>
             <button type="button" className="btn btn-slate" onClick={clearFoundParticles}>
               Clear the list
