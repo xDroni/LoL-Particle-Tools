@@ -162,7 +162,7 @@ export default function Particles() {
           <select
             multiple
             className="particle-list particle-list-scrollbar"
-            disabled={locationInProgress}
+            disabled={locationInProgress || replayLoad}
             onChange={handleEnabledParticlesChange}
           >
             {enabledParticlesFiltered.map((particleName) => {
@@ -177,7 +177,11 @@ export default function Particles() {
               );
             })}
           </select>
-          <button className="btn btn-r btn-slate -ml-1 h-[70vh]" onClick={disableSelectedParticles}>
+          <button
+            className="btn btn-r btn-slate -ml-1 h-[70vh]"
+            onClick={disableSelectedParticles}
+            disabled={locationInProgress || replayLoad}
+          >
             <FontAwesomeIcon icon="fa-solid fa-arrow-right" />
           </button>
         </div>
@@ -194,13 +198,17 @@ export default function Particles() {
       <div className="w-96 text-center">
         <span className="block hidden uppercase md:mb-2 md:block">Disabled particles</span>
         <div className="flex">
-          <button className="btn btn-l btn-slate -mr-1 h-[70vh]" onClick={enableSelectedParticles}>
+          <button
+            className="btn btn-l btn-slate -mr-1 h-[70vh]"
+            onClick={enableSelectedParticles}
+            disabled={locationInProgress || replayLoad}
+          >
             <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
           </button>
           <select
             multiple
             className="particle-list particle-list-scrollbar"
-            disabled={locationInProgress}
+            disabled={locationInProgress || replayLoad}
             onChange={handleDisabledParticlesChange}
           >
             {disabledParticlesFiltered.map((particleName) => {
