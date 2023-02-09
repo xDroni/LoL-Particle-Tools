@@ -21,7 +21,7 @@ function App() {
   const toastNotificationHandler = (type, message) => {
     const options = {
       position: 'bottom-right',
-      autoClose: 7000,
+      autoClose: 5000,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -37,7 +37,6 @@ function App() {
         break;
       case TOAST_NOTIFICATION_TYPES.LOADING:
         setLoadingToastId(toast.loading(message, { ...options, autoClose: false }));
-        electronAPI.focusMainWindow();
         break;
       default:
         toast.info(message, options);
@@ -60,11 +59,17 @@ function App() {
         : autoFetch(setParticles, replayLoad, setReplayLoad, 7000);
     setInterval(i);
 
-    if (replayLoad === true && particlesByState.inactive.length > 0) {
+    if (replayLoad === true) {
       toastNotificationHandler(
         TOAST_NOTIFICATION_TYPES.LOADING,
         'Replay not found. Save the deactivated particles to a file to not lose them!'
       );
+
+      if (particlesByState.inactive.length === 0) {
+        return;
+      }
+
+      electronAPI.focusMainWindow();
     }
 
     if (replayLoad === false && loadingToastId !== null) {

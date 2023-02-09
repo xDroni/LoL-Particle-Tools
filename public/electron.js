@@ -92,8 +92,8 @@ function createMainWindow() {
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
-          width: 346, //  -16
-          height: 339, // -39
+          width: 346,
+          height: 339,
           resizable: true,
           minimizable: false,
           maximizable: false,
@@ -161,7 +161,8 @@ function restoreAndFocusMainWindow() {
   }
 
   if (!mainWindow.isFocused()) {
-    return mainWindow.focus();
+    mainWindow.minimize();
+    return mainWindow.restore();
   }
 }
 
