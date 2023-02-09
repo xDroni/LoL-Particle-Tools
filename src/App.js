@@ -13,7 +13,7 @@ const TOAST_NOTIFICATION_TYPES = window.TOAST_NOTIFICATION_TYPES;
 
 function App() {
   const { interval, setInterval, replayLoad, setReplayLoad } = useContext(LoadingContext);
-  const { particles, setParticles } = useContext(ParticlesContext);
+  const { particles, setParticles, particlesByState } = useContext(ParticlesContext);
   const [loadingToastId, setLoadingToastId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -59,7 +59,7 @@ function App() {
         : autoFetch(setParticles, replayLoad, setReplayLoad, 7000);
     setInterval(i);
 
-    if (replayLoad === true) {
+    if (replayLoad === true && particlesByState.disabled.length > 0) {
       toastNotificationHandler(
         TOAST_NOTIFICATION_TYPES.LOADING,
         'Replay not found. Save the disabled particles to file to not lose them!'
@@ -148,9 +148,9 @@ function App() {
                 className="text-blue-400 underline"
                 target="_blank"
                 rel="noreferrer"
-                href="https://youtu.be/F4FTJY52NtU?t=28"
+                // href="https://youtu.be/F4FTJY52NtU?t=28"
               >
-                https://youtu.be/F4FTJY52NtU
+                TODO
               </a>
             </p>
             <ol className="ml-8 list-decimal">

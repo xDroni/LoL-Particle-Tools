@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { saveAs } from 'file-saver';
-import React, { useContext, useDeferredValue, useState } from 'react';
+import React, { useContext, useDeferredValue, useEffect, useState } from 'react';
 
 import { LoadingContext, ParticlesContext } from './AppContext';
 import fetchParticles from './common/fetchParticles';
@@ -12,18 +12,23 @@ const TOAST_NOTIFICATION_TYPES = window.TOAST_NOTIFICATION_TYPES;
 
 export default function Particles() {
   const { replayLoad, setReplayLoad } = useContext(LoadingContext);
-  const { particles, setParticles } = useContext(ParticlesContext);
+  const { particles, setParticles, particlesByState, setParticlesByState } =
+    useContext(ParticlesContext);
   const [locationInProgress, setLocationInProgress] = useState(false);
   const [selectedEnabledParticles, setSelectedEnabledParticles] = useState([]);
   const [selectedDisabledParticles, setSelectedDisabledParticles] = useState([]);
 
-  const particlesByState = Object.entries(particles).reduce(
-    (prev, curr) => ({
-      enabled: curr[1] ? [...prev.enabled, curr[0]] : [...prev.enabled],
-      disabled: !curr[1] ? [...prev.disabled, curr[0]] : [...prev.disabled]
-    }),
-    { enabled: [], disabled: [] }
-  );
+  useEffect(() => {
+    setParticlesByState(
+      Object.entries(particles).reduce(
+        (prev, curr) => ({
+          enabled: curr[1] ? [...prev.enabled, curr[0]] : [...prev.enabled],
+          disabled: !curr[1] ? [...prev.disabled, curr[0]] : [...prev.disabled]
+        }),
+        { enabled: [], disabled: [] }
+      )
+    );
+  }, [particles, setParticlesByState]);
 
   const [enabledParticlesFilter, setEnabledParticlesFilter] = useState('');
   const [disabledParticlesFilter, setDisabledParticlesFilter] = useState('');

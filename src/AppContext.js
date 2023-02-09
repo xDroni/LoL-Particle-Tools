@@ -13,8 +13,9 @@ export const LoadingContextProvider = (props) => {
 
 export const ParticlesContextProvider = (props) => {
   const [particles, setParticles] = useState([]);
+  const [particlesByState, setParticlesByState] = useState({ enabled: [], disabled: [] });
 
-  const contextValue = { particles, setParticles };
+  const contextValue = { particles, setParticles, particlesByState, setParticlesByState };
   return (
     <ParticlesContext.Provider value={contextValue}>{props.children}</ParticlesContext.Provider>
   );

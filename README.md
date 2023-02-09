@@ -6,23 +6,24 @@ https://youtu.be/FvQJKjt-hYk
 
 ## Features
 
-- Locate particles fast (about 3 seconds per particle using Auto mode)
-- Disable particles from your own lists using text file
-- Save disabled particles for later (or when the replay crashes)
+- Fast particle search (about 3 seconds per particle in Auto mode)
+- Deactivate particles from your own lists using a text file
+- Save deactivated particles for later use (or if the game crashes)
 
 ### Particle Locator
 
-Helps you find unwanted particle (name) and disable it.
+Helps you find unwanted particle (name) and deactivate it.
 
 ### How to use Particle Locator?
 
 ### Auto Locating
 
 1. Open the replay
-2. Set in-game window mode to either Borderless or Windowed
-3. Pause the replay
-4. Open Particle Locator and click Start
-5. Select the particle(s) that you want to disable (and automatically find their name)
+2. Set the in-game window mode to either **borderless** or **windowed** ([screenshot](demo/settings/window-mode.png?raw=true 'window mode'))
+3. (optional) If you get incorrect results or the process takes forever try to **turn off in-game shadows** ([screenshot](demo/settings/shadow-quality.png?raw=true 'shadow quality'))
+4. Pause the playback
+5. Open Particle Locator and click on Start
+6. Select the particle(s) that you want to deactivate (and automatically find their name)
 
 ### Legacy Locating
 
@@ -34,21 +35,21 @@ It simply makes requests to League of Legends Replay API locally.
 
 ### Auto Locating
 
-1. It takes the list of currently enabled particles
-2. User selects the area with particles he wants to disable
-3. It takes the snapshot of selected area
-4. The list of currently enabled particles is divided into 2 groups
-5. It disables (enables if they were disabled) all particles from the first group
-6. It takes the snapshot of selected area again and compares it to the previous one
-7. If there are differences in the snapshot (the particle changed its state) we can assume that it's located in the first group.
-   If there are no differences we know it's located in the second group
+1. Takes the list of active particles
+2. User selects the area with particles he wants to deactivate
+3. It takes the snapshot of the selected area
+4. The list of currently activated particles is divided into 2 groups
+5. It deactivates all particles of the first group (activates them if they were deactivated)
+6. Takes another snapshot of the selected area and compares it with the previous one
+7. If there are differences in the snapshot (the particle has changed its state) we can assume that it's located in the first group.
+   If there are no differences we know that it's located in the second group
 8. It repeats the division and comparison until there is only one particle left in the list
 
-On average, a 5v5 Summoner's Rift **replay has about 1700-2300 particles**, which means **it will take 10-11 comparisons** (~3 seconds) to locate one particle.
+On average, a 5v5 Summoner's Rift **replay has about 1700-2300 particles**, which means **it takes 10-11 divisions and comparisons** (~3 seconds) to locate one particle.
 
 ### Legacy Locating
 
-- Same as Auto Locating, but without automated comparisons. User needs to manually determine if particle has changed its state (~15 seconds per particle)
+- Same as Auto Locating, but without automated comparisons. User must manually determine if particle has changed its state (~15 seconds per particle)
 
 ### Images
 
