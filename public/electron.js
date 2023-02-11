@@ -7,6 +7,12 @@ let mainWindow, autoParticleLocatorGameWindow, width, height, TOAST_NOTIFICATION
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    return app.quit();
+  }
+});
+
 app.whenReady().then(() => {
   ({ width, height } = screen.getPrimaryDisplay().size);
   if (BrowserWindow.getAllWindows().length === 0) {
@@ -120,7 +126,10 @@ function createMainWindow() {
     evt.preventDefault();
   });
 
-  mainWindow.on('closed', () => (mainWindow = null));
+  mainWindow.on('closed', () => {
+    mainWindow = autoParticleLocatorGameWindow = null;
+    return app.quit();
+  });
 }
 
 function createAutoParticleLocatorHandleWindow() {
@@ -165,9 +174,3 @@ function restoreAndFocusMainWindow() {
     return mainWindow.restore();
   }
 }
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});

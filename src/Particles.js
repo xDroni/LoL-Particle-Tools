@@ -10,6 +10,8 @@ import ParticleLocator from './ParticleLocator';
 const electronAPI = window.electronAPI;
 const TOAST_NOTIFICATION_TYPES = window.TOAST_NOTIFICATION_TYPES;
 
+const exportedFileName = 'saved-particles';
+
 export default function Particles() {
   const { replayLoad, setReplayLoad } = useContext(LoadingContext);
   const { particles, setParticles, particlesByState, setParticlesByState } =
@@ -32,7 +34,6 @@ export default function Particles() {
 
   const [activeParticlesFilter, setActiveParticlesFilter] = useState('');
   const [inactiveParticlesFilter, setInactiveParticlesFilter] = useState('');
-  const [fileName, setFileName] = useState('');
   const activeParticlesDeferredFilter = useDeferredValue(activeParticlesFilter);
   const inactiveParticlesDeferredFilter = useDeferredValue(inactiveParticlesFilter);
 
@@ -101,8 +102,7 @@ export default function Particles() {
       return prev + curr + '\n';
     }, '');
     const blob = new Blob([data]);
-    saveAs(blob, `${fileName}`);
-    setFileName('');
+    saveAs(blob, `${exportedFileName}`);
   }
 
   function handleImportFile() {
