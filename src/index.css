@@ -2,43 +2,121 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    overflow-y: overlay;
+  }
+
+  body {
+    @apply bg-slate-900 text-xs text-slate-200 lg:text-base;
+  }
+
+  .text-xxs {
+    font-size: 0.625rem;
+    line-height: 0.75rem;
+  }
+
+  .initial {
+    font-size: initial;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply rounded py-1 px-2 font-bold disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-r {
+    @apply rounded-r-full;
+  }
+
+  .btn-l {
+    @apply rounded-l-full;
+  }
+
+  .btn-slate {
+    @apply bg-slate-500 text-white;
+  }
+
+  .btn-slate:hover {
+    @apply bg-slate-600;
+  }
+
+  .btn-slate:disabled {
+    @apply bg-slate-800;
+  }
+
+  .btn-responsive {
+    @apply text-[0px] md:text-xs lg:text-base;
+  }
+
+  .particle-list {
+    @apply z-10 mb-1 h-[70vh] w-full rounded bg-slate-800 text-xs focus:border-slate-200 focus:ring-0 disabled:bg-slate-800 md:mb-4 lg:text-base;
+  }
+
+  .particle-list-scrollbar::-webkit-scrollbar-track {
+    @apply rounded-full bg-slate-800;
+  }
+
+  .filter-button {
+    @apply ml-auto mr-auto mb-1 w-3/4 bg-slate-800 text-xs placeholder-slate-100 focus:border-slate-200 focus:ring-0 md:mb-4 lg:text-base;
+  }
+
+  .checkbox-focus {
+    @apply focus:ring-slate-500 focus:ring-offset-0;
+  }
+
+  .modal-transition {
+    transition: opacity 0.5s ease;
+  }
+
+  .modal-container-transition {
+    transition: opacity 0.5s ease;
+    backdrop-filter: brightness(35%) blur(5px);
+  }
+
+  .text-loader {
+    animation: pulse 0.9s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
 @layer utilities {
-  /* Chrome, Safari and Opera */
+  :root {
+    --toastify-color-dark: #334155 !important;
+  }
+
+  /* styled scrollbar */
+  ::-webkit-scrollbar {
+    width: 0.5rem;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply rounded-full bg-slate-700;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-slate-400;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-200;
+  }
+
+  /* hide scrollbar */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
 
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+  .scrollbar-gutter-enable {
+    scrollbar-gutter: stable both-edges;
   }
-}
-
-@layer base {
-  body {
-    @apply text-slate-200 bg-slate-900 text-xs lg:text-base;
-  }
-}
-
-.btn {
-  @apply font-bold py-1 px-2 rounded;
-}
-.btn-slate {
-  @apply bg-slate-500 text-white;
-}
-.btn-slate:hover {
-  @apply bg-slate-700;
-}
-
-.btn-responsive {
-  @apply lg:text-base md:text-xs sm:text-xs text-[0px];
-}
-
-.initial {
-  font-size: initial;
-}
-
-.text-xxs {
-  font-size: 0.625rem;
-  line-height: 0.75rem;
 }

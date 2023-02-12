@@ -1,6 +1,11 @@
 import config from '../config.json';
 
-export default async function fetchParticles(setParticles, setReplayLoad) {
+export default async function fetchParticles(
+  setParticles,
+  replayLoad,
+  setReplayLoad,
+  onlyActivated
+) {
   try {
     const result = await fetch(
       `${config.address}:${config.port}/replay/${config.particlesEndpoint}`
@@ -9,16 +14,22 @@ export default async function fetchParticles(setParticles, setReplayLoad) {
     if (json?.errorCode === undefined) {
       setParticles(json);
       setReplayLoad(false);
-      return json;
+      return onlyActivated === true
+        ? Object.fromEntries(Object.entries(json).filter(([, state]) => Boolean(state)))
+        : json;
     }
-    setReplayLoad(true);
+    if (replayLoad !== null) {
+      setReplayLoad(true);
+    }
     return Promise.reject(Error(json.errorCode));
   } catch (err) {
-    setReplayLoad(true);
+    if (replayLoad !== null) {
+      setReplayLoad(true);
+    }
     console.error(err);
   }
 }
 
-export function autoFetch(setParticles, setReplayLoad, timeout) {
-  return setInterval(() => fetchParticles(setParticles, setReplayLoad), timeout);
+export function autoFetch(setParticles, replayLoad, setReplayLoad, timeout) {
+  return setInterval(() => fetchParticles(setParticles, replayLoad, setReplayLoad), timeout);
 }

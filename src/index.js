@@ -1,17 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
 import './index.css';
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faArrowLeft,
   faArrowRight,
   faArrowsRotate,
+  faCircleQuestion,
   faCrosshairs,
   faEyeSlash,
   faFileArrowDown,
   faFileArrowUp
 } from '@fortawesome/free-solid-svg-icons';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
+import App from './App';
+import { ParticlesContextProvider } from './AppContext';
+import { LoadingContextProvider } from './AppContext';
 
 library.add(
   faFileArrowUp,
@@ -20,12 +25,17 @@ library.add(
   faEyeSlash,
   faArrowRight,
   faArrowLeft,
-  faArrowsRotate
+  faArrowsRotate,
+  faCircleQuestion
 );
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <LoadingContextProvider>
+      <ParticlesContextProvider>
+        <App />
+      </ParticlesContextProvider>
+    </LoadingContextProvider>
   </React.StrictMode>
 );

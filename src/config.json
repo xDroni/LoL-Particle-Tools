@@ -1,5 +1,8 @@
 {
   "address": "https://127.0.0.1",
   "port": "2999",
-  "particlesEndpoint": "particles"
+  "particlesEndpoint": "particles",
+  "getRenderPropertiesEndpoint": "GetReplayRender",
+  "postRenderPropertiesEndpoint": "PostReplayRender",
+  "requiredRenderProperties": ["floatingText", "interfaceAll", "outlineHover", "outlineSelect"]
 }
