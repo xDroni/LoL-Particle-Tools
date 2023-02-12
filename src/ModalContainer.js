@@ -25,9 +25,9 @@ export default function ModalContainer({ handleModal }) {
               className="text-blue-400 underline"
               target="_blank"
               rel="noreferrer"
-              // href="https://youtu.be/F4FTJY52NtU?t=28"
+              href="https://youtu.be/hG5-MSInKL0"
             >
-              TODO
+              https://youtu.be/hG5-MSInKL0
             </a>
           </p>
           <ol className="ml-8 list-decimal">
@@ -36,7 +36,19 @@ export default function ModalContainer({ handleModal }) {
               Set in-game window mode to either <span className="font-bold">borderless</span> or{' '}
               <span className="font-bold">windowed</span>
             </li>
-            <li>Pause the replay</li>
+            <li>
+              (optional) If you get incorrect results or the process takes forever try to turn off
+              in-game shadows -{' '}
+              <a
+                className="text-blue-400 underline"
+                target="_blank"
+                rel="noreferrer"
+                href="https://github.com/xDroni/LoL-Particle-Tools/blob/autoLocating/demo/settings/shadow-quality.png?raw=true"
+              >
+                screenshot
+              </a>
+            </li>
+            <li>Pause the replay playback</li>
             <li>
               Open Particle Locator and click <span className="font-bold">Start</span>
             </li>
@@ -53,9 +65,9 @@ export default function ModalContainer({ handleModal }) {
               className="text-blue-400 underline"
               target="_blank"
               rel="noreferrer"
-              href="https://youtu.be/FvQJKjt-hYk?t=28"
+              href="https://youtu.be/FvQJKjt-hYk"
             >
-              https://youtu.be/FvQJKjt-hYk?t=28
+              https://youtu.be/FvQJKjt-hYk
             </a>
           </p>
           <ul className="ml-8 list-decimal list-disc">
@@ -65,6 +77,17 @@ export default function ModalContainer({ handleModal }) {
             </li>
           </ul>
         </div>
+        <p className="mt-4">More info here: </p>
+        <p>
+          <a
+            className="text-blue-400 underline"
+            target="_blank"
+            rel="noreferrer"
+            href="https://github.com/xDroni/LoL-Particle-Tools/blob/main/README.md"
+          >
+            https://github.com/xDroni/LoL-Particle-Tools/blob/main/README.md
+          </a>
+        </p>
       </div>
     </div>
   );
