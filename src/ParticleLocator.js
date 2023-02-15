@@ -124,27 +124,28 @@ export default function ParticleLocator({ props }) {
       return electronAPI.sendToastNotification(TOAST_NOTIFICATION_TYPES.ERROR, 'Replay not found');
     }
 
-    clearInterval(interval);
     const currentParticles = await fetchParticles(setParticles, replayLoad, setReplayLoad);
+
+    // if replayLoad has not been updated yet
+    if (currentParticles === undefined) {
+      return;
+    }
+
+    clearInterval(interval);
+
     const activeParticles = Object.entries(currentParticles).filter(([, state]) => Boolean(state));
 
     particlesStateToRestore.current = currentParticles;
     setLocationInProgress(true);
 
-    try {
-      const currentRenderProperties = await fetchRenderProperties(replayLoad, setReplayLoad);
-      renderPropertiesToRestore.current = currentRenderProperties;
-
-      const preparedRenderProperties = prepareRequiredRenderProperties(
-        currentRenderProperties,
-        false
-      );
-
-      // needed to switch off interface, outlines etc. which may affect the results
-      await postRenderProperties(preparedRenderProperties);
-    } catch (e) {
-      console.error(e);
-    }
+    const currentRenderProperties = await fetchRenderProperties(replayLoad, setReplayLoad);
+    renderPropertiesToRestore.current = currentRenderProperties;
+    const preparedRenderProperties = prepareRequiredRenderProperties(
+      currentRenderProperties,
+      false
+    );
+    // needed to switch off interface, outlines etc. which may affect the results
+    await postRenderProperties(preparedRenderProperties);
 
     if (mode === MODE.LEGACY) {
       return findParticle(activeParticles);
@@ -173,8 +174,9 @@ export default function ParticleLocator({ props }) {
     setInterval(autoFetch(setParticles, replayLoad, setReplayLoad, 7000));
   }
 
-  function handleParticleChange(didChange) {
-    if (locationInProgress === false) {
+  function handleParticleChangeLegacyMode(didChange) {
+    // as this function is used only for legacy mode - do nothing when there is auto mode enabled
+    if (locationInProgress === false || mode === MODE.AUTO) {
       return;
     }
     return didChange === true ? findParticle(split.entries1) : findParticle(split.entries2);
@@ -210,7 +212,7 @@ export default function ParticleLocator({ props }) {
       </button>
       {isNewWindow && (
         <ParticleLocatorWindow
-          handleDidChange={handleParticleChange}
+          handleDidChange={handleParticleChangeLegacyMode}
           onClose={() => {
             setIsNewWindow(false);
             if (locationInProgress) void stopLocating();
@@ -282,7 +284,7 @@ export default function ParticleLocator({ props }) {
                 <button
                   type="button"
                   className="btn btn-slate h-16 w-16 text-xl"
-                  onClick={() => handleParticleChange(true)}
+                  onClick={() => handleParticleChangeLegacyMode(true)}
                   disabled={isLoading || !locationInProgress}
                 >
                   Yes
@@ -290,7 +292,7 @@ export default function ParticleLocator({ props }) {
                 <button
                   type="button"
                   className="btn btn-slate h-16 w-16 text-xl"
-                  onClick={() => handleParticleChange(false)}
+                  onClick={() => handleParticleChangeLegacyMode(false)}
                   disabled={isLoading || !locationInProgress}
                 >
                   No
