@@ -178,7 +178,7 @@ export default function Particles() {
             })}
           </select>
           <button
-            className="btn btn-r btn-slate -ml-1 h-[70vh]"
+            className="btn btn-r btn-slate z-10 -ml-0.5 h-[70vh]"
             onClick={deactivateSelectedParticles}
             disabled={locationInProgress || replayLoad}
           >
@@ -197,14 +197,7 @@ export default function Particles() {
       </div>
       <div className="w-96 text-center">
         <span className="block hidden uppercase md:mb-2 md:block">Inactive particles</span>
-        <div className="flex">
-          <button
-            className="btn btn-l btn-slate -mr-1 h-[70vh]"
-            onClick={activateSelectedParticles}
-            disabled={locationInProgress || replayLoad}
-          >
-            <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
-          </button>
+        <div className="flex flex-row-reverse">
           <select
             multiple
             className="particle-list particle-list-scrollbar"
@@ -223,6 +216,13 @@ export default function Particles() {
               );
             })}
           </select>
+          <button
+            className="btn btn-l btn-slate z-10 -mr-0.5 h-[70vh]"
+            onClick={activateSelectedParticles}
+            disabled={locationInProgress || replayLoad}
+          >
+            <FontAwesomeIcon icon="fa-solid fa-arrow-left" />
+          </button>
         </div>
 
         <input
