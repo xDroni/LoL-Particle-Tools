@@ -83,6 +83,7 @@ function createMainWindow() {
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      devTools: !app.isPackaged,
       webSecurity: false,
       spellcheck: false
     },
@@ -93,6 +94,10 @@ function createMainWindow() {
     isDev ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
   );
 
+  if (app.isPackaged) {
+    mainWindow.removeMenu();
+  }
+
   mainWindow.webContents.setWindowOpenHandler(({ frameName, url }) => {
     if (frameName === 'ParticleLocatorWindow') {
       return {
@@ -100,7 +105,7 @@ function createMainWindow() {
         overrideBrowserWindowOptions: {
           width: 346,
           height: 339,
-          resizable: true,
+          resizable: false,
           minimizable: false,
           maximizable: false,
           autoHideMenuBar: true,
@@ -116,6 +121,9 @@ function createMainWindow() {
   });
 
   mainWindow.webContents.on('did-create-window', (newWindowComponent) => {
+    if (app.isPackaged) {
+      newWindowComponent.removeMenu();
+    }
     mainWindow.minimize();
     newWindowComponent.setAlwaysOnTop(true, 'normal');
   });
@@ -140,9 +148,14 @@ function createAutoParticleLocatorHandleWindow() {
     autoHideMenuBar: true,
     show: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      devTools: !app.isPackaged
     }
   });
+
+  if (app.isPackaged) {
+    autoParticleLocatorGameWindow.removeMenu();
+  }
 
   autoParticleLocatorGameWindow.loadFile(path.join(__dirname, './autoParticleLocator/index.html'));
 
