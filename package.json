@@ -1,7 +1,7 @@
 {
   "name": "lol-particle-tools",
   "description": "Utility tool for League of Legends Creators that helps managing particles. (includes Particle Locator)",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Karol Rudnikowski (dxdroni)",
   "private": true,
   "homepage": "./",
