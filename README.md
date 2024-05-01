@@ -20,7 +20,7 @@ Helps you find unwanted particle (name) and deactivate it.
 
 ### Auto Locating
 
-1. Open the replay
+1. Run [League Director](https://github.com/RiotGames/leaguedirector) and the replay to make sure it's detected
 2. Set the in-game window mode to either **borderless** or **windowed** ([screenshot](demo/settings/window-mode.png?raw=true 'window mode'))
 3. (optional) If you get incorrect results or the process takes forever try to **turn off in-game shadows** ([screenshot](demo/settings/shadow-quality.png?raw=true 'shadow quality'))
 4. Pause the playback
