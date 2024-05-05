@@ -6,6 +6,7 @@ const isDev = require('electron-is-dev');
 let mainWindow, autoParticleLocatorGameWindow, width, height, TOAST_NOTIFICATION_TYPES;
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
+app.commandLine.appendSwitch('lang', 'en-US');
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
