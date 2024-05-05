@@ -16,6 +16,20 @@ export default function ModalContainer({ handleModal }) {
           <button onClick={handleModal}>Close</button>
           {/* icon */}
         </div>
+        <div className="mb-3 flex justify-between">
+          <p className="text-md italic">
+            If replay is not detected, try installing{' '}
+            <a
+              className="text-blue-400 underline"
+              target="_blank"
+              rel="noreferrer"
+              href="https://github.com/RiotGames/leaguedirector"
+            >
+              League Director
+            </a>{' '}
+            and make sure it works there first.
+          </p>
+        </div>
         <h4 className="text-xl font-bold">Particle Locator</h4>
         <h5 className="mt-2 text-lg text-teal-400">Auto mode</h5>
         <div className="ml-1.5">
@@ -43,7 +57,7 @@ export default function ModalContainer({ handleModal }) {
                 className="text-blue-400 underline"
                 target="_blank"
                 rel="noreferrer"
-                href="https://github.com/xDroni/LoL-Particle-Tools/blob/autoLocating/demo/settings/shadow-quality.png?raw=true"
+                href="https://github.com/xDroni/LoL-Particle-Tools/blob/main/demo/settings/shadow-quality.png?raw=true"
               >
                 screenshot
               </a>
@@ -70,7 +84,7 @@ export default function ModalContainer({ handleModal }) {
               https://youtu.be/FvQJKjt-hYk
             </a>
           </p>
-          <ul className="ml-8 list-decimal list-disc">
+          <ul className="ml-8 list-disc">
             <li>
               Same as auto mode, except that you have to manually select whether a particle has
               changed its state (appeared / disappeared)

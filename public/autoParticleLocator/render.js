@@ -87,7 +87,7 @@ function drawRectangle() {
   let mouseDown = false;
 
   async function sendImageSrc() {
-    await new Promise((resolve) => setTimeout(resolve, 58));
+    await new Promise((resolve) => setTimeout(resolve, 75));
     const cropImageSrc = await refreshScreen();
     await window.electronAPI.sendImageSrcResponse(cropImageSrc);
   }
